@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace MainView.Properties
+namespace AutoBuild.Properties
 {
 
 

@@ -22,6 +22,7 @@
                 <Button Content="Abrir Excel"
                     HorizontalAlignment="Center"
                     Command="{Binding DischangeCommand}"/>
+                <Separator/>
                 <Button Content="Exportar lista de componentes"
                     HorizontalAlignment="Center"/>
             </ToolBar>

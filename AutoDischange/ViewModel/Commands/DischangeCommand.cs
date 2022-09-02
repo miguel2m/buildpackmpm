@@ -23,6 +23,7 @@ namespace AutoDischange.ViewModel.Commands
 
         public void Execute(object parameter)
         {
+            ViewModel.DischangeStatus = "Cargando lista de changesets...";
             //TODO: Call login from ViewModel
             OpenFileDialog dialog = new OpenFileDialog();
             dialog.Filter = "Excel Files|*.xls;*.xlsx;*.xlsm";

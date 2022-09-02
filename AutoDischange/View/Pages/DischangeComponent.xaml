@@ -12,11 +12,11 @@
         <vm:DischangeVM x:Key="vm" />
     </Page.Resources>
     <DockPanel DataContext="{StaticResource vm}">
-        <!--<StatusBar DockPanel.Dock="Bottom">
+        <StatusBar DockPanel.Dock="Bottom">
             <StatusBarItem>
                 <TextBlock  Text="{Binding DischangeStatus}"/>
             </StatusBarItem>
-        </StatusBar>-->
+        </StatusBar>
         <ToolBarTray DockPanel.Dock="Top">
             <ToolBar>
                 <Button Content="Abrir Excel"

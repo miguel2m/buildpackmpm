@@ -25,25 +25,40 @@ namespace AutoDischange.ViewModel
             {
                 selectedChangeset = value;
                 OnPropertyChanged("SelectedChangeset");
+                DischangeStatus = "Selección de changeset";
                 //GetNotes();
             }
         }
+
+        private string dischangeStatus;
+
+        public string DischangeStatus
+        {
+            get { return dischangeStatus; }
+            set {
+                dischangeStatus = value;
+                OnPropertyChanged("DischangeStatus");
+            }
+        }
+
 
         public DischangeVM()
         {
             DischangeCommand = new DischangeCommand(this);
             DischangeChangesets = new ObservableCollection<DischangeChangeset>();
+            DischangeStatus = "Nada que hacer";
         }
 
         public void GetExcel(string fileName)
         {
             DischangeChangesets.Clear();
-            //DischangeStatus = "Cargando lista de changesets...";
+
+            
             foreach (var changeset in ExcelHelper.ReadExcel(fileName))
             {
                 DischangeChangesets.Add(changeset);
             }
-            //DischangeStatus = "Lista de changesets cargada";
+            DischangeStatus = "Lista de changesets cargada";
 
 
         }

@@ -56,11 +56,13 @@
 
                 <TextBlock Text="Ubicación en TFS "/>
                 <ListView DockPanel.Dock="Left"
-                  Width="140"
-                  SelectionMode="Single">
+                          
+                          SelectionMode="Single"
+                          DataContext="{StaticResource vm}"
+                          ItemsSource="{Binding Tfs.value}">
                     <ListView.ItemTemplate>
                         <DataTemplate>
-                            <TextBlock />
+                            <TextBlock Text="{Binding item.path}"/>
                         </DataTemplate>
                     </ListView.ItemTemplate>
                 </ListView>

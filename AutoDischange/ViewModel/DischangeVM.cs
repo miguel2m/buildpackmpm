@@ -27,6 +27,7 @@ namespace AutoDischange.ViewModel
                 OnPropertyChanged("SelectedChangeset");
                 DischangeStatus = "Selección de changeset";
                 //GetNotes();
+                GetChangeset();
             }
         }
 
@@ -48,11 +49,12 @@ namespace AutoDischange.ViewModel
             set
             {
                 tfs = value;
-                //OnPropertyChanged("SelectedChangeset");
+                OnPropertyChanged("Tfs");
                 //DischangeStatus = "Selección de changeset";
                 //GetNotes();
             }
         }
+
 
         public DischangeVM()
         {
@@ -61,7 +63,7 @@ namespace AutoDischange.ViewModel
             DischangeStatus = "Nada que hacer";
         }
 
-        public async void GetExcel(string fileName)
+        public void GetExcel(string fileName)
         {
             DischangeChangesets.Clear();
 
@@ -73,8 +75,34 @@ namespace AutoDischange.ViewModel
             DischangeStatus = "Lista de changesets cargada";
 
             //Tfs = await TFSRequest.GetChangeset("162501");
-            //Tfs.value.ForEach(Console.WriteLine);
+            ////Tfs.value.ForEach(Console.WriteLine);
             //Console.WriteLine(Tfs.count);
+            //foreach (Value element in Tfs.value)
+            //{
+            //    Console.WriteLine($"{element.item.path} ");
+            //}
+        }
+
+        public async void GetChangeset()
+        {
+
+
+            if (SelectedChangeset != null)
+            {
+                DischangeStatus = "Obteniendo Changeset del TFS";
+
+                Tfs = await TFSRequest.GetChangeset(SelectedChangeset.Changeset);
+                //Console.WriteLine(Tfs.count);
+                //foreach (Value element in Tfs.value)
+                //{
+                //    Console.WriteLine($"{element.item.path} ");
+                //}
+
+                DischangeStatus = "Changeet del TFS Obtenido";
+            }
+            
+            
+
         }
 
         public event PropertyChangedEventHandler PropertyChanged;

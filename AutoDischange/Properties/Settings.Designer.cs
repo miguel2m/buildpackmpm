@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace AutoBuild.Properties
+namespace AutoDischange.Properties
 {
 
 

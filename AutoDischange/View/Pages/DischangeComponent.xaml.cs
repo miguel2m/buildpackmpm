@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.Win32;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -13,14 +14,14 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-namespace AutoBuild.Views
+namespace AutoDischange.View.Pages
 {
     /// <summary>
-    /// Lógica de interacción para MainWindow.xaml
+    /// Lógica de interacción para DischangeComponent.xaml
     /// </summary>
-    public partial class MainWindow : Window
+    public partial class DischangeComponent : Page
     {
-        public MainWindow()
+        public DischangeComponent()
         {
             InitializeComponent();
         }

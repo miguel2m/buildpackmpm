@@ -39,24 +39,42 @@
             </ListView.ItemTemplate>
         </ListView>
         <Grid>
+            
             <StackPanel DataContext="{Binding SelectedChangeset}"
                     Margin="10">
                 <TextBlock Background="AntiqueWhite" 
-  Foreground="Navy" 
-  
-  FontFamily="Century Gothic"
-  FontSize="12"
-  FontStretch="UltraExpanded"
-  FontStyle="Italic"
-  FontWeight="UltraBold" Text="Changeset Excel"/>
+                           Foreground="Navy" 
+                           FontFamily="Century Gothic"
+                           FontSize="12"
+                           FontStretch="UltraExpanded"
+                           FontStyle="Italic"
+                           FontWeight="UltraBold" 
+                           Text="Changeset Excel"/>
+                
                 <TextBlock Text="Changeset:"/>
                 <TextBox Text="{Binding Changeset}"/>
 
                 <TextBlock Text="Ubicación en TFS "/>
-                <TextBox />
+                <ListView DockPanel.Dock="Left"
+                  Width="140"
+                  SelectionMode="Single">
+                    <ListView.ItemTemplate>
+                        <DataTemplate>
+                            <TextBlock />
+                        </DataTemplate>
+                    </ListView.ItemTemplate>
+                </ListView>
 
                 <TextBlock Text="Ubicación en guía de ubicaciones Dischange"/>
-                <TextBox />
+                <ListView DockPanel.Dock="Left"
+                  Width="140"
+                  SelectionMode="Single">
+                    <ListView.ItemTemplate>
+                        <DataTemplate>
+                            <TextBlock />
+                        </DataTemplate>
+                    </ListView.ItemTemplate>
+                </ListView>
             </StackPanel>
            
             

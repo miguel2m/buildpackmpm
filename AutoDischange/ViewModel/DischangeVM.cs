@@ -41,6 +41,18 @@ namespace AutoDischange.ViewModel
             }
         }
 
+        private TfsModel tfs;
+        public TfsModel Tfs
+        {
+            get { return tfs; }
+            set
+            {
+                tfs = value;
+                //OnPropertyChanged("SelectedChangeset");
+                //DischangeStatus = "Selección de changeset";
+                //GetNotes();
+            }
+        }
 
         public DischangeVM()
         {
@@ -49,7 +61,7 @@ namespace AutoDischange.ViewModel
             DischangeStatus = "Nada que hacer";
         }
 
-        public void GetExcel(string fileName)
+        public async void GetExcel(string fileName)
         {
             DischangeChangesets.Clear();
 
@@ -60,7 +72,9 @@ namespace AutoDischange.ViewModel
             }
             DischangeStatus = "Lista de changesets cargada";
 
-
+            //Tfs = await TFSRequest.GetChangeset("162501");
+            //Tfs.value.ForEach(Console.WriteLine);
+            //Console.WriteLine(Tfs.count);
         }
 
         public event PropertyChangedEventHandler PropertyChanged;

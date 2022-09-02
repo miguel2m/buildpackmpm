@@ -14,18 +14,19 @@
     <DockPanel DataContext="{StaticResource vm}">
         <Menu DockPanel.Dock="Top">
             <MenuItem  Header="File">
-                <MenuItem  Header="New notebook" 
+                <!--<MenuItem  Header="New notebook" 
                            Command="{Binding NewNotebookCommand}"/>
                 <MenuItem  Header="New note"
                            Command="{Binding NewNoteCommand}"
                            CommandParameter="{Binding SelectedNotebook}"/>
                            
-                <Separator/>
+                <Separator/>-->
                 <MenuItem  Header="Exit"
                            Click="MenuItem_Click"
                 />
             </MenuItem>
         </Menu>
+        
         <Grid DockPanel.Dock="Left">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="50"/>

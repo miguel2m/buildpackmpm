@@ -11,15 +11,41 @@
     <Page.Resources>
         <vm:DischangeVM x:Key="vm" />
     </Page.Resources>
-    <Grid  DataContext="{StaticResource vm}">
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="*"/>
-            <ColumnDefinition Width="Auto"/>
-        </Grid.ColumnDefinitions>
-        <StackPanel Margin="10" >
-            <Button Content="Abrir Excel"
+    <DockPanel DataContext="{StaticResource vm}">
+        <!--<StatusBar DockPanel.Dock="Bottom">
+            <StatusBarItem>
+                <TextBlock  Text="{Binding DischangeStatus}"/>
+            </StatusBarItem>
+        </StatusBar>-->
+        <ToolBarTray DockPanel.Dock="Top">
+            <ToolBar>
+                <Button Content="Abrir Excel"
                     HorizontalAlignment="Center"
                     Command="{Binding DischangeCommand}"/>
-        </StackPanel>
-    </Grid>
+                <Button Content="Exportar lista de componentes"
+                    HorizontalAlignment="Center"/>
+            </ToolBar>
+        </ToolBarTray>
+        <ListView DockPanel.Dock="Left"
+                  Width="140"
+                  SelectedValue="{Binding SelectedChangeset, Mode=TwoWay}"
+                  ItemsSource="{Binding DischangeChangesets}">
+            <ListView.ItemTemplate>
+                <DataTemplate>
+                    <TextBlock Text="{Binding Changeset}"/>
+                </DataTemplate>
+            </ListView.ItemTemplate>
+        </ListView>
+        <Grid>
+            <StackPanel DataContext="{Binding SelectedChangeset}"
+                    Margin="10">
+                <TextBlock Text="Id:"/>
+                <TextBox Text="{Binding Id}"/>
+                <TextBlock Text="Changeset:"/>
+                <TextBox Text="{Binding Changeset}"/>
+                
+            </StackPanel>
+        </Grid>
+    </DockPanel>
+    
 </Page>

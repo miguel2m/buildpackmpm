@@ -26,7 +26,6 @@ namespace AutoDischange.ViewModel
                 selectedChangeset = value;
                 OnPropertyChanged("SelectedChangeset");
                 DischangeStatus = "Selección de changeset";
-                //GetNotes();
                 GetChangeset();
             }
         }
@@ -50,8 +49,6 @@ namespace AutoDischange.ViewModel
             {
                 tfs = value;
                 OnPropertyChanged("Tfs");
-                //DischangeStatus = "Selección de changeset";
-                //GetNotes();
             }
         }
 
@@ -65,43 +62,22 @@ namespace AutoDischange.ViewModel
 
         public void GetExcel(string fileName)
         {
-            DischangeChangesets.Clear();
-
-            
+            DischangeChangesets.Clear();          
             foreach (var changeset in ExcelHelper.ReadExcel(fileName))
             {
                 DischangeChangesets.Add(changeset);
             }
             DischangeStatus = "Lista de changesets cargada";
-
-            //Tfs = await TFSRequest.GetChangeset("162501");
-            ////Tfs.value.ForEach(Console.WriteLine);
-            //Console.WriteLine(Tfs.count);
-            //foreach (Value element in Tfs.value)
-            //{
-            //    Console.WriteLine($"{element.item.path} ");
-            //}
         }
 
         public async void GetChangeset()
         {
-
-
             if (SelectedChangeset != null)
             {
                 DischangeStatus = "Obteniendo Changeset del TFS";
-
-                Tfs = await TFSRequest.GetChangeset(SelectedChangeset.Changeset);
-                //Console.WriteLine(Tfs.count);
-                //foreach (Value element in Tfs.value)
-                //{
-                //    Console.WriteLine($"{element.item.path} ");
-                //}
-
-                DischangeStatus = "Changeet del TFS Obtenido";
+                Tfs = await TFSRequest.GetChangeset(SelectedChangeset.Changeset);        
+                DischangeStatus = $"Path Changesets del TFS Obtenido cantidad:{Tfs.count} ";
             }
-            
-            
 
         }
 

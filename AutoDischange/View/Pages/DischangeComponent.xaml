@@ -45,16 +45,16 @@
                 <TextBlock Background="AntiqueWhite" 
                            Foreground="Navy" 
                            FontFamily="Century Gothic"
-                           FontSize="12"
+                           FontSize="16"
                            FontStretch="UltraExpanded"
                            FontStyle="Italic"
                            FontWeight="UltraBold" 
                            Text="Changeset Excel"/>
-                
-                <TextBlock Text="Changeset:"/>
+
+                <TextBlock FontSize="14"  FontFamily="Century Gothic"  Text="Changeset:"/>
                 <TextBox Text="{Binding Changeset}"/>
 
-                <TextBlock Text="Ubicación en TFS "/>
+                <TextBlock FontSize="14"  FontFamily="Century Gothic"  Text="Ubicación en TFS "/>
                 <ListView DockPanel.Dock="Left"
                           
                           SelectionMode="Single"
@@ -62,12 +62,12 @@
                           ItemsSource="{Binding Tfs.value}">
                     <ListView.ItemTemplate>
                         <DataTemplate>
-                            <TextBlock Text="{Binding item.path}"/>
+                            <TextBlock  Text="{Binding item.path}"/>
                         </DataTemplate>
                     </ListView.ItemTemplate>
                 </ListView>
 
-                <TextBlock Text="Ubicación en guía de ubicaciones Dischange"/>
+                <TextBlock FontSize="14"  FontFamily="Century Gothic" Text="Ubicación en guía de ubicaciones Dischange"/>
                 <ListView DockPanel.Dock="Left"
                   Width="140"
                   SelectionMode="Single">

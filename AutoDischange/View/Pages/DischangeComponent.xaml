@@ -41,12 +41,25 @@
         <Grid>
             <StackPanel DataContext="{Binding SelectedChangeset}"
                     Margin="10">
-                <TextBlock Text="Id:"/>
-                <TextBox Text="{Binding Id}"/>
+                <TextBlock Background="AntiqueWhite" 
+  Foreground="Navy" 
+  
+  FontFamily="Century Gothic"
+  FontSize="12"
+  FontStretch="UltraExpanded"
+  FontStyle="Italic"
+  FontWeight="UltraBold" Text="Changeset Excel"/>
                 <TextBlock Text="Changeset:"/>
                 <TextBox Text="{Binding Changeset}"/>
-                
+
+                <TextBlock Text="Ubicación en TFS "/>
+                <TextBox />
+
+                <TextBlock Text="Ubicación en guía de ubicaciones Dischange"/>
+                <TextBox />
             </StackPanel>
+           
+            
         </Grid>
     </DockPanel>
     

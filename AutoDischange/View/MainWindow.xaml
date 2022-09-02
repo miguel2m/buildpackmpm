@@ -4,29 +4,21 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:AutoDischange.View"
-        xmlns:vm="clr-namespace:AutoDischange.ViewModel"
+
         xmlns:cc="clr-namespace:AutoDischange.View.CustomControl"
         mc:Ignorable="d"
         Title="MainWindow" Height="450" Width="800">
-    <Window.Resources>
-        <vm:MainVM x:Key="vm" />
-    </Window.Resources>
-    <DockPanel DataContext="{StaticResource vm}">
+
+    <DockPanel >
         <Menu DockPanel.Dock="Top">
             <MenuItem  Header="File">
-                <!--<MenuItem  Header="New notebook" 
-                           Command="{Binding NewNotebookCommand}"/>
-                <MenuItem  Header="New note"
-                           Command="{Binding NewNoteCommand}"
-                           CommandParameter="{Binding SelectedNotebook}"/>
-                           
-                <Separator/>-->
+                
                 <MenuItem  Header="Exit"
                            Click="MenuItem_Click"
                 />
             </MenuItem>
         </Menu>
-        
+
         <Grid DockPanel.Dock="Left">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="50"/>
@@ -47,35 +39,5 @@
             <Frame Grid.Column="1" x:Name="navframe" NavigationUIVisibility="Hidden" Background="#e9ecef"/>
 
         </Grid>
-        
-        <!--<ListView DockPanel.Dock="Left"
-                  Width="140"
-                  SelectedValue="{Binding SelectedNotebook, Mode=TwoWay}"
-                  ItemsSource="{Binding Notebooks}">
-            <ListView.ItemTemplate>
-                <DataTemplate>
-                    <TextBlock Text="{Binding Name}"/>
-                </DataTemplate>
-            </ListView.ItemTemplate>
-        </ListView>
-        <ListView DockPanel.Dock="Left"
-                  Width="140"
-                  ItemsSource="{Binding Notes}">
-            <ListView.ItemTemplate>
-                <DataTemplate>
-                    <TextBlock Text="{Binding Title}"/>
-                </DataTemplate>
-            </ListView.ItemTemplate>
-        </ListView>
-        <ToolBarTray DockPanel.Dock="Top">
-            <ToolBar>
-                <Button Content="Speech"
-                        Click="SpeechButton_Click"/>
-            </ToolBar>
-        </ToolBarTray>
-        
-        <Grid>
-            
-        </Grid>-->
     </DockPanel>
 </Window>

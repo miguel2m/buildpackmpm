@@ -114,10 +114,6 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="View\LoginWindow.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
     <Page Include="View\MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -126,20 +122,8 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Model\Note.cs" />
-    <Compile Include="Model\Notebook.cs" />
-    <Compile Include="Model\User.cs" />
-    <Compile Include="ViewModel\Commands\LoginCommand.cs" />
-    <Compile Include="ViewModel\Commands\NewNotebookCommand.cs" />
-    <Compile Include="ViewModel\Commands\NewNoteCommand.cs" />
-    <Compile Include="ViewModel\Commands\RegisterCommand.cs" />
     <Compile Include="ViewModel\Helpers\DatabaseHelper.cs" />
-    <Compile Include="ViewModel\LoginVM.cs" />
-    <Compile Include="ViewModel\MainVM.cs" />
     <Compile Include="View\CustomControl\NavButton.cs" />
-    <Compile Include="View\LoginWindow.xaml.cs">
-      <DependentUpon>LoginWindow.xaml</DependentUpon>
-    </Compile>
     <Compile Include="View\MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>

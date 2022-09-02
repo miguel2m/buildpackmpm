@@ -29,6 +29,7 @@
         </ToolBarTray>
         <ListView DockPanel.Dock="Left"
                   Width="140"
+                  SelectionMode="Single"
                   SelectedValue="{Binding SelectedChangeset, Mode=TwoWay}"
                   ItemsSource="{Binding DischangeChangesets}">
             <ListView.ItemTemplate>

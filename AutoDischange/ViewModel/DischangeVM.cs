@@ -25,7 +25,7 @@ namespace AutoDischange.ViewModel
             {
                 selectedChangeset = value;
                 OnPropertyChanged("SelectedChangeset");
-                DischangeStatus = "Selección de changeset";
+                DischangeStatus = "Selección de changeset.";
                 GetChangeset();
             }
         }
@@ -57,7 +57,9 @@ namespace AutoDischange.ViewModel
         {
             DischangeCommand = new DischangeCommand(this);
             DischangeChangesets = new ObservableCollection<DischangeChangeset>();
-            DischangeStatus = "Nada que hacer";
+            DischangeStatus = "Nada que hacer.";
+
+            DISChangeRequest.DischangeGraphClientAsync();
         }
 
         public void GetExcel(string fileName)
@@ -67,16 +69,16 @@ namespace AutoDischange.ViewModel
             {
                 DischangeChangesets.Add(changeset);
             }
-            DischangeStatus = "Lista de changesets cargada";
+            DischangeStatus = "Lista de changesets cargada.";
         }
 
         public async void GetChangeset()
         {
             if (SelectedChangeset != null)
             {
-                DischangeStatus = "Obteniendo Changeset del TFS";
+                DischangeStatus = "Obteniendo Path del TFS.";
                 Tfs = await TFSRequest.GetChangeset(SelectedChangeset.Changeset);        
-                DischangeStatus = $"Path Changesets del TFS Obtenido cantidad:{Tfs.count} ";
+                DischangeStatus = $"Path Changesets del TFS Obtenido cantidad: {Tfs.count}.";
             }
 
         }

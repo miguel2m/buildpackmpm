@@ -209,6 +209,7 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="Model\DischangeChangeset.cs" />
+    <Compile Include="Model\DischangeGraph.cs" />
     <Compile Include="Model\TfsModel.cs" />
     <Compile Include="ViewModel\Commands\DischangeCommand.cs" />
     <Compile Include="ViewModel\DischangeVM.cs" />

@@ -59,7 +59,7 @@ namespace AutoDischange.ViewModel
             DischangeChangesets = new ObservableCollection<DischangeChangeset>();
             DischangeStatus = "Nada que hacer.";
 
-            DISChangeRequest.DischangeGraphClientAsync();
+            //DISChangeRequest.DischangeGraphClientAsync();
         }
 
         public void GetExcel(string fileName)

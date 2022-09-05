@@ -80,10 +80,10 @@ namespace AutoDischange.ViewModel.Helpers
             {
                 var rows = await graphClient
                 .Me.Drive
-                .Items["ED6F63845B1BF544!452"]
+                .Items["{ED6F63845B1BF544!452}"]
                 .Workbook
-                .Worksheets["18789F74-420A-4B82-9558-2C4E90E637B5"]
-                .Tables["5C2127C3-6F49-4969-B255-CC2A10F09BDA"]
+                .Worksheets["{18789F74-420A-4B82-9558-2C4E90E637B5}"]
+                .Tables["{5C2127C3-6F49-4969-B255-CC2A10F09BDA}"]
                 .Rows
                 .Request()
                 .Skip(5)

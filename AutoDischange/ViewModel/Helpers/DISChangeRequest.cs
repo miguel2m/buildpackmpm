@@ -26,15 +26,24 @@ namespace AutoDischange.ViewModel.Helpers
             // /.default scope, and preconfigure your permissions on the
             // app registration in Azure. An administrator must grant consent
             // to those permissions beforehand.
-            var scopes = new[] { "User.Read", "Files.ReadWrite" };
+            //var scopes = new[] { "User.Read", "Files.ReadWrite" };
+            var scopes = new[] { "https://graph.microsoft.com/.default" };
 
             // Multi-tenant apps can use "common",
             // single-tenant apps must use the tenant ID from the Azure portal
-            var tenantId = "9e1dccef-5501-4d13-bffd-130f3fe62dfc";
+            //var tenantId = "9e1dccef-5501-4d13-bffd-130f3fe62dfc";
 
             // Values from app registration
-            var clientId = "41dbd95a-644e-4866-b0c8-ecfb366e59b1";
-            var clientSecret = "7qv8Q~UqVZq2DuzvNv972UHHiv_t5mMhnnvM3c4C";
+            //var clientId = "41dbd95a-644e-4866-b0c8-ecfb366e59b1";
+            //var clientSecret = "7qv8Q~UqVZq2DuzvNv972UHHiv_t5mMhnnvM3c4C";
+
+            // Multi-tenant apps can use "common",
+            // single-tenant apps must use the tenant ID from the Azure portal
+            var tenantId = "479a4cf6-50f0-4b4c-a7e3-24cc0acc9b0c";
+
+            // Values from app registration
+            var clientId = "378c7483-4478-40a4-b2da-d12421968f30";
+            var clientSecret = "DQY8Q~6Xlp.QWfWuRU76RLpyeSGgaYJd6YByeaEZ";
 
             // using Azure.Identity;
             var options = new TokenCredentialOptions
@@ -61,7 +70,33 @@ namespace AutoDischange.ViewModel.Helpers
             //    .Top(5)
             //    .GetAsync();
 
-            Console.WriteLine(graphClient.ToString());
+            //var rows = await graphClient.Me.Drive.Items["{ED6F63845B1BF544!451}"].Workbook.Tables["{workbookTable-id}"].Rows
+            //.Request()
+            //.Skip(5)
+            //.Top(5)
+            //.GetAsync();
+
+            try
+            {
+                var rows = await graphClient
+                .Me.Drive
+                .Items["ED6F63845B1BF544!452"]
+                .Workbook
+                .Worksheets["18789F74-420A-4B82-9558-2C4E90E637B5"]
+                .Tables["5C2127C3-6F49-4969-B255-CC2A10F09BDA"]
+                .Rows
+                .Request()
+                .Skip(5)
+                .Top(5)
+                .GetAsync();
+
+                Console.WriteLine(rows.ToString());
+            } catch (Exception ex) {
+                Console.WriteLine(ex);
+            };
+            
+
+
            //return rows;
         }
     }

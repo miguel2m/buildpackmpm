@@ -4,12 +4,14 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:AutoDischange.View"
-
+        xmlns:vm="clr-namespace:AutoDischange.ViewModel"
         xmlns:cc="clr-namespace:AutoDischange.View.CustomControl"
         mc:Ignorable="d"
         Title="MainWindow" Height="450" Width="800">
-
-    <DockPanel >
+    <Window.Resources>
+        <vm:MainVM x:Key="vm" />
+    </Window.Resources>
+    <DockPanel DataContext="{StaticResource vm}">
         <Menu DockPanel.Dock="Top">
             <MenuItem  Header="File">
                 

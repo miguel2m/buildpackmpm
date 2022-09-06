@@ -7,6 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Windows;
 
 namespace AutoDischange.ViewModel.Helpers
 {
@@ -24,20 +25,7 @@ namespace AutoDischange.ViewModel.Helpers
         //Client credentials provider
         public static async void DischangeGraphClientAsync()
         {
-            // The client credentials flow requires that you request the
-            // /.default scope, and preconfigure your permissions on the
-            // app registration in Azure. An administrator must grant consent
-            // to those permissions beforehand.
-            //var scopes = new[] { "User.Read", "Files.ReadWrite" };
-            var scopes = new[] { "https://graph.microsoft.com/.default" };
-
-            // Multi-tenant apps can use "common",
-            // single-tenant apps must use the tenant ID from the Azure portal
-            var tenantId = "9e1dccef-5501-4d13-bffd-130f3fe62dfc";
-
-            // Values from app registration
-            var clientId = "41dbd95a-644e-4866-b0c8-ecfb366e59b1";
-            var clientSecret = "7qv8Q~UqVZq2DuzvNv972UHHiv_t5mMhnnvM3c4C";
+            
 
             // Multi-tenant apps can use "common",
             // single-tenant apps must use the tenant ID from the Azure portal
@@ -47,17 +35,7 @@ namespace AutoDischange.ViewModel.Helpers
             //var clientId = "378c7483-4478-40a4-b2da-d12421968f30";
             //var clientSecret = "DQY8Q~6Xlp.QWfWuRU76RLpyeSGgaYJd6YByeaEZ";
 
-            // using Azure.Identity;
-            var options = new TokenCredentialOptions
-            {
-                AuthorityHost = AzureAuthorityHosts.AzurePublicCloud
-            };
-
-            //https://docs.microsoft.com/dotnet/api/azure.identity.clientsecretcredential
-            var clientSecretCredential = new ClientSecretCredential(
-                tenantId, clientId, clientSecret, options);
-
-            var graphClient = new GraphServiceClient(clientSecretCredential, scopes);
+            
 
 
             // The client credentials flow requires that you request the
@@ -90,6 +68,31 @@ namespace AutoDischange.ViewModel.Helpers
 
             try
             {
+                // The client credentials flow requires that you request the
+                // /.default scope, and preconfigure your permissions on the
+                // app registration in Azure. An administrator must grant consent
+                // to those permissions beforehand.
+                //var scopes = new[] { "User.Read", "Files.ReadWrite" };
+                var scopes = new[] { "https://graph.microsoft.com/.default" };
+
+                // Multi-tenant apps can use "common",
+                // single-tenant apps must use the tenant ID from the Azure portal
+                var tenantId = "9e1dccef-5501-4d13-bffd-130f3fe62dfc";
+
+                // Values from app registration
+                var clientId = "41dbd95a-644e-4866-b0c8-ecfb366e59b1";
+                var clientSecret = "7qv8Q~UqVZq2DuzvNv972UHHiv_t5mMhnnvM3c4C";
+                // using Azure.Identity;
+                var options = new TokenCredentialOptions
+                {
+                    AuthorityHost = AzureAuthorityHosts.AzurePublicCloud
+                };
+
+                //https://docs.microsoft.com/dotnet/api/azure.identity.clientsecretcredential
+                var clientSecretCredential = new ClientSecretCredential(
+                    tenantId, clientId, clientSecret, options);
+
+                var graphClient = new GraphServiceClient(clientSecretCredential, scopes);
                 //var rows = await graphClient
                 //.Users["{99cdbfec-35f4-462e-bae2-c4e27a90a3f6}"]
                 //.Drive
@@ -118,7 +121,9 @@ namespace AutoDischange.ViewModel.Helpers
 
                 Console.WriteLine(rows.ToString());
             } catch (Exception ex) {
-                Console.WriteLine(ex);
+                Console.WriteLine(ex.Message);
+                //throw new Exception(ex.Message);
+                MessageBox.Show("Error al intentar conectar con el OneDrive: " + ex.Message, "Error al intentar conectar con el TFS", MessageBoxButton.OK, MessageBoxImage.Error);
             };
             
 

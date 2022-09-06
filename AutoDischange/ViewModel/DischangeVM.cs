@@ -9,6 +9,7 @@ using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
 
 namespace AutoDischange.ViewModel
 {
@@ -59,26 +60,44 @@ namespace AutoDischange.ViewModel
             DischangeChangesets = new ObservableCollection<DischangeChangeset>();
             DischangeStatus = "Nada que hacer.";
 
-            //DISChangeRequest.DischangeGraphClientAsync();
+           
         }
 
         public void GetExcel(string fileName)
         {
-            DischangeChangesets.Clear();          
-            foreach (var changeset in ExcelHelper.ReadExcel(fileName))
+            try
             {
-                DischangeChangesets.Add(changeset);
+                DischangeChangesets.Clear();
+                foreach (var changeset in ExcelHelper.ReadExcel(fileName))
+                {
+                    DischangeChangesets.Add(changeset);
+                }
+                DischangeStatus = "Lista de changesets cargada.";
             }
-            DischangeStatus = "Lista de changesets cargada.";
+            catch (Exception ex)
+            {
+                DischangeStatus = $"Error en Excel: { ex.Message}.";
+                MessageBox.Show("Error en Excel: " + ex.Message, "Error en Excel", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+            
         }
 
         public async void GetChangeset()
         {
             if (SelectedChangeset != null)
             {
-                DischangeStatus = "Obteniendo Path del TFS.";
-                Tfs = await TFSRequest.GetChangeset(SelectedChangeset.Changeset);        
-                DischangeStatus = $"Path Changesets del TFS Obtenido cantidad: {Tfs.count}.";
+                try
+                {
+                    DischangeStatus = "Obteniendo Path del TFS.";
+                    Tfs = await TFSRequest.GetChangeset(SelectedChangeset.Changeset);
+                    DischangeStatus = $"Path Changesets del TFS Obtenido cantidad: {Tfs.count}.";
+                }
+                catch (Exception ex)
+                {
+                    DischangeStatus = $"Error al intentar conectar con el TFS: { ex.Message}.";
+                    MessageBox.Show("Error al intentar conectar con el TFS: " + ex.Message, "Error al intentar conectar con el TFS", MessageBoxButton.OK, MessageBoxImage.Error);
+                }
+                
             }
 
         }

@@ -7,7 +7,6 @@ using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Text;
 using System.Threading.Tasks;
-using System.Windows;
 
 namespace AutoDischange.ViewModel.Helpers
 {
@@ -37,15 +36,13 @@ namespace AutoDischange.ViewModel.Helpers
         {
             TfsModel tfsReponse = new TfsModel();
 
-            try
-            {
                 string url = BASE_URL + string.Format(URL_GET_CHANGESET, changeset) + URL_VERSION;
                 
                 using (HttpClient client = new HttpClient())
                 {
 
-                    //var byteArray = Encoding.ASCII.GetBytes($"SEGWIN\\miguelangel.medina:6qpt4zyxkac6n6vhhql4ha6qyjnmz6c5jmhx3d3bwszmmfzrl4gq");
-                    var byteArray = Encoding.ASCII.GetBytes($"SEGWIN\\miguelangel.medina:6qpt4zyxkac6n6vhhql4ha6qyjnmz6c5jmhx3d3bwszmmf");
+                    var byteArray = Encoding.ASCII.GetBytes($"SEGWIN\\miguelangel.medina:6qpt4zyxkac6n6vhhql4ha6qyjnmz6c5jmhx3d3bwszmmfzrl4gq");
+
                     client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Basic", Convert.ToBase64String(byteArray));
 
                     var response = await client.GetAsync(url);
@@ -56,13 +53,7 @@ namespace AutoDischange.ViewModel.Helpers
                     string json = await response.Content.ReadAsStringAsync();
                     tfsReponse = JsonConvert.DeserializeObject<TfsModel>(json);
                 }
-            }
-            catch (Exception ex)
-            {
-
-                MessageBox.Show("Error al intentar conectar con el TFS: " + ex.Message, "Error al intentar conectar con el TFS", MessageBoxButton.OK, MessageBoxImage.Error);
-
-            }
+            
             
 
             return tfsReponse;

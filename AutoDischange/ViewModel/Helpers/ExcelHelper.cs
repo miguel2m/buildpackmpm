@@ -6,7 +6,6 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using System.Windows;
 
 namespace AutoDischange.ViewModel.Helpers
 {
@@ -17,10 +16,8 @@ namespace AutoDischange.ViewModel.Helpers
         public static List<DischangeChangeset> ReadExcel (string path) 
         {
             List<DischangeChangeset> DischangeChangesets = new List<DischangeChangeset>();
-            try
-            {
-                
-
+            
+               
                 SLDocument sl = new SLDocument(path);
 
 
@@ -41,12 +38,7 @@ namespace AutoDischange.ViewModel.Helpers
                 //resultado.Add("OK", "true");
                 //resultado.Add("msg", DischangeChangesets);
                 //return DischangeChangesets;
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show("Error en Excel: " + ex.Message, "Error en Excel", MessageBoxButton.OK, MessageBoxImage.Error);
-
-            }
+            
             return DischangeChangesets;
 
 

@@ -60,7 +60,7 @@ namespace AutoDischange.ViewModel
             DischangeChangesets = new ObservableCollection<DischangeChangeset>();
             DischangeStatus = "Nada que hacer.";
 
-           
+
         }
 
         public void GetExcel(string fileName)

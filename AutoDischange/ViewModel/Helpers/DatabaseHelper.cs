@@ -1,25 +1,43 @@
-﻿using SQLite;
+﻿using AutoDischange.Model;
+using SQLite;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace AutoDischange.ViewModel.Helpers
 {
     public class DatabaseHelper
     {
         //Path DB
-        private static string dbFile = Path.Combine(Environment.CurrentDirectory, "notesDb.db3");
+        private static string dbFile = Path.Combine(Environment.CurrentDirectory, "dischangesPath.db3");
+
+
+        //INSERT INTO InsertDischange (Carga Masiva)
+        public static async Task<bool> InsertDischange(DischangePath item)
+        {
+            
+            bool result = false;
+
+            var db = new SQLiteAsyncConnection(dbFile);
+
+            await db.CreateTableAsync<DischangePath>();
+            int rows = await db.InsertAsync(item);
+            if (rows > 0)
+                result = true; 
+            return result;
+        }
 
         //INSERT INTO
-        public static bool Insert<T>(T item)
+        public static  bool Insert<T>(T item)
         {
             bool result = false;
 
             using (SQLiteConnection conn = new SQLiteConnection(dbFile))
             {
                 conn.CreateTable<T>();
-                int rows = conn.Insert(item);
+                int rows = conn.InsertOrReplace(item);
                 if (rows > 0)
                     result = true;
             }

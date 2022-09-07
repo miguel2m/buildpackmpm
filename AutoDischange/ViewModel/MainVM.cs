@@ -1,4 +1,5 @@
-﻿using AutoDischange.ViewModel.Helpers;
+﻿using AutoDischange.Model;
+using AutoDischange.ViewModel.Helpers;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -23,8 +24,22 @@ namespace AutoDischange.ViewModel
             //    Console.WriteLine(ex.Message);
             //    MessageBox.Show("Error al intentar conectar con el OneDrive: " + ex.Message, "Error al intentar conectar con el OneDrive", MessageBoxButton.OK, MessageBoxImage.Error);
             //};
-            DISChangeRequest.DischangeGraphClientAsync();
+            //DISChangeRequest.DischangeGraphClientAsync();
+            //ExcelHelper.ReadExcelDIS_Changes();
+            SyncDischange();
+
         }
-        
+
+        public async void SyncDischange()
+        {
+            //DatabaseHelper.Insert(ExcelHelper.ReadExcelDIS_Changes());
+            if (await ExcelHelper.ReadExcelDIS_Changes()) {
+                var notebooks = (DatabaseHelper.Read<DischangePath>()).Where(n => n.Path.Contains("JScript.js")).ToList();
+                notebooks.ForEach(p => Console.WriteLine(p.Path));
+            };
+
+            
+        }
+
     }
 }

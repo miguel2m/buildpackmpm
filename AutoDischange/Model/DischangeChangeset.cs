@@ -1,4 +1,5 @@
-﻿using System;
+﻿using SQLite;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -10,5 +11,12 @@ namespace AutoDischange.Model
     {
         public string Id { get; set; }
         public string Changeset { get; set; }
+    }
+
+    public class DischangePath
+    {
+        [PrimaryKey , AutoIncrement]
+        public int Id { get; set; }
+        public string Path { get; set; }
     }
 }

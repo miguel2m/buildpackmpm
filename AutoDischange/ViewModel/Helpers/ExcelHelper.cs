@@ -43,5 +43,50 @@ namespace AutoDischange.ViewModel.Helpers
 
 
         }
+
+        //READ Local DIS_Changes
+        public static async Task<bool> ReadExcelDIS_Changes()
+        {
+            string rtfFile = System.IO.Path.Combine(Environment.CurrentDirectory, "DIS_Changes.xlsx");
+
+            bool result = false;
+            //List<DischangePath> DischangeChangesets = new List<DischangePath>();
+
+
+            SLDocument sl = new SLDocument(rtfFile, "GuíaDeUbicaciones");
+
+
+            int iRow = 2;
+            while (!string.IsNullOrEmpty(sl.GetCellValueAsString(iRow, 1)))
+            {
+
+                DischangePath DischangeChangeset = new DischangePath
+                {
+                    Path = sl.GetCellValueAsString(iRow, 1).Split(';')[0],
+                };
+
+                var notebooks = (DatabaseHelper.Read<DischangePath>()).Where(n => n.Path.Contains(DischangeChangeset.Path)).ToList();
+               
+
+                if (notebooks.Count()>0)
+                {               
+                    result = await DatabaseHelper.InsertDischange(DischangeChangeset);
+                }
+                
+                
+               
+                iRow++;
+
+            }
+            //resultado.Add("OK", "true");
+            //resultado.Add("msg", DischangeChangesets);
+            //return DischangeChangesets;
+
+            return result;
+
+
+        }
+
+        
     }
 }

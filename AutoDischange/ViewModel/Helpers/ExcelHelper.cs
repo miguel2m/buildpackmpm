@@ -56,7 +56,7 @@ namespace AutoDischange.ViewModel.Helpers
             SLDocument sl = new SLDocument(rtfFile, "GuíaDeUbicaciones");
 
 
-            int iRow = 2;
+            int iRow = 1;
             while (!string.IsNullOrEmpty(sl.GetCellValueAsString(iRow, 1)))
             {
 
@@ -65,12 +65,17 @@ namespace AutoDischange.ViewModel.Helpers
                     Path = sl.GetCellValueAsString(iRow, 1).Split(';')[0],
                 };
 
-                var notebooks = (DatabaseHelper.Read<DischangePath>()).Where(n => n.Path.Contains(DischangeChangeset.Path)).ToList();
+                var notebooks = (DatabaseHelper.Read<DischangePath>()).Where(n => n.Path==DischangeChangeset.Path).ToList();
                
 
-                if (notebooks.Count()>0)
+                if (notebooks.Count()==0)
                 {               
                     result = await DatabaseHelper.InsertDischange(DischangeChangeset);
+                }
+                else
+                {
+                    DischangeChangeset.Id = notebooks[0].Id;
+                    result = await DatabaseHelper.InsertReplaceDischange(DischangeChangeset);
                 }
                 
                 

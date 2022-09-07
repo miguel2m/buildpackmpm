@@ -29,6 +29,21 @@ namespace AutoDischange.ViewModel.Helpers
             return result;
         }
 
+        //INSERT INTO InsertDischange (Carga Masiva)
+        public static async Task<bool> InsertReplaceDischange(DischangePath item)
+        {
+
+            bool result = false;
+
+            var db = new SQLiteAsyncConnection(dbFile);
+
+            await db.CreateTableAsync<DischangePath>();
+            int rows = await db.InsertOrReplaceAsync(item);
+            if (rows > 0)
+                result = true;
+            return result;
+        }
+
         //INSERT INTO
         public static  bool Insert<T>(T item)
         {

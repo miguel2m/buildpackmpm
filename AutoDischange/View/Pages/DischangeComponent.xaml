@@ -39,7 +39,7 @@
             </ListView.ItemTemplate>
         </ListView>
         <Grid>
-            
+            <ScrollViewer VerticalScrollBarVisibility="Auto">
             <StackPanel DataContext="{Binding SelectedChangeset}"
                     Margin="10">
                 <TextBlock Background="AntiqueWhite" 
@@ -80,8 +80,8 @@
                     </ListView.ItemTemplate>
                 </ListView>
             </StackPanel>
-           
-            
+            </ScrollViewer>
+
         </Grid>
     </DockPanel>
     

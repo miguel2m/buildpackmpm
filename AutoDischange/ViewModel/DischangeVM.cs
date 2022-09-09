@@ -42,22 +42,30 @@ namespace AutoDischange.ViewModel
             }
         }
 
-        private TfsModel tfs;
-        public TfsModel Tfs
+        public ObservableCollection<TfsItem> TfsList{ get; set; }
+
+      
+
+        private TfsItem tfsSelected;
+        public TfsItem TfsSelected
         {
-            get { return tfs; }
+            get { return tfsSelected; }
             set
             {
-                tfs = value;
-                OnPropertyChanged("Tfs");
+                tfsSelected = value;
+                OnPropertyChanged("TfsSelected");
+                GetTfsComponent();
             }
         }
 
+        public ObservableCollection<DischangePath> ComponentList { get; set; }
 
         public DischangeVM()
         {
             DischangeCommand = new DischangeCommand(this);
             DischangeChangesets = new ObservableCollection<DischangeChangeset>();
+            TfsList = new ObservableCollection<TfsItem>();
+            ComponentList = new ObservableCollection<DischangePath>();
             DischangeStatus = "Nada que hacer.";
 
 
@@ -88,9 +96,15 @@ namespace AutoDischange.ViewModel
             {
                 try
                 {
+                    TfsList.Clear();
                     DischangeStatus = "Obteniendo Path del TFS.";
-                    Tfs = await TFSRequest.GetChangeset(SelectedChangeset.Changeset);
-                    DischangeStatus = $"Path Changesets del TFS Obtenido cantidad: {Tfs.count}.";
+                    //Tfs = await TFSRequest.GetChangeset(SelectedChangeset.Changeset);
+                    foreach (TfsItem itemLocal in await TFSRequest.GetChangeset(SelectedChangeset.Changeset))
+                    {
+                        TfsList.Add(itemLocal);
+                    }
+                    
+                    DischangeStatus = $"Path Changesets del TFS Obtenido cantidad: {TfsList.Count}.";
                 }
                 catch (Exception ex)
                 {
@@ -98,6 +112,33 @@ namespace AutoDischange.ViewModel
                     MessageBox.Show("Error al intentar conectar con el TFS: " + ex.Message, "Error al intentar conectar con el TFS", MessageBoxButton.OK, MessageBoxImage.Error);
                 }
                 
+            }
+
+        }
+
+        public void GetTfsComponent()
+        {
+            if (TfsSelected != null)
+            {
+                try
+                {
+                    ComponentList.Clear();
+                    Console.WriteLine(TfsSelected.path);
+                    //DischangeStatus = "Obteniendo Path del TFS.";
+                    ////Tfs = await TFSRequest.GetChangeset(SelectedChangeset.Changeset);
+                    //foreach (TfsItem itemLocal in await TFSRequest.GetChangeset(SelectedChangeset.Changeset))
+                    //{
+                    //    TfsList.Add(itemLocal);
+                    //}
+
+                    //DischangeStatus = $"Path Changesets del TFS Obtenido cantidad: {TfsList.Count}.";
+                }
+                catch (Exception ex)
+                {
+                    DischangeStatus = $"Error al intentar conectar con el DIS-Change.xlsx: { ex.Message}.";
+                    MessageBox.Show("Error al intentar conectar con el DIS-Change.xlsx : " + ex.Message, "Error al intentar conectar con el DIS-Change.xlsx", MessageBoxButton.OK, MessageBoxImage.Error);
+                }
+
             }
 
         }

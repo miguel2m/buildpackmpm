@@ -25,56 +25,18 @@ namespace AutoDischange.ViewModel.Helpers
         //Client credentials provider
         public static async void DischangeGraphClientAsync()
         {
-            
-
-            // Multi-tenant apps can use "common",
-            // single-tenant apps must use the tenant ID from the Azure portal
-            //var tenantId = "479a4cf6-50f0-4b4c-a7e3-24cc0acc9b0c";
-
-            // Values from app registration
-            //var clientId = "378c7483-4478-40a4-b2da-d12421968f30";
-            //var clientSecret = "DQY8Q~6Xlp.QWfWuRU76RLpyeSGgaYJd6YByeaEZ";
-
-            
-
-
-            // The client credentials flow requires that you request the
-            // /.default scope, and preconfigure your permissions on the
-            // app registration in Azure. An administrator must grant consent
-            // to those permissions beforehand.
-            //var scopes = new[] { "https://graph.microsoft.com/.default" };
-
-            //// Multi-tenant apps can use "common",
-            //// single-tenant apps must use the tenant ID from the Azure portal
-            //var tenantId = "479a4cf6-50f0-4b4c-a7e3-24cc0acc9b0c";
-
-            //// Values from app registration
-            //var clientId = "378c7483-4478-40a4-b2da-d12421968f30";
-            //var clientSecret = "DQY8Q~6Xlp.QWfWuRU76RLpyeSGgaYJd6YByeaEZ";
-
-            //// using Azure.Identity;
-            //var options = new TokenCredentialOptions
-            //{
-            //    AuthorityHost = AzureAuthorityHosts.AzurePublicCloud
-            //};
-
-            //// https://docs.microsoft.com/dotnet/api/azure.identity.clientsecretcredential
-            //var clientSecretCredential = new ClientSecretCredential(
-            //    tenantId, clientId, clientSecret, options);
-
-            //var graphClient = new GraphServiceClient(clientSecretCredential, scopes);
-
 
 
             try
             {
+
                 // The client credentials flow requires that you request the
                 // /.default scope, and preconfigure your permissions on the
                 // app registration in Azure. An administrator must grant consent
                 // to those permissions beforehand.
                 //var scopes = new[] { "User.Read", "Files.ReadWrite" };
+                //var scopes = new[] { "https://graph.microsoft.com/.default" };
                 var scopes = new[] { "https://graph.microsoft.com/.default" };
-
                 // Multi-tenant apps can use "common",
                 // single-tenant apps must use the tenant ID from the Azure portal
                 var tenantId = "9e1dccef-5501-4d13-bffd-130f3fe62dfc";
@@ -93,6 +55,7 @@ namespace AutoDischange.ViewModel.Helpers
                     tenantId, clientId, clientSecret, options);
 
                 var graphClient = new GraphServiceClient(clientSecretCredential, scopes);
+
                 //var rows = await graphClient
                 //.Users["{99cdbfec-35f4-462e-bae2-c4e27a90a3f6}"]
                 //.Drive
@@ -106,22 +69,35 @@ namespace AutoDischange.ViewModel.Helpers
                 //.Top(5)
                 //.GetAsync();
 
+                //var rows = await graphClient
+                //.Users["{0443360f-4ed8-4ba6-86bb-c8d8b4652529}"]
+                //.Drive
+                //.Items["{016N7AF7N7376NVRCNKBEIY7OZFFJC35WJ}"]
+                //.Workbook
+                //.Worksheets["{2962B4F3-22EE-4CA3-B99D-D11C378DDAF0}"]
+                //.Tables["{885B09EA-6A5E-4B9C-87C0-AE1C5007DE62}"]
+                //.Rows
+                //.Request()
+                //.Skip(5)
+                //.Top(5)
+                //.GetAsync();
+
                 var rows = await graphClient
                 .Users["{0443360f-4ed8-4ba6-86bb-c8d8b4652529}"]
                 .Drive
                 .Items["{016N7AF7N7376NVRCNKBEIY7OZFFJC35WJ}"]
                 .Workbook
                 .Worksheets["{2962B4F3-22EE-4CA3-B99D-D11C378DDAF0}"]
-                .Tables["{885B09EA-6A5E-4B9C-87C0-AE1C5007DE62}"]
-                .Rows
                 .Request()
-                .Skip(5)
-                .Top(5)
-                .GetAsync();
+                .GetResponseAsync();
+                Console.WriteLine(rows);
+                //foreach (var item in rows)
+                //{
+                //    Console.WriteLine(item);
+                //}
 
-                Console.WriteLine(rows.ToString());
             } catch (Exception ex) {
-                Console.WriteLine(ex.Message);
+                Console.WriteLine(ex);
                 //throw new Exception(ex.Message);
                 MessageBox.Show("Error al intentar conectar con el OneDrive: " + ex.Message, "Error al intentar conectar con One drive", MessageBoxButton.OK, MessageBoxImage.Error);
             };

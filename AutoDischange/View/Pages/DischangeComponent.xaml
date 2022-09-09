@@ -59,21 +59,23 @@
                           
                           SelectionMode="Single"
                           DataContext="{StaticResource vm}"
-                          ItemsSource="{Binding Tfs.value}">
+                          SelectedValue="{Binding TfsSelected, Mode=TwoWay}"
+                          ItemsSource="{Binding TfsList}">
                     <ListView.ItemTemplate>
                         <DataTemplate>
-                            <TextBlock  Text="{Binding item.path}"/>
+                            <TextBlock  Text="{Binding path}"/>
                         </DataTemplate>
                     </ListView.ItemTemplate>
                 </ListView>
 
                 <TextBlock FontSize="14"  FontFamily="Century Gothic" Text="Ubicación en guía de ubicaciones Dischange"/>
                 <ListView DockPanel.Dock="Left"
-                  Width="140"
-                  SelectionMode="Single">
+                          SelectionMode="Single"
+                          DataContext="{StaticResource vm}"
+                          ItemsSource="{Binding ComponentList}">
                     <ListView.ItemTemplate>
                         <DataTemplate>
-                            <TextBlock />
+                            <TextBlock Text="{Binding Path}"/>
                         </DataTemplate>
                     </ListView.ItemTemplate>
                 </ListView>

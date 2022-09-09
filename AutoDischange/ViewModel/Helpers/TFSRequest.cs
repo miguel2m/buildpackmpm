@@ -32,9 +32,9 @@ namespace AutoDischange.ViewModel.Helpers
         //}
         
         //GET Changeset
-        public static async Task<TfsModel> GetChangeset(string changeset)
+        public static async Task<List<TfsItem>> GetChangeset(string changeset)
         {
-            TfsModel tfsReponse = new TfsModel();
+                List <TfsItem> tfsReponse = new List<TfsItem>();
 
                 string url = BASE_URL + string.Format(URL_GET_CHANGESET, changeset) + URL_VERSION;
                 
@@ -51,7 +51,14 @@ namespace AutoDischange.ViewModel.Helpers
                         throw new HttpRequestException(response.StatusCode.ToString());
                     }
                     string json = await response.Content.ReadAsStringAsync();
-                    tfsReponse = JsonConvert.DeserializeObject<TfsModel>(json);
+                    TfsModel tfsReponseVar = (JsonConvert.DeserializeObject<TfsModel>(json));
+
+                    foreach (TfsValue itemLocal in tfsReponseVar.value)
+                    {
+                   
+                        tfsReponse.Add(itemLocal.item);
+                    }
+                    
                 }
             
             

@@ -27,7 +27,7 @@ namespace AutoDischange.ViewModel
             //};
             //DISChangeRequest.DischangeGraphClientAsync();
             //ExcelHelper.ReadExcelDIS_Changes();
-            SyncDischange();
+            //SyncDischange();
 
         }
 
@@ -41,7 +41,7 @@ namespace AutoDischange.ViewModel
             try
             {
                 string dbFile = Path.Combine(Environment.CurrentDirectory, "dischangesPath.db3");
-                Console.WriteLine(File.Exists(dbFile));
+                //Console.WriteLine(File.Exists(dbFile));
                 if (File.Exists(dbFile) == false)
                 {
                     if (await ExcelHelper.ReadExcelDIS_Changes())

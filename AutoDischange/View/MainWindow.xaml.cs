@@ -34,7 +34,7 @@ namespace AutoDischange.View
 
         private void SpeechButton_Click(object sender, RoutedEventArgs e)
         {
-
+            
         }
 
         private void sidebar_SelectionChanged(object sender, SelectionChangedEventArgs e)

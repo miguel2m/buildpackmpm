@@ -45,15 +45,15 @@ namespace AutoDischange.ViewModel.Helpers
         }
 
         //READ Local DIS_Changes
-        public static async Task<bool> ReadExcelDIS_Changes()
+        public static async Task<bool> ReadExcelDIS_Changes(string filePath)
         {
-            string rtfFile = System.IO.Path.Combine(Environment.CurrentDirectory, "DIS_Changes.xlsx");
+            //string rtfFile = System.IO.Path.Combine(Environment.CurrentDirectory, "DIS_Changes.xlsx");
 
             bool result = false;
             //List<DischangePath> DischangeChangesets = new List<DischangePath>();
 
 
-            SLDocument sl = new SLDocument(rtfFile, "GuíaDeUbicaciones");
+            SLDocument sl = new SLDocument(filePath, "GuíaDeUbicaciones");
 
 
             int iRow = 1;

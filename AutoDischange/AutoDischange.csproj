@@ -216,6 +216,7 @@
     <Compile Include="ViewModel\Helpers\DISChangeRequest.cs" />
     <Compile Include="ViewModel\Helpers\ExcelHelper.cs" />
     <Compile Include="ViewModel\Helpers\TFSRequest.cs" />
+    <Compile Include="ViewModel\Helpers\UtilHelper.cs" />
     <Compile Include="ViewModel\MainVM.cs" />
     <Compile Include="View\Pages\DischangeComponent.xaml.cs">
       <DependentUpon>DischangeComponent.xaml</DependentUpon>

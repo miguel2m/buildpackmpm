@@ -97,6 +97,7 @@ namespace AutoDischange.ViewModel
                 try
                 {
                     TfsList.Clear();
+                    ComponentList.Clear();
                     DischangeStatus = "Obteniendo Path del TFS.";
                     //Tfs = await TFSRequest.GetChangeset(SelectedChangeset.Changeset);
                     foreach (TfsItem itemLocal in await TFSRequest.GetChangeset(SelectedChangeset.Changeset))
@@ -123,13 +124,23 @@ namespace AutoDischange.ViewModel
                 try
                 {
                     ComponentList.Clear();
-                    Console.WriteLine(TfsSelected.path);
-                    //DischangeStatus = "Obteniendo Path del TFS.";
-                    ////Tfs = await TFSRequest.GetChangeset(SelectedChangeset.Changeset);
-                    //foreach (TfsItem itemLocal in await TFSRequest.GetChangeset(SelectedChangeset.Changeset))
-                    //{
-                    //    TfsList.Add(itemLocal);
-                    //}
+                    string valueString = String.Empty;
+                    if (TfsSelected.path.Contains("cs"))
+                    {
+                        List<string> listValue = UtilHelper.fileList(TfsSelected.path, '/');
+                        valueString = listValue.First(i => i.Contains("mpm.seg"));
+
+                    }
+                    else
+                    {
+                        valueString = UtilHelper.nameFile(TfsSelected.path, '/');
+                    }
+                    var DischangePathList = (DatabaseHelper.Read<DischangePath>()).Where(n => n.Path.Contains(valueString)).ToList();
+                    
+                    foreach (DischangePath itemLocal in DischangePathList)
+                    {
+                        ComponentList.Add(itemLocal);
+                    }
 
                     //DischangeStatus = $"Path Changesets del TFS Obtenido cantidad: {TfsList.Count}.";
                 }

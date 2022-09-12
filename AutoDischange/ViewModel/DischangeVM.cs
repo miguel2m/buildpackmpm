@@ -18,6 +18,8 @@ namespace AutoDischange.ViewModel
         public ObservableCollection<DischangeChangeset> DischangeChangesets { get; set; }
         public DischangeCommand DischangeCommand { get; set; }
 
+        public PackageCommand PackageCommand { get; set; }
+
         private DischangeChangeset selectedChangeset;
         public DischangeChangeset SelectedChangeset
         {
@@ -67,7 +69,7 @@ namespace AutoDischange.ViewModel
             TfsList = new ObservableCollection<TfsItem>();
             ComponentList = new ObservableCollection<DischangePath>();
             DischangeStatus = "Nada que hacer.";
-
+            PackageCommand = new PackageCommand(this);
 
         }
 

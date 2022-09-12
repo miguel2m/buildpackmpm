@@ -213,6 +213,7 @@
     <Compile Include="Model\TfsModel.cs" />
     <Compile Include="ViewModel\Commands\DischangeCommand.cs" />
     <Compile Include="ViewModel\Commands\SettingCommand.cs" />
+    <Compile Include="ViewModel\Commands\PackageCommand.cs" />
     <Compile Include="ViewModel\DischangeVM.cs" />
     <Compile Include="ViewModel\Helpers\DISChangeRequest.cs" />
     <Compile Include="ViewModel\Helpers\ExcelHelper.cs" />

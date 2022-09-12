@@ -73,12 +73,12 @@ namespace AutoDischange.ViewModel
 
         }
 
-        public void GetExcel(string fileName)
+        public async void GetExcel(string fileName)
         {
             try
             {
                 DischangeChangesets.Clear();
-                foreach (var changeset in ExcelHelper.ReadExcel(fileName))
+                foreach (var changeset in await ExcelHelper.ReadExcel(fileName))
                 {
                     DischangeChangesets.Add(changeset);
                 }

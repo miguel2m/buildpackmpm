@@ -52,7 +52,23 @@
                   ItemsSource="{Binding DischangeChangesets}">
             <ListView.ItemTemplate>
                 <DataTemplate>
-                    <TextBlock Text="{Binding Changeset}"/>
+                    <Border Name="border" BorderBrush="DarkBlue" BorderThickness="1" Padding="5" Margin="5">
+                        <Grid>
+                            <Grid.RowDefinitions>
+                                <RowDefinition/>
+                                <RowDefinition/>
+                                <RowDefinition/>
+                            </Grid.RowDefinitions>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition />
+                                <ColumnDefinition />
+                            </Grid.ColumnDefinitions>
+                            <TextBlock Grid.Row="0" Grid.Column="0" Text="Changeset:"/>
+                            <TextBlock Grid.Row="0" Grid.Column="1" Text="{Binding Path=Changeset}" />
+                            <TextBlock Grid.Row="1" Grid.Column="0" Text="Branch:"/>
+                            <TextBlock Grid.Row="1" Grid.Column="1" Text="{Binding Path=Branch}"/>
+                        </Grid>
+                    </Border>
                 </DataTemplate>
             </ListView.ItemTemplate>
         </ListView>
@@ -71,6 +87,9 @@
 
                     <TextBlock FontSize="14"  FontFamily="Century Gothic"  Text="Changeset:"/>
                     <TextBox Text="{Binding Changeset}"/>
+
+                    <TextBlock FontSize="14"  FontFamily="Century Gothic"  Text="Branch:"/>
+                    <TextBox Text="{Binding Branch}"/>
 
                     <TextBlock FontSize="14"  FontFamily="Century Gothic"  Text="Ubicación en TFS "/>
                     <ListView DockPanel.Dock="Left"

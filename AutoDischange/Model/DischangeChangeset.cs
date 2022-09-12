@@ -9,8 +9,10 @@ namespace AutoDischange.Model
 {
     public class DischangeChangeset
     {
-        public string Id { get; set; }
+        [PrimaryKey, AutoIncrement]
+        public int Id { get; set; }
         public string Changeset { get; set; }
+        public string Branch { get; set; }
     }
 
     public class DischangePath

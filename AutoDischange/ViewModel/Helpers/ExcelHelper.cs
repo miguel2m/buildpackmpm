@@ -13,7 +13,7 @@ namespace AutoDischange.ViewModel.Helpers
     {
 
         //READ EXCEL
-        public static List<DischangeChangeset> ReadExcel (string path) 
+        public static async Task<List<DischangeChangeset>> ReadExcel (string path) 
         {
             List<DischangeChangeset> DischangeChangesets = new List<DischangeChangeset>();
             
@@ -27,11 +27,13 @@ namespace AutoDischange.ViewModel.Helpers
 
                     DischangeChangeset DischangeChangeset = new DischangeChangeset
                     {
-                        Id = Guid.NewGuid().ToString(),
+                        Id = iRow,
                         Changeset = sl.GetCellValueAsString(iRow, 1),
+                        Branch = sl.GetCellValueAsString(iRow, 2),
                     };
 
                     DischangeChangesets.Add(DischangeChangeset);
+                    await DatabaseHelper.InsertReplaceChangeset(DischangeChangeset);
                     iRow++;
 
                 }

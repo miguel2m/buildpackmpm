@@ -1,6 +1,7 @@
 ﻿using Microsoft.Win32;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Text;
 using System.Windows.Input;
 
@@ -9,7 +10,12 @@ namespace AutoDischange.ViewModel.Commands
     public class DischangeCommand :ICommand
     {
         public DischangeVM ViewModel { get; set; }
-        public event EventHandler CanExecuteChanged;
+
+        public event EventHandler CanExecuteChanged
+        {
+            add { CommandManager.RequerySuggested += value; }
+            remove { CommandManager.RequerySuggested -= value; }
+        }
 
         public DischangeCommand(DischangeVM vm)
         {
@@ -18,7 +24,10 @@ namespace AutoDischange.ViewModel.Commands
 
         public bool CanExecute(object parameter)
         {
-            return true;
+            string dbFile = Path.Combine(Environment.CurrentDirectory, "dischangesPath.db3");
+            //    //Console.WriteLine(File.Exists(dbFile));
+            //    if (File.Exists(dbFile) == false)
+            return (File.Exists(dbFile) == true)?true:false;
         }
 
         public void Execute(object parameter)

@@ -32,6 +32,12 @@ namespace AutoDischange.View
             Application.Current.Shutdown();
         }
 
+        private void ToolItem_Click(object sender, RoutedEventArgs e)
+        {
+            ToolWindow toolWindowWindow = new ToolWindow();
+            toolWindowWindow.ShowDialog();
+        }
+
         private void SpeechButton_Click(object sender, RoutedEventArgs e)
         {
             
@@ -40,9 +46,9 @@ namespace AutoDischange.View
         private void sidebar_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
 
-            var selected = sidebar.SelectedItem as CustomControl.NavButton;
+            //var selected = sidebar.SelectedItem as CustomControl.NavButton;
 
-            navframe.Navigate(selected.Navlink);
+            //navframe.Navigate(selected.Navlink);
 
         }
     }

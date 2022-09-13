@@ -73,12 +73,12 @@ namespace AutoDischange.ViewModel
 
         }
 
-        public void GetExcel(string fileName)
+        public async void GetExcel(string fileName)
         {
             try
             {
                 DischangeChangesets.Clear();
-                foreach (var changeset in ExcelHelper.ReadExcel(fileName))
+                foreach (var changeset in await ExcelHelper.ReadExcel(fileName))
                 {
                     DischangeChangesets.Add(changeset);
                 }
@@ -101,10 +101,20 @@ namespace AutoDischange.ViewModel
                     TfsList.Clear();
                     ComponentList.Clear();
                     DischangeStatus = "Obteniendo Path del TFS.";
-                    //Tfs = await TFSRequest.GetChangeset(SelectedChangeset.Changeset);
+                    
                     foreach (TfsItem itemLocal in await TFSRequest.GetChangeset(SelectedChangeset.Changeset))
                     {
-                        TfsList.Add(itemLocal);
+                        if (!string.IsNullOrEmpty(SelectedChangeset.Branch))
+                        {
+                            if (itemLocal.path.Contains(SelectedChangeset.Branch))
+                            {
+                                TfsList.Add(itemLocal);
+                            }
+                        }
+                        else
+                        {                     
+                            TfsList.Add(itemLocal);
+                        }
                     }
                     
                     DischangeStatus = $"Path Changesets del TFS Obtenido cantidad: {TfsList.Count}.";

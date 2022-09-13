@@ -19,7 +19,7 @@ namespace AutoDischange.ViewModel.Commands
 
         public void Execute(object parameter)
         {
-            
+            string transFileJen = ViewModel.copyToJenkins();
 
         }
     }

@@ -162,5 +162,36 @@ namespace AutoDischange.ViewModel
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
+
+        public string copyToJenkins()
+        {
+            /**
+             *Necesito estos parametros:
+             * El Branch de donde lo va a copiar
+             * Ruta del Dischanges
+             * Ruta donde el usuario enviara la copia
+             * 
+             */
+
+            string result = string.Empty;
+
+            string branch = "20211118_P4.1";
+
+            List<string> rutaDisChanges = new List<string>()
+            {
+                @"eClient\Content\Custom\BSM\JScripts.js",
+                @"eClient\Content\Custom\BSM\JScripts.OpenMarket.js",
+                @"eClient\workflowConfiguration\eccotizador-custom-workflow-entries.OpenMarket.xml"
+            };
+            string rutaCont = @"C:\Users\edgar.linarez\OneDrive - MPM SOFTWARE SLU\Documentos\Edgar\pruebas\";
+
+
+            foreach (string item in rutaDisChanges)
+            {
+                result = TransferFileJenkinsHelper.JenkinsTransferFile(item, rutaCont, branch);
+            }
+
+            return result;
+        }
     }
 }

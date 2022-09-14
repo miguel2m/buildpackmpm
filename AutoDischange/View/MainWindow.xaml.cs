@@ -1,7 +1,10 @@
 ﻿
+using AutoDischange.Model;
 using AutoDischange.View.CustomControl;
 using System;
 using System.Collections.Generic;
+using System.Configuration;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -22,9 +25,35 @@ namespace AutoDischange.View
     /// </summary>
     public partial class MainWindow : Window
     {
+        List<BranchJenkins> lstNombDir = new List<BranchJenkins>();
         public MainWindow()
         {
             InitializeComponent();
+            InitializeCmbBranch();
+        }
+        private void InitializeCmbBranch()
+        {
+            string rutaBranch = ConfigurationManager.AppSettings["rutaJenkins"];
+            string[] subDir = Directory.GetDirectories(rutaBranch);
+            foreach (var item in subDir.Select((value, i) => new { i, value }))
+            {
+                var value = nameDir(item.value);
+                var index = item.i;
+                lstNombDir.Add(new BranchJenkins { CodBranch = index, NameBranch = value });
+            }
+            this.CmbNameBranch.DisplayMemberPath = "NameBranch";
+            this.CmbNameBranch.SelectedValuePath = "CodBranch";
+            this.CmbNameBranch.ItemsSource = lstNombDir;
+        }
+
+        public string nameDir(string url)
+        {
+            List<string> list = new List<string>();
+            list = url.Split('\\').ToList();
+            int count = list.Count;
+            string result = list[count - 1];
+
+            return result;
         }
 
         private void MenuItem_Click(object sender, RoutedEventArgs e)

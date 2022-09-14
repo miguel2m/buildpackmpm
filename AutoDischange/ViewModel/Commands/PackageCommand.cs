@@ -14,12 +14,16 @@ namespace AutoDischange.ViewModel.Commands
         }
         public bool CanExecute(object parameter)
         {
+            //LOGICA PARA BLOQUEAR EL BOTON EXPORTAR LISTA DE LOS COMPONENTES
+            //SE DEBE AVERIGUAR QUE LA LISTA DE LOS CHANGESET ESTE CREADO
             return true;
         }
 
         public void Execute(object parameter)
         {
-            string transFileJen = ViewModel.copyToJenkins();
+            
+
+            ViewModel.copyToJenkins();
 
         }
     }

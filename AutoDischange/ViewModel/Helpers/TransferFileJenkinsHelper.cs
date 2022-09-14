@@ -12,6 +12,9 @@ namespace AutoDischange.ViewModel.Helpers
     {
         public static string JenkinsTransferFile(string rutaDisChanges, string rutaUsr, string branch)
         {
+            //Necesito extraer solo la parte que es necesaria de la ruta de la Guia de Ubicaciones
+            rutaDisChanges = cutPath(rutaDisChanges);
+
             //ruta del servidor
             string rutaServer = ConfigurationManager.AppSettings["rutaJenkins"];
 
@@ -72,6 +75,24 @@ namespace AutoDischange.ViewModel.Helpers
             {
                 result += list[i] + "\\";
             }
+            return result;
+        }
+        public static string cutPath(string url)
+        {
+            //NECESITO SOLO OBTENER UNA PARTE DEL PATH
+            //TENGO ESTA URL DE EJEMPLO \Alojables\DIS\eClient\workflowConfiguration\agenda.tareainc-mapping.xml
+            //LOS DOS PRIMEROS ELEMENTOS NO ME SIRVEN \Alojables\DIS\
+            string result = string.Empty;
+            List<string> list = new List<string>();
+            list = url.Split('\\').ToList();
+            for(int i = 3; i < list.Count - 1; i++)
+            {
+                //CUANDO LO CONSTRUYO COLOCO LOS SLASH INVERTIDOS AL FINAL
+                result += list[i] + "\\";
+            }
+            //DEBO QUITAR LOS DOS ULTIMO ELEMENTO SLASH
+            int a = list.Count - 1;
+            result += list[a];
             return result;
         }
     }

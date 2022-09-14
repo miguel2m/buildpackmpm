@@ -73,7 +73,7 @@
             </ListView.ItemTemplate>
         </ListView>
         <Grid>
-            <ScrollViewer VerticalScrollBarVisibility="Auto">
+            <ScrollViewer VerticalScrollBarVisibility="Auto" Margin="0,0,0.333,27.333">
                 <StackPanel DataContext="{Binding SelectedChangeset}"
                     Margin="10">
                     <TextBlock Background="AntiqueWhite" 
@@ -116,9 +116,10 @@
                             </DataTemplate>
                         </ListView.ItemTemplate>
                     </ListView>
+                    <TextBlock FontSize="14"  FontFamily="Century Gothic" Text="Selecciona un Branch"/>
+                    <ComboBox x:Name="CmbNameBranch" Width="195" HorizontalAlignment="Left" VerticalAlignment="Top" ItemsSource="{Binding CmbNameBranch}"/>
                 </StackPanel>
             </ScrollViewer>
-
         </Grid>
     </DockPanel>
     <!--<DockPanel DataContext="{StaticResource vm}">

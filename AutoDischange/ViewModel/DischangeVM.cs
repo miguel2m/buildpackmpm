@@ -101,23 +101,38 @@ namespace AutoDischange.ViewModel
                     TfsList.Clear();
                     ComponentList.Clear();
                     DischangeStatus = "Obteniendo Path del TFS.";
+                    List<TfsItem> allItem = await TFSRequest.GetChangeset(SelectedChangeset.Changeset);
                     
-                    foreach (TfsItem itemLocal in await TFSRequest.GetChangeset(SelectedChangeset.Changeset))
+                    if (!string.IsNullOrEmpty(SelectedChangeset.Branch))
                     {
-                        if (!string.IsNullOrEmpty(SelectedChangeset.Branch))
+                        allItem = allItem.FindAll((item)=> item.path.Contains(SelectedChangeset.Branch));
+                    }
+                    if (allItem.FirstOrDefault() != null)
+                    {
+                        foreach (TfsItem itemLocal in allItem)
                         {
-                            if (itemLocal.path.Contains(SelectedChangeset.Branch))
+                            if (!string.IsNullOrEmpty(SelectedChangeset.Branch))
+                            {
+                                if (itemLocal.path.Contains(SelectedChangeset.Branch))
+                                {
+                                    TfsList.Add(itemLocal);
+                                }
+                            }
+                            else
                             {
                                 TfsList.Add(itemLocal);
                             }
                         }
-                        else
-                        {                     
-                            TfsList.Add(itemLocal);
-                        }
+                        DischangeStatus = $"Path Changesets del TFS Obtenido cantidad: {TfsList.Count}.";
+                    }
+                    else
+                    {
+                        DischangeStatus = $"El changeset {SelectedChangeset.Changeset} en el branch {SelectedChangeset.Branch} no posee componentes.";
+                        MessageBox.Show($"El changeset {SelectedChangeset.Changeset} en el branch {SelectedChangeset.Branch} no posee componentes.", $"El changeset {SelectedChangeset.Changeset} en el branch {SelectedChangeset.Branch} no posee componentes.", MessageBoxButton.OK, MessageBoxImage.Warning);
                     }
                     
-                    DischangeStatus = $"Path Changesets del TFS Obtenido cantidad: {TfsList.Count}.";
+                    
+                    
                 }
                 catch (Exception ex)
                 {

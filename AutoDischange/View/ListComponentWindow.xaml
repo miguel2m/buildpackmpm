@@ -29,7 +29,13 @@
         <StackPanel DockPanel.Dock="Top" Margin="10">
 
             <TextBlock Text="Ruta:"/>
-            <TextBox Text="{Binding PathComponent, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+            <TextBox Name="tbPathComponent" Text="{Binding PathComponent, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+            <Button 
+                    Margin="0,5"
+                    Width="100"
+                    Content="Abrir carpeta"
+                    Click="PickupFolder_Click">
+            </Button>
             <TextBlock Text="Branch:"/>
             <!--<TextBox Text="{Binding Branch, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>-->
             <ComboBox 

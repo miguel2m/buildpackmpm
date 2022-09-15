@@ -74,13 +74,13 @@ namespace AutoDischange.ViewModel
         {
             ListComponentCommand = new ListComponentCommand(this);
             ListComponentObjs = new ObservableCollection<ListComponent>();
-            ListComponent listcomponentobjtemp1 = new ListComponent();
-            ListComponent listcomponentobjtemp2 = new ListComponent();
-            listcomponentobjtemp1.Branch = "test1";
-            listcomponentobjtemp2.Branch = "test2";
-            ListComponentObjs.Add(listcomponentobjtemp1);
-            ListComponentObjs.Add(listcomponentobjtemp2);
-            //LoadBranch();
+            //ListComponent listcomponentobjtemp1 = new ListComponent();
+            //ListComponent listcomponentobjtemp2 = new ListComponent();
+            //listcomponentobjtemp1.Branch = "test1";
+            //listcomponentobjtemp2.Branch = "test2";
+            //ListComponentObjs.Add(listcomponentobjtemp1);
+            //ListComponentObjs.Add(listcomponentobjtemp2);
+            LoadBranch();
             ListComponent = new ListComponent();
             //SelectedBranch = new ListComponent();
 

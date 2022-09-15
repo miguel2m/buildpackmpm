@@ -1,0 +1,53 @@
+﻿<Window x:Class="AutoDischange.View.ListComponentWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:AutoDischange.View"
+        mc:Ignorable="d"
+        Title="ListComponentWindow"
+        Height="300" Width="300"
+        xmlns:vm="clr-namespace:AutoDischange.ViewModel"
+        WindowStartupLocation="CenterScreen">
+    <Window.Resources>
+        <ResourceDictionary>
+            <vm:ListComponentVM x:Key="vm"/>
+        </ResourceDictionary>
+    </Window.Resources>
+    <!--<DockPanel DataContext="{StaticResource vm}">-->
+    <DockPanel DataContext="{StaticResource vm}">
+        <!--<StatusBar DockPanel.Dock="Bottom">
+            <StatusBarItem>
+                <TextBlock  Text="{Binding StatusExcel}"/>
+            </StatusBarItem>
+        </StatusBar>-->
+        <StatusBar DockPanel.Dock="Bottom">
+            <StatusBarItem>
+                <TextBlock  Text="{Binding ListComponentStatus}"/>
+            </StatusBarItem>
+        </StatusBar>
+        <StackPanel DockPanel.Dock="Top" Margin="10">
+
+            <TextBlock Text="Ruta:"/>
+            <TextBox Text="{Binding PathComponent, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+            <TextBlock Text="Branch:"/>
+            <!--<TextBox Text="{Binding Branch, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>-->
+            <ComboBox 
+                 ItemsSource="{Binding ListComponentObjs}"
+                 SelectedValue="{Binding SelectedBranch, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                 SelectedValuePath="Branch"
+                 DisplayMemberPath="Branch"
+                 />
+            
+
+            <Button Command="{Binding ListComponentCommand}"
+                    CommandParameter="{Binding ListComponent}"
+                    Margin="0,5"
+                    Width="100"
+                    Content="Ejecutar">
+
+            </Button>
+
+        </StackPanel>
+    </DockPanel>
+</Window>

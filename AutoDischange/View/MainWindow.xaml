@@ -40,9 +40,14 @@
                     HorizontalAlignment="Center"
                     Command="{Binding DischangeCommand}"/>
                 <Separator/>
+                <!--<Button Content="Exportar lista de componentes"
+                    HorizontalAlignment="Center"
+                    Command="{Binding PackageCommand}"/>-->
                 <Button Content="Exportar lista de componentes"
                     HorizontalAlignment="Center"
-                    Command="{Binding PackageCommand}"/>
+                    Click="ListComponentItem_Click"
+                    Command="{Binding PackageCommand}"
+                    CommandParameter="{Binding SelectedChangeset}"/>
             </ToolBar>
         </ToolBarTray>
         <ListView DockPanel.Dock="Left"
@@ -116,8 +121,8 @@
                             </DataTemplate>
                         </ListView.ItemTemplate>
                     </ListView>
-                    <TextBlock FontSize="14"  FontFamily="Century Gothic" Text="Selecciona un Branch"/>
-                    <ComboBox x:Name="CmbNameBranch" Width="195" HorizontalAlignment="Left" VerticalAlignment="Top" ItemsSource="{Binding CmbNameBranch}"/>
+                    <!--<TextBlock FontSize="14"  FontFamily="Century Gothic" Text="Selecciona un Branch"/>
+                    <ComboBox x:Name="CmbNameBranch" Width="195" HorizontalAlignment="Left" VerticalAlignment="Top" ItemsSource="{Binding CmbNameBranch}"/>-->
                 </StackPanel>
             </ScrollViewer>
         </Grid>

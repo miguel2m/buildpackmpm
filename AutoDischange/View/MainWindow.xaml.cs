@@ -33,17 +33,17 @@ namespace AutoDischange.View
         }
         private void InitializeCmbBranch()
         {
-            string rutaBranch = ConfigurationManager.AppSettings["rutaJenkins"];
-            string[] subDir = Directory.GetDirectories(rutaBranch);
-            foreach (var item in subDir.Select((value, i) => new { i, value }))
-            {
-                var value = nameDir(item.value);
-                var index = item.i;
-                lstNombDir.Add(new BranchJenkins { CodBranch = index, NameBranch = value });
-            }
-            this.CmbNameBranch.DisplayMemberPath = "NameBranch";
-            this.CmbNameBranch.SelectedValuePath = "CodBranch";
-            this.CmbNameBranch.ItemsSource = lstNombDir;
+            //string rutaBranch = ConfigurationManager.AppSettings["rutaJenkins"];
+            //string[] subDir = Directory.GetDirectories(rutaBranch);
+            //foreach (var item in subDir.Select((value, i) => new { i, value }))
+            //{
+            //    var value = nameDir(item.value);
+            //    var index = item.i;
+            //    lstNombDir.Add(new BranchJenkins { CodBranch = index, NameBranch = value });
+            //}
+            //this.CmbNameBranch.DisplayMemberPath = "NameBranch";
+            //this.CmbNameBranch.SelectedValuePath = "CodBranch";
+            //this.CmbNameBranch.ItemsSource = lstNombDir;
         }
 
         public string nameDir(string url)
@@ -65,6 +65,12 @@ namespace AutoDischange.View
         {
             ToolWindow toolWindowWindow = new ToolWindow();
             toolWindowWindow.ShowDialog();
+        }
+
+        private void ListComponentItem_Click(object sender, RoutedEventArgs e)
+        {
+            ListComponentWindow listComponentWindow = new ListComponentWindow();
+            listComponentWindow.ShowDialog();
         }
 
         private void SpeechButton_Click(object sender, RoutedEventArgs e)

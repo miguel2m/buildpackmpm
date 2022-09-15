@@ -21,4 +21,12 @@ namespace AutoDischange.Model
         public int Id { get; set; }
         public string Path { get; set; }
     }
+
+    public class ListComponent
+    {
+        [PrimaryKey, AutoIncrement]
+        public int Id { get; set; }
+        public string Path { get; set; }
+        public string Branch { get; set; }
+    }
 }

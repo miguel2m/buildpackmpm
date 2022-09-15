@@ -85,14 +85,23 @@ namespace AutoDischange.ViewModel.Helpers
             string result = string.Empty;
             List<string> list = new List<string>();
             list = url.Split('\\').ToList();
-            for(int i = 3; i < list.Count - 1; i++)
+            for(int i = 1; i < list.Count; i++)
             {
                 //CUANDO LO CONSTRUYO COLOCO LOS SLASH INVERTIDOS AL FINAL
-                result += list[i] + "\\";
+                if (list[i] != "Alojables" && list[i] != "Configurables" && list[i] != "Cer" && list[i] != "Des" &&
+                    list[i] != "DIS" && list[i] != "Pre" && list[i] != "Pro")
+                {
+                    if (i == list.Count - 1)
+                    {
+                        result += list[i];
+                    }
+                    else
+                    {
+                        result += list[i] + "\\";
+                    }
+                    
+                }
             }
-            //DEBO QUITAR LOS DOS ULTIMO ELEMENTO SLASH
-            int a = list.Count - 1;
-            result += list[a];
             return result;
         }
     }

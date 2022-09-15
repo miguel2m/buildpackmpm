@@ -186,78 +186,7 @@ namespace AutoDischange.ViewModel
         private void OnPropertyChanged(string propertyName)
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-        }
-
-        public async void copyToJenkins()
-        {            
-            var changesetList = (DatabaseHelper.Read<DischangeChangeset>()).ToList();
-            List<TfsItem> TodosItemTfs = new List<TfsItem>();
-            List<DischangePath> DischangePathList = new List<DischangePath>();
-            List<string> PathGU = new List<string>();
-            if (changesetList.Count > 0)
-            {
-                foreach (DischangeChangeset item in changesetList)
-                {
-                    //TODOS LOS COMPONENTES DEL CHANGESET
-                    List<TfsItem>TodosItmTfs2 = await TFSRequest.GetChangeset(item.Changeset);
-                    if (!string.IsNullOrEmpty(item.Branch))
-                    {
-                        TodosItmTfs2 = TodosItmTfs2.FindAll((item2) => item2.path.Contains(item.Branch));
-                    }
-
-                    if (TodosItmTfs2.FirstOrDefault() != null)
-                    {
-                        foreach (TfsItem itemLocal in TodosItmTfs2)
-                        {
-                            if (!string.IsNullOrEmpty(item.Branch))
-                            {
-                                if (itemLocal.path.Contains(item.Branch))
-                                {
-                                    TodosItemTfs.Add(itemLocal);
-                                }
-                            }
-                            else
-                            {
-                                TodosItemTfs.Add(itemLocal);
-                            }
-                        }
-                    }
-                }
-
-                //obtener lista guia de ubicaciones 
-
-                if (TodosItemTfs.Count > 0)
-                {
-                    foreach (TfsItem item in TodosItemTfs)
-                    {
-                        string valueString = String.Empty;
-                        if (item.path.Contains("cs"))
-                        {
-                            List<string> listValue = UtilHelper.fileList(item.path, '/');
-                            valueString = listValue.First(i => i.Contains("mpm.seg"));
-
-                        }
-                        else
-                        {
-                            valueString = UtilHelper.nameFile(item.path, '/');
-                        }
-                        //guia de ubicaciones
-                        DischangePathList = (DatabaseHelper.Read<DischangePath>()).Where(n => n.Path.Contains(valueString)).ToList();
-                        PathGU.Add(DischangePathList[0].Path);
-                    }                    
-                }
-            }
-            string result = string.Empty;
-            string branch = "20211118_P4.1";
-            string rutaCont = @"C:\Users\edgar.linarez\OneDrive - MPM SOFTWARE SLU\Documentos\Edgar\pruebas\";
-            if (PathGU.Count > 0)
-            {
-                foreach (string itemPathGU in PathGU)
-                {
-                    result = TransferFileJenkinsHelper.JenkinsTransferFile(itemPathGU, rutaCont, branch);
-                }
-            }
-        }
+        }       
 
     }
 }

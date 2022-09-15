@@ -23,7 +23,7 @@ namespace AutoDischange.ViewModel.Commands
         {
             
 
-            //ViewModel.copyToJenkins();
+            ViewModel.copyToJenkins();
 
         }
     }

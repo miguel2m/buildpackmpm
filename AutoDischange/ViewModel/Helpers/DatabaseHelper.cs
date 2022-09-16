@@ -29,6 +29,12 @@ namespace AutoDischange.ViewModel.Helpers
             return result;
         }
 
+        public static async Task Delete()
+        {
+            var db = new SQLiteAsyncConnection(dbFile);
+            await db.DeleteAllAsync<DischangeChangeset>();
+        }
+
         //INSERT INTO InsertDischange (Carga Masiva)
         public static async Task<bool> InsertReplaceDischange(DischangePath item)
         {
@@ -47,7 +53,6 @@ namespace AutoDischange.ViewModel.Helpers
         //INSERT INTO InsertDischange (Carga Masiva)
         public static async Task<bool> InsertReplaceChangeset(DischangeChangeset item)
         {
-
             bool result = false;
 
             var db = new SQLiteAsyncConnection(dbFile);

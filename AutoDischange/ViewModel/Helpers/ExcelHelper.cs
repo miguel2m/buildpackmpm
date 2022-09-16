@@ -16,34 +16,29 @@ namespace AutoDischange.ViewModel.Helpers
         public static async Task<List<DischangeChangeset>> ReadExcel (string path) 
         {
             List<DischangeChangeset> DischangeChangesets = new List<DischangeChangeset>();
-            
                
-                SLDocument sl = new SLDocument(path);
+            SLDocument sl = new SLDocument(path);
 
+            //borramos la tabla para que al consultarla no tenga registros antiguos 
+            await DatabaseHelper.Delete();
 
-                int iRow = 2;
-                while (!string.IsNullOrEmpty(sl.GetCellValueAsString(iRow, 1)))
+            int iRow = 2;
+            while (!string.IsNullOrEmpty(sl.GetCellValueAsString(iRow, 1)))
+            {
+
+                DischangeChangeset DischangeChangeset = new DischangeChangeset
                 {
+                    Id = iRow,
+                    Changeset = sl.GetCellValueAsString(iRow, 1),
+                    Branch = sl.GetCellValueAsString(iRow, 2),
+                };
 
-                    DischangeChangeset DischangeChangeset = new DischangeChangeset
-                    {
-                        Id = iRow,
-                        Changeset = sl.GetCellValueAsString(iRow, 1),
-                        Branch = sl.GetCellValueAsString(iRow, 2),
-                    };
+                DischangeChangesets.Add(DischangeChangeset);
+                await DatabaseHelper.InsertReplaceChangeset(DischangeChangeset);
+                iRow++;
 
-                    DischangeChangesets.Add(DischangeChangeset);
-                    await DatabaseHelper.InsertReplaceChangeset(DischangeChangeset);
-                    iRow++;
-
-                }
-                //resultado.Add("OK", "true");
-                //resultado.Add("msg", DischangeChangesets);
-                //return DischangeChangesets;
-            
+            }            
             return DischangeChangesets;
-
-
         }
 
         //READ Local DIS_Changes

@@ -107,7 +107,7 @@ namespace AutoDischange.ViewModel
         }
 
         public async void copyToJenkins()
-        {
+        {            
             var changesetList = (DatabaseHelper.Read<DischangeChangeset>()).ToList();
             List<TfsItem> TodosItemTfs = new List<TfsItem>();
             List<DischangePath> DischangePathList = new List<DischangePath>();
@@ -134,10 +134,6 @@ namespace AutoDischange.ViewModel
                                     TodosItemTfs.Add(itemLocal);
                                 }
                             }
-                            //else
-                            //{
-                            //    TodosItemTfs.Add(itemLocal);
-                            //}
                         }
                     }
                 }
@@ -146,32 +142,56 @@ namespace AutoDischange.ViewModel
 
                 if (TodosItemTfs.Count > 0)
                 {
+                    List<string> list = new List<string>();
+                    string valueString = String.Empty;
+                    //list = url.Split('\\').ToList();
                     foreach (TfsItem item in TodosItemTfs)
                     {
-                        string valueString = String.Empty;
-                        if (item.path.Contains("cs"))
+                        list = item.path.Split('.').ToList();
+                        if (list[list.Count - 1] != "csproj")
                         {
-                            List<string> listValue = UtilHelper.fileList(item.path, '/');
-                            valueString = listValue.First(i => i.Contains("mpm.seg"));
+                            if ((list[list.Count - 1] == "cs"))
+                            {
+                                List<string> listValue = UtilHelper.fileList(item.path, '/');
+                                valueString = listValue.FirstOrDefault(i => i.Contains("mpm.seg"));
+                            }
+                            else
+                            {
+                                valueString = UtilHelper.nameFile(item.path, '/');
+                            }
+
+                            if (valueString != null)
+                            {
+                                //guia de ubicaciones
+                                DischangePathList = (DatabaseHelper.Read<DischangePath>()).Where(n => n.Path.Contains(valueString)).ToList();
+
+                                for (int i = 0; i < DischangePathList.Count; i++)
+                                {
+                                    PathGU.Add(DischangePathList[i].Path);
+                                }
+                            }
+
 
                         }
-                        else
-                        {
-                            valueString = UtilHelper.nameFile(item.path, '/');
-                        }
-                        //guia de ubicaciones
-                        DischangePathList = (DatabaseHelper.Read<DischangePath>()).Where(n => n.Path.Contains(valueString)).ToList();
-                        for (int i = 0; i < DischangePathList.Count; i++)
-                        {
-                            PathGU.Add(DischangePathList[i].Path);
-                        }
+                        //HAY ARCHIVOS QUE TIENEN "csv", "csproj" Y AL BUSCARLO POR LAS LETRAS "cs" hara un match incorrecto                                               
+                        //if (item.path.Contains("cs"))
+                        //{
+                        //    List<string> listValue = UtilHelper.fileList(item.path, '/');
+                        //    valueString = listValue.First(i => i.Contains("mpm.seg"));
+
+                        //}
+                        //else
+                        //{
+                        //    valueString = UtilHelper.nameFile(item.path, '/');
+                        //}
+
                     }
                 }
             }
             string result = string.Empty;
             string branch = ListComponent.Branch;
             //string rutaCont = @"C:\Users\edgar.linarez\OneDrive - MPM SOFTWARE SLU\Documentos\Edgar\pruebas\";
-            string rutaCont = ListComponent.Path;
+            string rutaCont = ListComponent.Path + "\\";
             if (PathGU.Count > 0)
             {
                 foreach (string itemPathGU in PathGU)

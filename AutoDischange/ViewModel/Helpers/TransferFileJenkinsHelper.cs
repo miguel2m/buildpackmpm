@@ -28,7 +28,7 @@ namespace AutoDischange.ViewModel.Helpers
             string rutaPack = rutaNoFile(rutaDisChanges);
 
             string rutaI = rutaServer + rutaPack;
-            string rutaF = rutaUsr + rutaPack;
+            string rutaF = rutaUsr + $@"{branch}\" + rutaPack;
             try
             {
                 //verifico que el directorio de busqueda exista
@@ -45,8 +45,14 @@ namespace AutoDischange.ViewModel.Helpers
                 }
 
                 //Verifico que el archivo en directorio destino exista o no
-                if (File.Exists(rutaI + fileExamp))
+                if (File.Exists(Path.Combine(rutaI, fileExamp)))
                 {
+                    //SI SE TRATA DE UN CSV POR UNA EXTRANA RAZON ME DA UN ERROR DE EXCEPCION CUANDO ES ESTE TIPO DE ARCHIVO LUEGO LO VEO
+                    if (fileExamp.Contains(".csv"))
+                    {
+                        File.SetAttributes(rutaF, FileAttributes.Normal);
+                        File.Delete(Path.Combine(rutaF, fileExamp));
+                    }
                     //Copiar archivo
                     File.Copy(rutaI + fileExamp, rutaF + fileExamp, true);
                 }
@@ -85,7 +91,7 @@ namespace AutoDischange.ViewModel.Helpers
             string result = string.Empty;
             List<string> list = new List<string>();
             list = url.Split('\\').ToList();
-            for(int i = 1; i < list.Count; i++)
+            for (int i = 1; i < list.Count; i++)
             {
                 //CUANDO LO CONSTRUYO COLOCO LOS SLASH INVERTIDOS AL FINAL
                 if (list[i] != "Alojables" && list[i] != "Configurables" && list[i] != "Cer" && list[i] != "Des" &&
@@ -99,7 +105,7 @@ namespace AutoDischange.ViewModel.Helpers
                     {
                         result += list[i] + "\\";
                     }
-                    
+
                 }
             }
             return result;

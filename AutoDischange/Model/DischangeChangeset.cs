@@ -29,4 +29,12 @@ namespace AutoDischange.Model
         public string Path { get; set; }
         public string Branch { get; set; }
     }
+
+    public class DiffComponent
+    {
+        [PrimaryKey, AutoIncrement]
+        public int Id { get; set; }
+        public string PathStart { get; set; }
+        public string PathEnd { get; set; }
+    }
 }

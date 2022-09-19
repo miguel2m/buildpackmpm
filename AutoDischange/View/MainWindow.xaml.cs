@@ -66,6 +66,12 @@ namespace AutoDischange.View
             ToolWindow toolWindowWindow = new ToolWindow();
             toolWindowWindow.ShowDialog();
         }
+        private void DiffComponent_Click(object sender, RoutedEventArgs e)
+        {
+            DiffComponentWindow diffWindowWindow = new DiffComponentWindow();
+            diffWindowWindow.ShowDialog();
+        }
+        
 
         private void ListComponentItem_Click(object sender, RoutedEventArgs e)
         {

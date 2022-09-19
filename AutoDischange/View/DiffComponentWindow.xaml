@@ -1,0 +1,62 @@
+﻿<Window x:Class="AutoDischange.View.DiffComponentWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:AutoDischange.View"
+        mc:Ignorable="d"
+        Title="DiffComponentWindow" 
+        Height="300" Width="300"
+        xmlns:vm="clr-namespace:AutoDischange.ViewModel"
+        WindowStartupLocation="CenterScreen">
+    <Window.Resources>
+        <ResourceDictionary>
+            <vm:DiffComponentVM x:Key="vm"/>
+        </ResourceDictionary>
+    </Window.Resources>
+    <DockPanel DataContext="{StaticResource vm}">
+        
+        <StatusBar DockPanel.Dock="Bottom">
+            <StatusBarItem>
+                <TextBlock  Text="{Binding DiffStatus}"/>
+            </StatusBarItem>
+        </StatusBar>
+        <ScrollViewer VerticalScrollBarVisibility="Auto" Margin="0,0,0.333,27.333">
+            <StackPanel x:Name="inputContainer" DockPanel.Dock="Top" Margin="10">
+
+                <TextBlock Text="Ruta Inicio:"/>
+                <TextBox Name="startPathComponentText" Text="{Binding PathStartComponent, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                <Button Name="startPathComponent"
+                        Margin="0,5"
+                        Width="100"
+                        Content="Abrir carpeta"
+                        Click="PickupFolder_Click"
+                    >
+                </Button>
+
+                <TextBlock Text="Ruta Destino:"/>
+                <TextBox Name="endPathComponentText" Text="{Binding PathEndComponent, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                <Button Name="endPathComponent"
+                        Margin="0,5"
+                        Width="100"
+                        Content="Abrir carpeta"
+                        Click="PickupFolder_Click"
+                    >
+                </Button>
+
+                <Button IsEnabled="{Binding DiffVisible}"
+                        Command="{Binding DiffComponentCommand}" 
+                        CommandParameter="{Binding DiffComponent}"
+                        Margin="0,5"
+                        Width="100"
+                        Content="Comparar">
+
+                </Button>
+            
+                
+           
+
+            </StackPanel>
+        </ScrollViewer>
+    </DockPanel>
+</Window>

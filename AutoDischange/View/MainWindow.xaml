@@ -15,7 +15,9 @@
     <DockPanel DataContext="{StaticResource vm}">
         <Menu DockPanel.Dock="Top">
             <MenuItem  Header="Menú">
-
+                <MenuItem  Header="Comparación de Componenetes"
+                           Click="DiffComponent_Click"
+                />
                 <MenuItem  Header="Exit"
                            Click="MenuItem_Click"
                 />
@@ -28,6 +30,7 @@
                 />
 
             </MenuItem>
+            
         </Menu>
         <StatusBar DockPanel.Dock="Bottom">
             <StatusBarItem>

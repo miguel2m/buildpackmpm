@@ -1,8 +1,10 @@
 ﻿using AutoDischange.Model;
 using AutoDischange.ViewModel.Commands;
+using AutoDischange.ViewModel.Helpers;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -91,6 +93,33 @@ namespace AutoDischange.ViewModel
 
         public void GenericInput()
         {
+           
+
+            
+           
+            Console.WriteLine("Path Start" + DiffComponent.PathStart);
+            DiffComponentHelper.DiffFiles(DiffComponent.PathStart, DiffComponent.PathEnd);
+            //var fileStart = DiffComponentHelper.GetFileList(DiffComponent.PathStart);
+            //foreach (var item in fileStart)
+            //{
+            //    //string fileName =Path.GetFileName(item);
+            //    //Console.WriteLine(fileName);
+            //    //var fileFound = DiffComponentHelper.GetSearchFileList(DiffComponent.PathEnd,fileName);
+            //    //Console.WriteLine("fileFound");
+            //    //foreach (var item2 in fileFound)
+            //    //{
+
+            //    //    Console.WriteLine(item2);
+            //    //}
+            //    //Console.WriteLine("Item");
+            //    //Console.WriteLine(item);
+            //}
+            //Console.WriteLine("Path End" + DiffComponent.PathEnd);
+            //var fileEnd = DiffComponentHelper.GetFileList(DiffComponent.PathEnd);
+            //foreach (var item in fileEnd)
+            //{
+            //    Console.WriteLine(item);
+            //}
             //AddInput?.Invoke(this, new EventArgs());
         }
 

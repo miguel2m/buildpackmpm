@@ -77,8 +77,8 @@ namespace AutoDischange.ViewModel.Helpers
         /// <param name="pathB">Ruta Destino</param>
         public static void DiffFiles(DiffComponent diffComponent, string pathUser)
         {
-            System.IO.DirectoryInfo dir1 = new System.IO.DirectoryInfo(diffComponent.PathStart);
-            System.IO.DirectoryInfo dir2 = new System.IO.DirectoryInfo(diffComponent.PathEnd);
+            System.IO.DirectoryInfo dir1 = new System.IO.DirectoryInfo(@diffComponent.PathStart);
+            System.IO.DirectoryInfo dir2 = new System.IO.DirectoryInfo(@diffComponent.PathEnd);
 
             // Take a snapshot of the file system.  
             IEnumerable<System.IO.FileInfo> list1 = dir1.GetFiles("*.*", System.IO.SearchOption.AllDirectories);

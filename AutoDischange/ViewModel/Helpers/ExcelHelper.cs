@@ -128,8 +128,8 @@ namespace AutoDischange.ViewModel.Helpers
             sl.SetCellValue(2, 12, "Hora");
             sl.SetCellValue(2, 13, "Tamaño");
             //SET Header Evaluaciones
-            sl.SetCellValue(2, 14, "EvalucionHash");
-            sl.SetCellValue(2, 15, "Evaluacion Fecha");
+            sl.SetCellValue(2, 14, "Hash");
+            sl.SetCellValue(2, 15, "Fecha");
             sl.SetCellValue(2, 16, "Tamaño");
 
             SLStyle styleFecha = sl.CreateStyle();
@@ -200,38 +200,106 @@ namespace AutoDischange.ViewModel.Helpers
                 
                 switch (item.HashResult)
                 {
-                    case 1:
+                    case 1://Iguales
                         // code block
                         sl.SetCellValue(_index, 14, "Iguales");
-                        sl.SetCellValue(_index, 15, "Iguales");
-                        sl.SetCellValue(_index, 16, "Iguales");
-                        styleColor.Fill.SetPattern(PatternValues.Solid, System.Drawing.Color.Green, System.Drawing.Color.DarkSalmon);
-                        sl.SetCellStyle(_index, 14, styleHora);
-                        sl.SetCellStyle(_index, 15, styleHora);
-                        sl.SetCellStyle(_index, 16, styleHora);
+                        styleColor.Fill.SetPattern(PatternValues.Solid, System.Drawing.Color.LightGreen, System.Drawing.Color.DarkSalmon);
+                        sl.SetRowStyle(_index, styleColor);
                         break;
-                    case 2:
+                    case 2:// Iguales
+                        sl.SetCellValue(_index, 14, "Iguales");
+                        styleColor.Fill.SetPattern(PatternValues.Solid, System.Drawing.Color.Yellow, System.Drawing.Color.DarkSalmon);
+                        sl.SetRowStyle(_index, styleColor);
+                        // code block
+                        break;
+                    case 3://A es mayor B
                         // code block
                         sl.SetCellValue(_index, 14, "Diferentes");
-                        sl.SetCellValue(_index, 15, "Diferentes");
-                        sl.SetCellValue(_index, 16, "Diferentes");
                         styleColor.Fill.SetPattern(PatternValues.Solid, System.Drawing.Color.Red, System.Drawing.Color.DarkSalmon);
-                        sl.SetCellStyle(_index, 14, styleHora);
-                        sl.SetCellStyle(_index, 15, styleHora);
-                        sl.SetCellStyle(_index, 16, styleHora);
+                        sl.SetRowStyle(_index, styleColor);
                         break;
-                    case 3:
+                    case 4://B es mayor A
                         // code block
-                        sl.SetCellValue(_index, 14, "Se encuentra solo en el paquete A");
-                        sl.SetCellValue(_index, 15, "Se encuentra solo en el paquete A");
-                        sl.SetCellValue(_index, 16, "Se encuentra solo en el paquete A");
-                        styleColor.Fill.SetPattern(PatternValues.Solid, System.Drawing.Color.Yellow, System.Drawing.Color.DarkSalmon);
-                        sl.SetCellStyle(_index, 14, styleHora);
-                        sl.SetCellStyle(_index, 15, styleHora);
-                        sl.SetCellStyle(_index, 16, styleHora);
+                        sl.SetCellValue(_index, 14, "Diferentes");
+                        styleColor.Fill.SetPattern(PatternValues.Solid, System.Drawing.Color.Red, System.Drawing.Color.DarkSalmon);
+                        sl.SetRowStyle(_index, styleColor);
+                        break;
+                    case 5: // Diferentes
+                        // code block
+                        sl.SetCellValue(_index, 14, "Diferentes");
+                        styleColor.Fill.SetPattern(PatternValues.Solid, System.Drawing.Color.Red, System.Drawing.Color.DarkSalmon);
+                        sl.SetRowStyle(_index, styleColor);
                         break;
                 }
-                
+                switch (item.FechaResult)
+                {
+                    case 1://Iguales
+                        // code block
+                        sl.SetCellValue(_index, 15, "Iguales");
+                        styleColor.Fill.SetPattern(PatternValues.Solid, System.Drawing.Color.LightGreen, System.Drawing.Color.DarkSalmon);
+                        sl.SetRowStyle(_index, styleColor);
+                        break;
+                    case 2:// Iguales
+                        sl.SetCellValue(_index, 15, "Iguales");
+                        styleColor.Fill.SetPattern(PatternValues.Solid, System.Drawing.Color.Yellow, System.Drawing.Color.DarkSalmon);
+                        sl.SetRowStyle(_index, styleColor);
+                        // code block
+                        break;
+                    case 3://A es mayor B
+                        // code block
+                        sl.SetCellValue(_index, 15, "El paquete 1 es más actual que el paquete 2");
+                        styleColor.Fill.SetPattern(PatternValues.Solid, System.Drawing.Color.Red, System.Drawing.Color.DarkSalmon);
+                        sl.SetRowStyle(_index, styleColor);
+                        break;
+                    case 4://B es mayor A
+                        // code block
+                        sl.SetCellValue(_index, 15, "El paquete 2 es más actual que el paquete 1");
+                        styleColor.Fill.SetPattern(PatternValues.Solid, System.Drawing.Color.Red, System.Drawing.Color.DarkSalmon);
+                        sl.SetRowStyle(_index, styleColor);
+                        break;
+                    case 5: // Diferentes
+                        // code block
+                        sl.SetCellValue(_index, 15, "Diferentes");
+                        styleColor.Fill.SetPattern(PatternValues.Solid, System.Drawing.Color.Red, System.Drawing.Color.DarkSalmon);
+                        sl.SetRowStyle(_index, styleColor);
+                        break;
+                }
+                switch (item.LenghtResult)
+                {
+                    case 1://Iguales
+                        // code block
+                        sl.SetCellValue(_index, 16, "Iguales");
+                        styleColor.Fill.SetPattern(PatternValues.Solid, System.Drawing.Color.LightGreen, System.Drawing.Color.DarkSalmon);
+                        sl.SetRowStyle(_index, styleColor);
+                        break;
+                    case 2:// Iguales
+                        sl.SetCellValue(_index, 16, "Iguales");
+                        styleColor.Fill.SetPattern(PatternValues.Solid, System.Drawing.Color.Yellow, System.Drawing.Color.DarkSalmon);
+                        sl.SetRowStyle(_index, styleColor);
+                        // code block
+
+                        sl.SetRowStyle(_index, styleColor);
+                        break;
+                    case 3://A es mayor B
+                        // code block
+                        sl.SetCellValue(_index, 16, "El paquete 1 es mayor que el paquete 2");
+                        styleColor.Fill.SetPattern(PatternValues.Solid, System.Drawing.Color.Red, System.Drawing.Color.DarkSalmon);
+                        sl.SetRowStyle(_index, styleColor);
+                        break;
+                    case 4://B es mayor A
+                        // code block
+                        sl.SetCellValue(_index, 16, "El paquete 2 es mayor que el paquete 1");
+                        styleColor.Fill.SetPattern(PatternValues.Solid, System.Drawing.Color.Red, System.Drawing.Color.DarkSalmon);
+                        sl.SetRowStyle(_index, styleColor);
+                        break;
+                    case 5: // Diferentes
+                        // code block
+                        sl.SetCellValue(_index, 16, "Diferentes");
+                        styleColor.Fill.SetPattern(PatternValues.Solid, System.Drawing.Color.Red, System.Drawing.Color.DarkSalmon);
+                        sl.SetRowStyle(_index, styleColor);
+                        break;
+                }
+
 
                 _index++;
             }

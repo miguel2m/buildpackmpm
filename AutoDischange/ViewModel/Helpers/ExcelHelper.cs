@@ -226,7 +226,7 @@ namespace AutoDischange.ViewModel.Helpers
                         break;
                     case 5: // Diferentes
                         // code block
-                        sl.SetCellValue(_index, 16, "El componenete solo existe en el paquete 1");
+                        sl.SetCellValue(_index, 14, "El componenete solo existe en el paquete 1");
                         styleColor.Fill.SetPattern(PatternValues.Solid, System.Drawing.Color.Red, System.Drawing.Color.DarkSalmon);
                         sl.SetRowStyle(_index, styleColor);
                         break;
@@ -259,7 +259,7 @@ namespace AutoDischange.ViewModel.Helpers
                         break;
                     case 5: // Diferentes
                         // code block
-                        sl.SetCellValue(_index, 16, "El componenete solo existe en el paquete 1");
+                        sl.SetCellValue(_index, 15, "El componenete solo existe en el paquete 1");
                         styleColor.Fill.SetPattern(PatternValues.Solid, System.Drawing.Color.Red, System.Drawing.Color.DarkSalmon);
                         sl.SetRowStyle(_index, styleColor);
                         break;

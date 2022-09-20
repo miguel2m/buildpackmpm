@@ -1,4 +1,5 @@
-﻿using System;
+﻿using AutoDischange.Model;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -70,14 +71,14 @@ namespace AutoDischange.ViewModel.Helpers
         }
 
         /// <summary>
-        /// https://learn.microsoft.com/en-us/dotnet/api/system.io.directory.getcreationtime?view=net-6.0
+        /// https://learn.microsoft.com/en-us/dotnet/csharp/programming-guide/concepts/linq/how-to-compare-the-contents-of-two-folders-linq
         /// </summary>
         /// <param name="pathA">Ruta Inicio</param>
         /// <param name="pathB">Ruta Destino</param>
-        public static void DiffFiles(string pathA, string pathB)
+        public static void DiffFiles(DiffComponent diffComponent, string pathUser)
         {
-            System.IO.DirectoryInfo dir1 = new System.IO.DirectoryInfo(pathA);
-            System.IO.DirectoryInfo dir2 = new System.IO.DirectoryInfo(pathB);
+            System.IO.DirectoryInfo dir1 = new System.IO.DirectoryInfo(diffComponent.PathStart);
+            System.IO.DirectoryInfo dir2 = new System.IO.DirectoryInfo(diffComponent.PathEnd);
 
             // Take a snapshot of the file system.  
             IEnumerable<System.IO.FileInfo> list1 = dir1.GetFiles("*.*", System.IO.SearchOption.AllDirectories);
@@ -107,28 +108,104 @@ namespace AutoDischange.ViewModel.Helpers
             // For this example we only check one way.  
             //var queryList1Only = (from file in list1
             //                      select file).Except(list2, myFileCompare);
+            //Console.WriteLine("Data list1");
+            //foreach (var v in list1)
+            //{
+            //    Console.WriteLine($"FullName {v.FullName}");
+            //    Console.WriteLine($"Length {GetSizeByte(v)}");
+            //    Console.WriteLine($"LastWriteTime {v.LastWriteTime.ToShortDateString()}");
+            //    string s = $"{v.Name}{v.Length}{v.LastWriteTime.ToString()}";
+            //    Console.WriteLine($"GetHashCode {s.GetHashCode()}");
+            //}
+            //Console.WriteLine("Data list2");
+            //foreach (var v in list2)
+            //{
+            //    Console.WriteLine($"FullName {v.FullName}");
+            //    Console.WriteLine($"Length {GetSizeByte(v)}");
+            //    Console.WriteLine($"LastWriteTime {v.LastWriteTime.ToShortDateString()}");
+            //    string s = $"{v.Name}{v.Length}{v.LastWriteTime.ToString()}";
+            //    Console.WriteLine($"GetHashCode {s.GetHashCode()}");
+            //}
 
             var queryList1Intersect = (from file in list1
                                   select file).Intersect(list2, myFileCompare);
 
-            Console.WriteLine("The following files are in list1 AND list2:");
+            //Console.WriteLine("The following files are in list1 AND list2:");
+            List<DiffCompareModel> diffCompareModelList = new List<DiffCompareModel>();
+            int count = 1;
             foreach (var v in queryList1Intersect)
             {
-                Console.WriteLine(v.FullName);
-                Console.WriteLine(v.Length);
-                Console.WriteLine(v.LastWriteTime.ToShortDateString());
-                Console.WriteLine(v.GetHashCode());
+                DiffCompareModel diffCompareModel = new DiffCompareModel();
+                diffCompareModel.Id = count;
+
+                diffCompareModel.UbicacionA = v.FullName;
+                diffCompareModel.PathA = v.Name;
+                string s = $"{v.Name}{v.Length}{v.LastWriteTime.ToString()}";
+                string sHash = s.GetHashCode().ToString();
+                diffCompareModel.HashA = sHash;
+                diffCompareModel.FechaA = v.LastWriteTime;
+
+                string sizeAll = GetSizeByte(v);
+                diffCompareModel.LenghtA = sizeAll;
+
+                diffCompareModel.UbicacionB = v.FullName;
+                diffCompareModel.PathB = v.Name;
+                diffCompareModel.HashB = sHash;
+                diffCompareModel.FechaB = v.LastWriteTime;
+                diffCompareModel.LenghtB = sizeAll;
+
+                diffCompareModel.HashResult = 1;
+                diffCompareModel.FechaResult = 1;
+                diffCompareModel.LenghtResult = 1;
+                diffCompareModelList.Add(diffCompareModel);
+
+                count++;
             }
+            ExcelHelper.CreateExcelDiffComapre(diffCompareModelList, pathUser, diffComponent);
 
-            var queryList1Only = (from file in list1
-                                  select file).Except(list2, myFileCompare);
+            //var queryList1Only = (from file in list1
+            //                      select file).Except(list2, myFileCompare);
 
-            Console.WriteLine("The following files are in list1 but not list2:");
-            foreach (var v in queryList1Only)
+            //Console.WriteLine("The following files are in list1 but not list2:");
+            //foreach (var v in queryList1Only)
+            //{
+            //    Console.WriteLine($"FullName {v.FullName}");
+            //    Console.WriteLine($"Length {GetSizeByte(v)}");
+            //    Console.WriteLine($"LastWriteTime {v.LastWriteTime.ToShortDateString()}");
+            //    string s = $"{v.Name}{v.Length}{v.LastWriteTime.ToString()}";
+            //    Console.WriteLine($"GetHashCode {s.GetHashCode()}");
+            //}
+
+
+            //FileNameCompare myFileNameCompare = new FileNameCompare();
+            //var queryNameList1Only = (from file in list1
+            //                      select file).Except(list2, myFileNameCompare);
+            //Console.WriteLine("The following Name files are in list1 but not list2:");
+            //foreach (var v in queryNameList1Only)
+            //{
+            //    Console.WriteLine($"FullName {v.FullName}");
+            //    Console.WriteLine($"Length {GetSizeByte(v)}");
+            //    Console.WriteLine($"LastWriteTime {v.LastWriteTime.ToShortDateString()}");
+            //    string s = $"{v.Name}{v.Length}{v.LastWriteTime.ToString()}";
+            //    Console.WriteLine($"GetHashCode {s.GetHashCode()}");
+            //}
+
+        }
+
+        private static string GetSizeByte(FileInfo filename)
+        {
+            string[] sizes = { "B", "KB", "MB", "GB", "TB" };
+            double len = filename.Length;
+            int order = 0;
+            while (len >= 1024 && order < sizes.Length - 1)
             {
-                Console.WriteLine(v.FullName);
+                order++;
+                len = len / 1024;
             }
 
+            // Adjust the format string to your preferences. For example "{0:0.#}{1}" would
+            // show a single decimal place, and no space.
+            return String.Format("{0:0.##} {1}", len, sizes[order]);
         }
 
         // This implementation defines a very simple comparison  
@@ -152,8 +229,29 @@ namespace AutoDischange.ViewModel.Helpers
             // reference identity, it is possible that two or more objects will produce the same  
             // hash code.  
             public int GetHashCode(System.IO.FileInfo fi)
-            {               
-                string s = $"{fi.Name}{fi.Length}{fi.LastWriteTime.ToString()}{fi.GetHashCode()}";
+            {
+                string s = $"{fi.Name}{fi.Length}{fi.LastWriteTime.ToString()}";
+                return s.GetHashCode();
+            }
+        }
+
+        private class FileNameCompare : System.Collections.Generic.IEqualityComparer<System.IO.FileInfo>
+        {
+            public FileNameCompare() { }
+
+            public bool Equals(System.IO.FileInfo f1, System.IO.FileInfo f2)
+            {
+                return (f1.Name == f2.Name);
+            }
+
+            // Return a hash that reflects the comparison criteria. According to the
+            // rules for IEqualityComparer<T>, if Equals is true, then the hash codes must  
+            // also be equal. Because equality as defined here is a simple value equality, not  
+            // reference identity, it is possible that two or more objects will produce the same  
+            // hash code.  
+            public int GetHashCode(System.IO.FileInfo fi)
+            {
+                string s = $"{fi.Name}";
                 return s.GetHashCode();
             }
         }

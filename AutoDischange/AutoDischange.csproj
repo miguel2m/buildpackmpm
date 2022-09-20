@@ -210,6 +210,7 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="Model\BranchJenkins.cs" />
+    <Compile Include="Model\DiffCompareModel.cs" />
     <Compile Include="Model\DischangeChangeset.cs" />
     <Compile Include="Model\DischangeGraph.cs" />
     <Compile Include="Model\TfsModel.cs" />

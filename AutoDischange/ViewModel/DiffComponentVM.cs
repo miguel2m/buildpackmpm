@@ -91,14 +91,16 @@ namespace AutoDischange.ViewModel
 
         public event EventHandler AddInput;
 
-        public void GenericInput()
+        public void GenericInput(string pathUser)
         {
-           
 
-            
-           
-            Console.WriteLine("Path Start" + DiffComponent.PathStart);
-            DiffComponentHelper.DiffFiles(DiffComponent.PathStart, DiffComponent.PathEnd);
+
+
+
+            DiffVisible = false;
+            DiffComponentHelper.DiffFiles(DiffComponent, pathUser);
+            DiffVisible = true;
+
             //var fileStart = DiffComponentHelper.GetFileList(DiffComponent.PathStart);
             //foreach (var item in fileStart)
             //{

@@ -107,6 +107,7 @@ namespace AutoDischange.ViewModel
             }
             catch (Exception ex)
             {
+                DiffVisible = true;
                 DiffStatus = $"Error al ejecutar comparación de paquetes: { ex.Message}.";
                 MessageBox.Show("Error al ejecutar comparación de paquetes : " + ex.Message, "Error al ejecutar comparación de paquetes", MessageBoxButton.OK, MessageBoxImage.Error);
             }

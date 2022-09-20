@@ -93,12 +93,15 @@ namespace AutoDischange.ViewModel.Helpers
             //Los que estan A y B
             List<DiffCompareModel> diffCompareModelList = new List<DiffCompareModel>();
             DiffCompareModel diffCompareModel;
+            string s;
+            string sHash;
+            string sizeAll;
             int count = 1;
             foreach (var v in queryList1Intersect)
             {
-                string s = $"{v.Name}{v.Length}{v.LastWriteTime.ToString()}";
-                string sHash = s.GetHashCode().ToString();
-                string sizeAll = GetSizeByte(v);
+                s = $"{v.Name}{v.Length}{v.LastWriteTime.ToString()}";
+                sHash = s.GetHashCode().ToString();
+                sizeAll = GetSizeByte(v);
 
                 diffCompareModel = new DiffCompareModel();
                 diffCompareModel.Id = count;
@@ -140,9 +143,9 @@ namespace AutoDischange.ViewModel.Helpers
                               select file).Except(list2, myFileCompare); //Los que estan en A y B pero no son iguales en HASH LastWriteTime
             foreach (var v in queryList1Only)
             {
-                string s = $"{v.Name}{v.Length}{v.LastWriteTime.ToString()}";
-                string sHash = s.GetHashCode().ToString();
-                string sizeAll = GetSizeByte(v);
+                s = $"{v.Name}{v.Length}{v.LastWriteTime.ToString()}";
+                sHash = s.GetHashCode().ToString();
+                sizeAll = GetSizeByte(v);
 
                 diffCompareModel = new DiffCompareModel();
                 diffCompareModel.Id = count;
@@ -184,9 +187,9 @@ namespace AutoDischange.ViewModel.Helpers
             //Los que estan solo en A
             foreach (var v in queryNameList1Only)
             {
-                string s = $"{v.Name}{v.Length}{v.LastWriteTime.ToString()}";
-                string sHash = s.GetHashCode().ToString();
-                string sizeAll = GetSizeByte(v);
+                s = $"{v.Name}{v.Length}{v.LastWriteTime.ToString()}";
+                sHash = s.GetHashCode().ToString();
+                sizeAll = GetSizeByte(v);
 
                 diffCompareModel = new DiffCompareModel();
                 diffCompareModel.Id = count;
@@ -200,7 +203,7 @@ namespace AutoDischange.ViewModel.Helpers
                 diffCompareModel.UbicacionB = String.Empty;
                 diffCompareModel.PathB = String.Empty;
                 diffCompareModel.HashB = String.Empty;
-                diffCompareModel.FechaB = DateTime.Now;
+                //diffCompareModel.FechaB = null;
                 diffCompareModel.LenghtB = String.Empty;
                 //Result
                 diffCompareModel.HashResult = 5;

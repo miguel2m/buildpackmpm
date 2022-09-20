@@ -182,9 +182,14 @@ namespace AutoDischange.ViewModel.Helpers
                 sl.SetCellValue(_index, 4, item.HashA);
 
                 sl.SetCellValue(_index, 5, item.FechaA);
-                sl.SetCellStyle(_index, 5, styleFecha);
                 sl.SetCellValue(_index, 6, item.FechaA);
-                sl.SetCellStyle(_index, 6, styleHora);
+
+                if (item.FechaA != null)
+                {
+                    sl.SetCellStyle(_index, 5, styleFecha);
+                    sl.SetCellStyle(_index, 6, styleHora);
+                }
+
                 sl.SetCellValue(_index, 7, item.LenghtA);
                 //SET Header Paquete B
                 sl.SetCellValue(_index, 8, item.UbicacionB);
@@ -192,9 +197,13 @@ namespace AutoDischange.ViewModel.Helpers
                 sl.SetCellValue(_index, 10, item.HashB);
 
                 sl.SetCellValue(_index, 11, item.FechaB);
-                sl.SetCellStyle(_index, 11, styleFecha);
                 sl.SetCellValue(_index, 12, item.FechaB);
-                sl.SetCellStyle(_index, 12, styleHora);
+                if (item.FechaB != null)
+                {
+
+                    sl.SetCellStyle(_index, 11, styleFecha);
+                    sl.SetCellStyle(_index, 12, styleHora);
+                }
                 sl.SetCellValue(_index, 13, item.LenghtB);
                 //SET Header Evaluaciones
                 

@@ -87,46 +87,6 @@ namespace AutoDischange.ViewModel.Helpers
             //A custom file comparer defined below  
             FileCompare myFileCompare = new FileCompare();
 
-            // Find the common files. It produces a sequence and doesn't
-            // execute until the foreach statement.  
-            //var queryCommonFiles = list1.Intersect(list2, myFileCompare);
-
-            //if (queryCommonFiles.Any())
-            //{
-            //    Console.WriteLine("The following files are in both folders:");
-            //    foreach (var v in queryCommonFiles)
-            //    {
-            //        Console.WriteLine(v.FullName); //shows which items end up in result list  
-            //    }
-            //}
-            //else
-            //{
-            //    Console.WriteLine("There are no common files in the two folders.");
-            //}
-
-            // Find the set difference between the two folders.  
-            // For this example we only check one way.  
-            //var queryList1Only = (from file in list1
-            //                      select file).Except(list2, myFileCompare);
-            //Console.WriteLine("Data list1");
-            //foreach (var v in list1)
-            //{
-            //    Console.WriteLine($"FullName {v.FullName}");
-            //    Console.WriteLine($"Length {GetSizeByte(v)}");
-            //    Console.WriteLine($"LastWriteTime {v.LastWriteTime.ToShortDateString()}");
-            //    string s = $"{v.Name}{v.Length}{v.LastWriteTime.ToString()}";
-            //    Console.WriteLine($"GetHashCode {s.GetHashCode()}");
-            //}
-            //Console.WriteLine("Data list2");
-            //foreach (var v in list2)
-            //{
-            //    Console.WriteLine($"FullName {v.FullName}");
-            //    Console.WriteLine($"Length {GetSizeByte(v)}");
-            //    Console.WriteLine($"LastWriteTime {v.LastWriteTime.ToShortDateString()}");
-            //    string s = $"{v.Name}{v.Length}{v.LastWriteTime.ToString()}";
-            //    Console.WriteLine($"GetHashCode {s.GetHashCode()}");
-            //}
-
             var queryList1Intersect = (from file in list1
                                   select file).Intersect(list2, myFileCompare);
 

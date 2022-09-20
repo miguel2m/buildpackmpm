@@ -8,6 +8,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
 
 namespace AutoDischange.ViewModel
 {
@@ -96,10 +97,20 @@ namespace AutoDischange.ViewModel
 
 
 
-
-            DiffVisible = false;
-            DiffComponentHelper.DiffFiles(DiffComponent, pathUser);
-            DiffVisible = true;
+            try
+            {
+                DiffStatus = $"Leyendo paquetes";
+                DiffVisible = false;
+                DiffComponentHelper.DiffFiles(DiffComponent, pathUser);
+                DiffVisible = true;
+                DiffStatus = $"Tarea comparación de paquetes finalizada";
+            }
+            catch (Exception ex)
+            {
+                DiffStatus = $"Error al ejecutar comparación de paquetes: { ex.Message}.";
+                MessageBox.Show("Error al ejecutar comparación de paquetes : " + ex.Message, "Error al ejecutar comparación de paquetes", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+            
 
             //var fileStart = DiffComponentHelper.GetFileList(DiffComponent.PathStart);
             //foreach (var item in fileStart)

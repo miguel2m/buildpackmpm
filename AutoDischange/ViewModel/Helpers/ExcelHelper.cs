@@ -215,13 +215,13 @@ namespace AutoDischange.ViewModel.Helpers
                     case 3://A es mayor B
                         // code block
                         sl.SetCellValue(_index, 14, "Diferentes");
-                        styleColor.Fill.SetPattern(PatternValues.Solid, System.Drawing.Color.Red, System.Drawing.Color.DarkSalmon);
+                        styleColor.Fill.SetPattern(PatternValues.Solid, System.Drawing.Color.Yellow, System.Drawing.Color.DarkSalmon);
                         sl.SetRowStyle(_index, styleColor);
                         break;
                     case 4://B es mayor A
                         // code block
                         sl.SetCellValue(_index, 14, "Diferentes");
-                        styleColor.Fill.SetPattern(PatternValues.Solid, System.Drawing.Color.Red, System.Drawing.Color.DarkSalmon);
+                        styleColor.Fill.SetPattern(PatternValues.Solid, System.Drawing.Color.Yellow, System.Drawing.Color.DarkSalmon);
                         sl.SetRowStyle(_index, styleColor);
                         break;
                     case 5: // Diferentes
@@ -248,13 +248,13 @@ namespace AutoDischange.ViewModel.Helpers
                     case 3://A es mayor B
                         // code block
                         sl.SetCellValue(_index, 15, "El paquete 1 es más actual que el paquete 2");
-                        styleColor.Fill.SetPattern(PatternValues.Solid, System.Drawing.Color.Red, System.Drawing.Color.DarkSalmon);
+                        styleColor.Fill.SetPattern(PatternValues.Solid, System.Drawing.Color.Yellow, System.Drawing.Color.DarkSalmon);
                         sl.SetRowStyle(_index, styleColor);
                         break;
                     case 4://B es mayor A
                         // code block
                         sl.SetCellValue(_index, 15, "El paquete 2 es más actual que el paquete 1");
-                        styleColor.Fill.SetPattern(PatternValues.Solid, System.Drawing.Color.Red, System.Drawing.Color.DarkSalmon);
+                        styleColor.Fill.SetPattern(PatternValues.Solid, System.Drawing.Color.Yellow, System.Drawing.Color.DarkSalmon);
                         sl.SetRowStyle(_index, styleColor);
                         break;
                     case 5: // Diferentes
@@ -283,13 +283,13 @@ namespace AutoDischange.ViewModel.Helpers
                     case 3://A es mayor B
                         // code block
                         sl.SetCellValue(_index, 16, "El paquete 1 es mayor que el paquete 2");
-                        styleColor.Fill.SetPattern(PatternValues.Solid, System.Drawing.Color.Red, System.Drawing.Color.DarkSalmon);
+                        styleColor.Fill.SetPattern(PatternValues.Solid, System.Drawing.Color.Yellow, System.Drawing.Color.DarkSalmon);
                         sl.SetRowStyle(_index, styleColor);
                         break;
                     case 4://B es mayor A
                         // code block
                         sl.SetCellValue(_index, 16, "El paquete 2 es mayor que el paquete 1");
-                        styleColor.Fill.SetPattern(PatternValues.Solid, System.Drawing.Color.Red, System.Drawing.Color.DarkSalmon);
+                        styleColor.Fill.SetPattern(PatternValues.Solid, System.Drawing.Color.Yellow, System.Drawing.Color.DarkSalmon);
                         sl.SetRowStyle(_index, styleColor);
                         break;
                     case 5: // Diferentes

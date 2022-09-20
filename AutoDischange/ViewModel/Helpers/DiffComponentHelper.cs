@@ -165,40 +165,11 @@ namespace AutoDischange.ViewModel.Helpers
 
                 count++;
             }
-
             //Los que estan solo en A
             FileNameCompare myFileNameCompare = new FileNameCompare();
             var queryNameList1Only = (from file in list1
                                       select file).Except(list2, myFileNameCompare);
-            foreach (var v in queryNameList1Only)
-            {
-                string s = $"{v.Name}{v.Length}{v.LastWriteTime.ToString()}";
-                string sHash = s.GetHashCode().ToString();
-                string sizeAll = GetSizeByte(v);
-
-                diffCompareModel = new DiffCompareModel();
-                diffCompareModel.Id = count;
-                //PathA
-                diffCompareModel.UbicacionA = v.FullName;
-                diffCompareModel.PathA = v.Name;
-                diffCompareModel.HashA = sHash;
-                diffCompareModel.FechaA = v.LastWriteTime;
-                diffCompareModel.LenghtA = sizeAll;
-                //PathB
-                diffCompareModel.UbicacionB = String.Empty;
-                diffCompareModel.PathB = String.Empty;
-                diffCompareModel.HashB = String.Empty;
-                diffCompareModel.FechaB = DateTime.Now;
-                diffCompareModel.LenghtB = String.Empty;
-                //Result
-                diffCompareModel.HashResult = 5;
-                diffCompareModel.FechaResult = 5;
-                diffCompareModel.LenghtResult = 5;
-
-                diffCompareModelList.Add(diffCompareModel);
-
-                count++;
-            }
+            
 
             //Los que estan en A y B pero no son giuales
 
@@ -244,6 +215,37 @@ namespace AutoDischange.ViewModel.Helpers
                 diffCompareModel.LenghtResult = diffCompareModel.HashA.CompareTo(diffCompareModel.LenghtA) > 0 ?
                     diffCompareModel.HashA.CompareTo(diffCompareModel.LenghtB) == 0 ? 2 : 3
                     : 4; // 2= Iguales , 3= A es mayor B y 4= B es mayor A
+
+                diffCompareModelList.Add(diffCompareModel);
+
+                count++;
+            }
+
+            //Los que estan solo en A
+            foreach (var v in queryNameList1Only)
+            {
+                string s = $"{v.Name}{v.Length}{v.LastWriteTime.ToString()}";
+                string sHash = s.GetHashCode().ToString();
+                string sizeAll = GetSizeByte(v);
+
+                diffCompareModel = new DiffCompareModel();
+                diffCompareModel.Id = count;
+                //PathA
+                diffCompareModel.UbicacionA = v.FullName;
+                diffCompareModel.PathA = v.Name;
+                diffCompareModel.HashA = sHash;
+                diffCompareModel.FechaA = v.LastWriteTime;
+                diffCompareModel.LenghtA = sizeAll;
+                //PathB
+                diffCompareModel.UbicacionB = String.Empty;
+                diffCompareModel.PathB = String.Empty;
+                diffCompareModel.HashB = String.Empty;
+                diffCompareModel.FechaB = DateTime.Now;
+                diffCompareModel.LenghtB = String.Empty;
+                //Result
+                diffCompareModel.HashResult = 5;
+                diffCompareModel.FechaResult = 5;
+                diffCompareModel.LenghtResult = 5;
 
                 diffCompareModelList.Add(diffCompareModel);
 

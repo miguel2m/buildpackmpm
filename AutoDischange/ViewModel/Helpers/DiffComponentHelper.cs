@@ -75,7 +75,7 @@ namespace AutoDischange.ViewModel.Helpers
         /// </summary>
         /// <param name="pathA">Ruta Inicio</param>
         /// <param name="pathB">Ruta Destino</param>
-        public static async Task DiffFiles(DiffComponent diffComponent, string pathUser)
+        public static async Task<bool> DiffFiles(DiffComponent diffComponent, string pathUser)
         {
             System.IO.DirectoryInfo dir1 = new System.IO.DirectoryInfo(@diffComponent.PathStart);
             System.IO.DirectoryInfo dir2 = new System.IO.DirectoryInfo(@diffComponent.PathEnd);
@@ -257,6 +257,8 @@ namespace AutoDischange.ViewModel.Helpers
             await task6;
 
             ExcelHelper.CreateExcelDiffComapre(diffCompareModelList, pathUser, diffComponent);
+
+            return true;
 
         }
 

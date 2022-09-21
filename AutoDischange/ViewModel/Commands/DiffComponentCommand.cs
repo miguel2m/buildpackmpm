@@ -7,6 +7,7 @@ using Microsoft.Win32;
 using System.Windows.Input;
 using AutoDischange.Model;
 using System.IO;
+using System.Windows.Forms;
 
 namespace AutoDischange.ViewModel.Commands
 {
@@ -43,25 +44,28 @@ namespace AutoDischange.ViewModel.Commands
                 return false;
             if (data.PathStart == data.PathEnd) //la ruta no debe ser igual
                 return false;
+
+            string dbFile = Path.Combine(Environment.CurrentDirectory, "dischangesPath.db3");
+            if (File.Exists(dbFile) != true)
+                return false;
+
             return true;
         }
 
         public void Execute(object parameter)
         {
-            ViewModel.GenericInput();
-            ////ViewModel.DischangeStatus = "Cargando lista de changesets...";
-            ////TODO: Call login from ViewModel
-            //OpenFileDialog dialog = new OpenFileDialog();
-            //dialog.Filter = "Excel Files|*.xls;*.xlsx;*.xlsm";
-            //dialog.InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
+           
+            using (var fbd = new FolderBrowserDialog())
+            {
+                DialogResult result = fbd.ShowDialog();
 
-            //if (dialog.ShowDialog() == true)
-            //{
-            //    ViewModel.SyncDischanges(dialog.FileName);
-            //    //selectedImage.Source = new BitmapImage(new Uri(fileName));
+                if (!string.IsNullOrWhiteSpace(fbd.SelectedPath))
+                {
+                    ViewModel.GenericInput(fbd.SelectedPath);
 
-            //    //MakePredictionAsync(fileName);
-            //}
+                }
+            }
+
 
         }
     }

@@ -1,11 +1,14 @@
 ﻿using AutoDischange.Model;
 using AutoDischange.ViewModel.Commands;
+using AutoDischange.ViewModel.Helpers;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
 
 namespace AutoDischange.ViewModel
 {
@@ -89,8 +92,48 @@ namespace AutoDischange.ViewModel
 
         public event EventHandler AddInput;
 
-        public void GenericInput()
+        public void GenericInput(string pathUser)
         {
+
+
+
+            try
+            {
+                DiffStatus = $"Leyendo paquetes";
+                DiffVisible = false;
+                DiffComponentHelper.DiffFiles(DiffComponent, pathUser);
+                DiffVisible = true;
+                DiffStatus = $"Tarea comparación de paquetes finalizada";
+            }
+            catch (Exception ex)
+            {
+                DiffVisible = true;
+                DiffStatus = $"Error al ejecutar comparación de paquetes: { ex.Message}.";
+                MessageBox.Show("Error al ejecutar comparación de paquetes : " + ex.Message, "Error al ejecutar comparación de paquetes", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+            
+
+            //var fileStart = DiffComponentHelper.GetFileList(DiffComponent.PathStart);
+            //foreach (var item in fileStart)
+            //{
+            //    //string fileName =Path.GetFileName(item);
+            //    //Console.WriteLine(fileName);
+            //    //var fileFound = DiffComponentHelper.GetSearchFileList(DiffComponent.PathEnd,fileName);
+            //    //Console.WriteLine("fileFound");
+            //    //foreach (var item2 in fileFound)
+            //    //{
+
+            //    //    Console.WriteLine(item2);
+            //    //}
+            //    //Console.WriteLine("Item");
+            //    //Console.WriteLine(item);
+            //}
+            //Console.WriteLine("Path End" + DiffComponent.PathEnd);
+            //var fileEnd = DiffComponentHelper.GetFileList(DiffComponent.PathEnd);
+            //foreach (var item in fileEnd)
+            //{
+            //    Console.WriteLine(item);
+            //}
             //AddInput?.Invoke(this, new EventArgs());
         }
 

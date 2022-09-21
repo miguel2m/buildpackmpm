@@ -92,7 +92,7 @@ namespace AutoDischange.ViewModel
 
         public event EventHandler AddInput;
 
-        public void GenericInput(string pathUser)
+        public async void GenericInput(string pathUser)
         {
 
 
@@ -101,7 +101,7 @@ namespace AutoDischange.ViewModel
             {
                 DiffStatus = $"Leyendo paquetes";
                 DiffVisible = false;
-                DiffComponentHelper.DiffFiles(DiffComponent, pathUser);
+                await DiffComponentHelper.DiffFiles(DiffComponent, pathUser);
                 DiffVisible = true;
                 DiffStatus = $"Tarea comparación de paquetes finalizada";
             }

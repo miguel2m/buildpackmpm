@@ -10,24 +10,38 @@ namespace AutoDischange.ViewModel.Helpers
 {
     public class TransferFileJenkinsHelper
     {
-        public static string JenkinsTransferFile(string rutaDisChanges, string rutaUsr, string branch)
+        public static string JenkinsTransferFile(string rutaUbicFile, string rutaUsr, string branch)
         {
-            //Necesito extraer solo la parte que es necesaria de la ruta de la Guia de Ubicaciones
-            rutaDisChanges = cutPath(rutaDisChanges);
+            string ext = Path.GetExtension(rutaUbicFile);
+            string rutaServer = string.Empty, rutaDisChanges = string.Empty, fileExamp = string.Empty;
+            string rutaPack = string.Empty, rutaI = string.Empty;
+            if (ext == ".sql")
+            {
+                rutaServer = rutaUbicFile;
+                fileExamp = nameFile(rutaServer);
+                rutaPack = rutaNoFile(rutaServer, ext);
+                rutaI = rutaNoFile(rutaServer); ;
+            }
+            else
+            {
+                //Necesito extraer solo la parte que es necesaria de la ruta de la Guia de Ubicaciones
+                rutaDisChanges = cutPath(rutaUbicFile);
 
-            //ruta del servidor
-            string rutaServer = ConfigurationManager.AppSettings["rutaJenkins"];
+                //ruta del servidor
+                rutaServer = ConfigurationManager.AppSettings["rutaJenkins"];
 
-            //Debo conectar la ruta del servidor jenkins con el branch seleccionado por el usuario
-            rutaServer = rutaServer + $@"{branch}\Pack\Latest\";
+                //Debo conectar la ruta del servidor jenkins con el branch seleccionado por el usuario
+                rutaServer = rutaServer + $@"{branch}\Pack\Latest\";
 
-            //Separo la ruta del dischange para obtener el nombre del archivo
-            string fileExamp = nameFile(rutaDisChanges);
+                //Separo la ruta del dischange para obtener el nombre del archivo
+                fileExamp = nameFile(rutaDisChanges);
 
-            //Separo la ruta del dischange para quitar el nombre del archivo
-            string rutaPack = rutaNoFile(rutaDisChanges);
+                //Separo la ruta del dischange para quitar el nombre del archivo
+                rutaPack = rutaNoFile(rutaDisChanges);
 
-            string rutaI = rutaServer + rutaPack;
+                rutaI = rutaServer + rutaPack;
+            }
+
             string rutaF = rutaUsr + $@"{branch}\" + rutaPack;
             try
             {
@@ -72,14 +86,25 @@ namespace AutoDischange.ViewModel.Helpers
 
             return result;
         }
-        public static string rutaNoFile(string url)
+        public static string rutaNoFile(string url, string ext = "")
         {
             string result = string.Empty;
             List<string> list = new List<string>();
             list = url.Split('\\').ToList();
-            for (int i = 0; i < list.Count - 1; i++)
+            int a = list.IndexOf("Scripts");
+            if (ext == ".sql")
             {
-                result += list[i] + "\\";
+                for (int i = a; i < list.Count - 1; i++)
+                {
+                    result += list[i] + "\\";
+                }
+            }
+            else
+            {
+                for (int i = 0; i < list.Count - 1; i++)
+                {
+                    result += list[i] + "\\";
+                }
             }
             return result;
         }

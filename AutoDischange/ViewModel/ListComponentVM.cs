@@ -143,47 +143,68 @@ namespace AutoDischange.ViewModel
                 if (TodosItemTfs.Count > 0)
                 {
                     List<string> list = new List<string>();
-                    string valueString = String.Empty;
-                    //list = url.Split('\\').ToList();
+                    string valueString = String.Empty, ext = string.Empty;
                     foreach (TfsItem item in TodosItemTfs)
                     {
+                        ext = Path.GetExtension(item.path);
+
                         list = item.path.Split('.').ToList();
-                        if (list[list.Count - 1] != "csproj")
+                        if (ext != ".csproj")
                         {
-                            if ((list[list.Count - 1] == "cs"))
+                            if (ext == ".cs")
                             {
                                 List<string> listValue = UtilHelper.fileList(item.path, '/');
                                 valueString = listValue.FirstOrDefault(i => i.Contains("mpm.seg"));
                             }
                             else
                             {
-                                valueString = UtilHelper.nameFile(item.path, '/');
+                                if (ext == ".sql")
+                                {
+                                    bool flag = false;
+                                    valueString = UtilHelper.extraerBranchTfs(item.path, '/');
+                                    string[] info = item.path.Split('/');
+
+                                    foreach (string s in info)
+                                    {
+                                        if (s == "BD")
+                                        {
+                                            flag = true;
+                                        }
+                                        if (flag && s != "BD")
+                                        {
+                                            valueString += $"\\{s}";
+                                        }
+                                    }
+                                }
+                                else
+                                {
+                                    valueString = UtilHelper.nameFile(item.path, '/');
+                                }
                             }
 
                             if (valueString != null)
                             {
-                                //guia de ubicaciones
-                                DischangePathList = (DatabaseHelper.Read<DischangePath>()).Where(n => n.Path.Contains(valueString)).ToList();
-
-                                for (int i = 0; i < DischangePathList.Count; i++)
+                                if (ext == ".sql")
                                 {
-                                    PathGU.Add(DischangePathList[i].Path);
+                                    //JenkinsItem jenkinsItem = new JenkinsItem() { JkPath = valueString };
+                                    PathGU.Add(valueString);
                                 }
+                                else
+                                {
+                                    //guia de ubicaciones
+                                    DischangePathList = (DatabaseHelper.Read<DischangePath>()).Where(n => n.Path.Contains(valueString)).ToList();
+
+                                    for (int i = 0; i < DischangePathList.Count; i++)
+                                    {
+                                        PathGU.Add(DischangePathList[i].Path);
+                                    }
+
+                                }
+
                             }
 
 
                         }
-                        //HAY ARCHIVOS QUE TIENEN "csv", "csproj" Y AL BUSCARLO POR LAS LETRAS "cs" hara un match incorrecto                                               
-                        //if (item.path.Contains("cs"))
-                        //{
-                        //    List<string> listValue = UtilHelper.fileList(item.path, '/');
-                        //    valueString = listValue.First(i => i.Contains("mpm.seg"));
-
-                        //}
-                        //else
-                        //{
-                        //    valueString = UtilHelper.nameFile(item.path, '/');
-                        //}
 
                     }
                 }

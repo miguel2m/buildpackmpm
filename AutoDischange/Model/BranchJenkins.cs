@@ -22,4 +22,8 @@ namespace AutoDischange.Model
         }
 
     }
+    public class JenkinsItem
+    {
+        public string JkPath { get; set; }
+    }
 }

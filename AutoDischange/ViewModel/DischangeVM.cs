@@ -47,7 +47,6 @@ namespace AutoDischange.ViewModel
         }
 
         public ObservableCollection<TfsItem> TfsList{ get; set; }
-
       
 
         private TfsItem tfsSelected;
@@ -64,12 +63,15 @@ namespace AutoDischange.ViewModel
 
         public ObservableCollection<DischangePath> ComponentList { get; set; }
 
+        public ObservableCollection<JenkinsItem> JenkinsListPath { get; set; }
+
         public DischangeVM()
         {
             DischangeCommand = new DischangeCommand(this);
             DischangeChangesets = new ObservableCollection<DischangeChangeset>();
             TfsList = new ObservableCollection<TfsItem>();
             ComponentList = new ObservableCollection<DischangePath>();
+            JenkinsListPath = new ObservableCollection<JenkinsItem>();
             DischangeStatus = "Nada que hacer.";
             PackageCommand = new PackageCommand(this);
 
@@ -102,6 +104,7 @@ namespace AutoDischange.ViewModel
                 {
                     TfsList.Clear();
                     ComponentList.Clear();
+                    JenkinsListPath.Clear();
                     DischangeStatus = "Obteniendo Path del TFS.";
                     List<TfsItem> allItem = await TFSRequest.GetChangeset(SelectedChangeset.Changeset);
                     
@@ -149,12 +152,12 @@ namespace AutoDischange.ViewModel
         public void GetTfsComponent()
         {
             string ext = string.Empty;
-            string pathjenk = @"\\ci-jenkins\branches\BSM\";
             if (TfsSelected != null)
             {
                 try
                 {
                     ComponentList.Clear();
+                    JenkinsListPath.Clear();
                     string valueString = String.Empty;
                     ext = Path.GetExtension(TfsSelected.path);
                     if (ext == ".cs")
@@ -191,8 +194,8 @@ namespace AutoDischange.ViewModel
                     //ACA BUSCO LOS SCRIPT DE SQL PERO EN EL JENKINS PARA MOSTRARLO EN FRONT
                     if (ext == ".sql")
                     {
-                        DischangePath dischangePath = new DischangePath(){ Id = 0, Path = valueString };
-                        ComponentList.Add(dischangePath);
+                        JenkinsItem jenkinsItem = new JenkinsItem() { JkPath = valueString };
+                        JenkinsListPath.Add(jenkinsItem);
                     }
                     else
                     {

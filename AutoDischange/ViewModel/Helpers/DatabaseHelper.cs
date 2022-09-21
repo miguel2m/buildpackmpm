@@ -32,7 +32,11 @@ namespace AutoDischange.ViewModel.Helpers
         public static async Task Delete()
         {
             var db = new SQLiteAsyncConnection(dbFile);
-            await db.DeleteAllAsync<DischangeChangeset>();
+            var ExistTable = await db.GetTableInfoAsync("DischangeChangeset");
+            if (ExistTable.Count > 0)
+            {
+                await db.DeleteAllAsync<DischangeChangeset>();
+            }
         }
 
         //INSERT INTO InsertDischange (Carga Masiva)

@@ -6,6 +6,8 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
+using System.Configuration;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -146,30 +148,61 @@ namespace AutoDischange.ViewModel
 
         public void GetTfsComponent()
         {
+            string ext = string.Empty;
+            string pathjenk = @"\\ci-jenkins\branches\BSM\";
             if (TfsSelected != null)
             {
                 try
                 {
                     ComponentList.Clear();
                     string valueString = String.Empty;
-                    if (TfsSelected.path.Contains("cs"))
+                    ext = Path.GetExtension(TfsSelected.path);
+                    if (ext == ".cs")
                     {
                         List<string> listValue = UtilHelper.fileList(TfsSelected.path, '/');
                         valueString = listValue.First(i => i.Contains("mpm.seg"));
-
                     }
                     else
                     {
-                        valueString = UtilHelper.nameFile(TfsSelected.path, '/');
-                    }
-                    var DischangePathList = (DatabaseHelper.Read<DischangePath>()).Where(n => n.Path.Contains(valueString)).ToList();
-                    
-                    foreach (DischangePath itemLocal in DischangePathList)
-                    {
-                        ComponentList.Add(itemLocal);
-                    }
+                        if (ext == ".sql")
+                        {
+                            bool flag = false; 
+                            valueString = UtilHelper.extraerBranchTfs(TfsSelected.path, '/');
+                            string[] info = TfsSelected.path.Split('/');
 
-                    //DischangeStatus = $"Path Changesets del TFS Obtenido cantidad: {TfsList.Count}.";
+                            foreach (string s in info)
+                            {
+                                if (s == "BD")
+                                {
+                                    flag = true;
+                                }
+                                if (flag && s != "BD")
+                                {
+                                    valueString += $"\\{s}";
+                                }
+                            }
+
+                        }
+                        else
+                        {
+                            valueString = UtilHelper.nameFile(TfsSelected.path, '/');
+                        }                        
+                    }
+                    //ACA BUSCO LOS SCRIPT DE SQL PERO EN EL JENKINS PARA MOSTRARLO EN FRONT
+                    if (ext == ".sql")
+                    {
+                        DischangePath dischangePath = new DischangePath(){ Id = 0, Path = valueString };
+                        ComponentList.Add(dischangePath);
+                    }
+                    else
+                    {
+                        var DischangePathList = (DatabaseHelper.Read<DischangePath>()).Where(n => n.Path.Contains(valueString)).ToList();
+
+                        foreach (DischangePath itemLocal in DischangePathList)
+                        {
+                            ComponentList.Add(itemLocal);
+                        }
+                    }
                 }
                 catch (Exception ex)
                 {

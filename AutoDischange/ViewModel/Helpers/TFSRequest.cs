@@ -2,6 +2,7 @@
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Net.Http;
 using System.Net.Http.Headers;
@@ -30,41 +31,42 @@ namespace AutoDischange.ViewModel.Helpers
 
         //    return tfsReponse;
         //}
-        
+
         //GET Changeset
         public static async Task<List<TfsItem>> GetChangeset(string changeset)
         {
-                List <TfsItem> tfsReponse = new List<TfsItem>();
+            List<TfsItem> tfsReponse = new List<TfsItem>();
 
-                string url = BASE_URL + string.Format(URL_GET_CHANGESET, changeset) + URL_VERSION;
-                
-                using (HttpClient client = new HttpClient())
+            string ext = string.Empty;
+
+            string url = BASE_URL + string.Format(URL_GET_CHANGESET, changeset) + URL_VERSION;
+
+            using (HttpClient client = new HttpClient())
+            {
+
+                var byteArray = Encoding.ASCII.GetBytes($"SEGWIN\\miguelangel.medina:6qpt4zyxkac6n6vhhql4ha6qyjnmz6c5jmhx3d3bwszmmfzrl4gq");
+
+                client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Basic", Convert.ToBase64String(byteArray));
+
+                var response = await client.GetAsync(url);
+                if (!response.IsSuccessStatusCode)
                 {
-
-                    var byteArray = Encoding.ASCII.GetBytes($"SEGWIN\\miguelangel.medina:6qpt4zyxkac6n6vhhql4ha6qyjnmz6c5jmhx3d3bwszmmfzrl4gq");
-
-                    client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Basic", Convert.ToBase64String(byteArray));
-
-                    var response = await client.GetAsync(url);
-                    if (!response.IsSuccessStatusCode)
-                    {
-                        throw new HttpRequestException(response.StatusCode.ToString());
-                    }
-                    string json = await response.Content.ReadAsStringAsync();
-                    TfsModel tfsReponseVar = (JsonConvert.DeserializeObject<TfsModel>(json));
-
-                    foreach (TfsValue itemLocal in tfsReponseVar.value)
-                    {
-                   
-                        tfsReponse.Add(itemLocal.item);
-                    }
-                    
+                    throw new HttpRequestException(response.StatusCode.ToString());
                 }
-            
-            
+                string json = await response.Content.ReadAsStringAsync();
+                TfsModel tfsReponseVar = (JsonConvert.DeserializeObject<TfsModel>(json));
 
+                foreach (TfsValue itemLocal in tfsReponseVar.value)
+                {
+                    //NO SE ADMITE ARCHIVOS SIN EXTENSION O CON EXTENSION .CSPROJ
+                    ext = Path.GetExtension(itemLocal.item.path);
+                    if ((ext != "") && (ext != ".csproj"))
+                    {
+                        tfsReponse.Add(itemLocal.item);
+                    }                  
+                }
+            }
             return tfsReponse;
         }
-
     }
 }

@@ -209,11 +209,14 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Model\ActivityModel.cs" />
     <Compile Include="Model\BranchJenkins.cs" />
     <Compile Include="Model\DiffCompareModel.cs" />
     <Compile Include="Model\DischangeChangeset.cs" />
     <Compile Include="Model\DischangeGraph.cs" />
     <Compile Include="Model\TfsModel.cs" />
+    <Compile Include="ViewModel\ActivityComponentVM.cs" />
+    <Compile Include="ViewModel\Commands\ActivityComponentCommand.cs" />
     <Compile Include="ViewModel\Commands\DischangeCommand.cs" />
     <Compile Include="ViewModel\Commands\ListComponentCommand.cs" />
     <Compile Include="ViewModel\Commands\DiffComponentCommand.cs" />
@@ -230,6 +233,9 @@
     <Compile Include="ViewModel\ListComponentVM.cs" />
     <Compile Include="ViewModel\MainVM.cs" />
     <Compile Include="ViewModel\SettingVM.cs" />
+    <Compile Include="View\ActivityReportWindow.xaml.cs">
+      <DependentUpon>ActivityReportWindow.xaml</DependentUpon>
+    </Compile>
     <Compile Include="View\DiffComponentWindow.xaml.cs">
       <DependentUpon>DiffComponentWindow.xaml</DependentUpon>
     </Compile>
@@ -248,6 +254,10 @@
     <Page Include="Themes\Generic.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
+    </Page>
+    <Page Include="View\ActivityReportWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="View\DiffComponentWindow.xaml">
       <SubType>Designer</SubType>

@@ -18,6 +18,9 @@
                 <MenuItem  Header="Comparación de paquetes"
                            Click="DiffComponent_Click"
                 />
+                <MenuItem  Header="Excel de entrega"
+                           Click="ActivityComponent_Click"
+                />
                 <MenuItem  Header="Exit"
                            Click="MenuItem_Click"
                 />

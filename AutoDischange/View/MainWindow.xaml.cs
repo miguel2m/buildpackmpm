@@ -61,6 +61,14 @@ namespace AutoDischange.View
             Application.Current.Shutdown();
         }
 
+        private void ActivityComponent_Click(object sender, RoutedEventArgs e)
+        {
+            ActivityReportWindow activityReportWindow = new ActivityReportWindow();
+            activityReportWindow.ShowDialog();
+        }
+
+        
+
         private void ToolItem_Click(object sender, RoutedEventArgs e)
         {
             ToolWindow toolWindowWindow = new ToolWindow();

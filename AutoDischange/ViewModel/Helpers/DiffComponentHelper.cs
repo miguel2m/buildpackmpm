@@ -155,7 +155,7 @@ namespace AutoDischange.ViewModel.Helpers
                 IEnumerable<System.IO.FileInfo> queryNameList1Only = await task2;
 
 
-                if (queryList1Intersect.Count() > 0)
+                if (queryList1Intersect.Count() > 0 && queryNameList1Only.Count() > 0)
                 {
                     //Los que estan en A y B pero no son giuales
 
@@ -227,44 +227,47 @@ namespace AutoDischange.ViewModel.Helpers
                     task5.Start();
                     await task5;
                 }
-                
 
-
-                Task task6 = new Task(() =>
+                if (queryNameList1Only.Count() > 0)
                 {
-                    //Los que estan solo en A
-                    foreach (var v in queryNameList1Only)
+                    Task task6 = new Task(() =>
                     {
-                        s = $"{v.Name}{v.Length}{v.LastWriteTime.ToString()}";
-                        sHash = s.GetHashCode().ToString();
-                        sizeAll = GetSizeByte(v);
+                        //Los que estan solo en A
+                        foreach (var v in queryNameList1Only)
+                        {
+                            s = $"{v.Name}{v.Length}{v.LastWriteTime.ToString()}";
+                            sHash = s.GetHashCode().ToString();
+                            sizeAll = GetSizeByte(v);
 
-                        diffCompareModel = new DiffCompareModel();
-                        diffCompareModel.Id = count;
-                        //PathA
-                        diffCompareModel.UbicacionA = v.FullName;
-                        diffCompareModel.PathA = v.Name;
-                        diffCompareModel.HashA = sHash;
-                        diffCompareModel.FechaA = v.LastWriteTime;
-                        diffCompareModel.LenghtA = sizeAll;
-                        //PathB
-                        diffCompareModel.UbicacionB = String.Empty;
-                        diffCompareModel.PathB = String.Empty;
-                        diffCompareModel.HashB = String.Empty;
-                        //diffCompareModel.FechaB = null;
-                        diffCompareModel.LenghtB = String.Empty;
-                        //Result
-                        diffCompareModel.HashResult = 5;
-                        diffCompareModel.FechaResult = 5;
-                        diffCompareModel.LenghtResult = 5;
+                            diffCompareModel = new DiffCompareModel();
+                            diffCompareModel.Id = count;
+                            //PathA
+                            diffCompareModel.UbicacionA = v.FullName;
+                            diffCompareModel.PathA = v.Name;
+                            diffCompareModel.HashA = sHash;
+                            diffCompareModel.FechaA = v.LastWriteTime;
+                            diffCompareModel.LenghtA = sizeAll;
+                            //PathB
+                            diffCompareModel.UbicacionB = String.Empty;
+                            diffCompareModel.PathB = String.Empty;
+                            diffCompareModel.HashB = String.Empty;
+                            //diffCompareModel.FechaB = null;
+                            diffCompareModel.LenghtB = String.Empty;
+                            //Result
+                            diffCompareModel.HashResult = 5;
+                            diffCompareModel.FechaResult = 5;
+                            diffCompareModel.LenghtResult = 5;
 
-                        diffCompareModelList.Add(diffCompareModel);
+                            diffCompareModelList.Add(diffCompareModel);
 
-                        count++;
-                    }
-                });
-                task6.Start();
-                await task6;
+                            count++;
+                        }
+                    });
+                    task6.Start();
+                    await task6;
+                }
+
+                
 
                 ExcelHelper.CreateExcelDiffComapre(diffCompareModelList, pathUser, diffComponent);
                 return true;

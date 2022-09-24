@@ -88,24 +88,25 @@ namespace AutoDischange.ViewModel.Helpers
             {
                 foreach (System.IO.FileInfo item in listInput)
                 {
-                    Task<List<DischangePath>> task1 = new Task<List<DischangePath>>(() =>
-                    {
-                        return (DatabaseHelper.Read<DischangePath>()).Where(n => n.Path.Contains(item.Name)).ToList();
-                    });
-                    task1.Start();
-                    List<DischangePath> dischangePathListTemp = await task1;
-                    if (dischangePathListTemp.Any())
-                    {
-                        //DischangePathList.Add(dischangePathListTemp.First().Path);
-                        //foreach (DischangePath itemTemp in dischangePathListTemp)
-                        //{
-                        //    DischangePathList.Add(itemTemp.Path);
-                        //}
-                    }
-                    else
-                    {
-                        DischangePathList.Add(item.Name);
-                    }
+                    //Task<List<DischangePath>> task1 = new Task<List<DischangePath>>(() =>
+                    //{
+                    //    return (DatabaseHelper.Read<DischangePath>()).Where(n => n.Path.Contains(item.Name)).ToList();
+                    //});
+                    //task1.Start();
+                    //List<DischangePath> dischangePathListTemp = await task1;
+                    //if (dischangePathListTemp.Any())
+                    //{
+                    //    //DischangePathList.Add(dischangePathListTemp.First().Path);
+                    //    foreach (DischangePath itemTemp in dischangePathListTemp)
+                    //    {
+                    //        DischangePathList.Add(itemTemp.Path);
+                    //    }
+                    //}
+                    //else
+                    //{
+                    //    DischangePathList.Add(item.Name);
+                    //}
+                    DischangePathList.Add(item.Name);
                 }
             });
             task0.Start();

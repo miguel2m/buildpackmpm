@@ -76,12 +76,12 @@ namespace AutoDischange.ViewModel
         {
             try
             {
-                activityStatus = $"Leyendo paquetes";
+                ActivityStatus = $"Leyendo paquetes";
                 ActivityVisible = false;
                 //await DiffComponentHelper.DiffFiles(DiffComponent, pathUser);
                 await ActivityHelper.ExportActivity(activityComponent, pathUser);
                 ActivityVisible = true;
-                activityStatus = $"Tarea comparación de paquetes finalizada";
+                ActivityStatus = $"Tarea comparación de paquetes finalizada";
                 MessageBox.Show("Listo ", "Listo", MessageBoxButton.OK, MessageBoxImage.Information);
             }
             catch (Exception ex)

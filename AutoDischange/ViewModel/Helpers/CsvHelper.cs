@@ -23,33 +23,31 @@ namespace AutoDischange.ViewModel.Helpers
 
             // To Read Use:
             var result = engine.ReadFile(filePath);
-
-            Task task0 = new Task(async () =>
+            foreach (DisChangeData item in result)
             {
-                foreach (DisChangeData item in result)
+                DischangePath DischangeChangeset = new DischangePath
                 {
-                    DischangePath DischangeChangeset = new DischangePath
-                    {
-                        Path = item.PathData,
-                    };
+                    Path = item.PathData,
+                };
 
-                    var notebooks = (DatabaseHelper.Read<DischangePath>()).Where(n => n.Path == DischangeChangeset.Path).ToList();
+                var notebooks = (DatabaseHelper.Read<DischangePath>()).Where(n => n.Path == DischangeChangeset.Path).ToList();
 
 
-                    if (notebooks.Count() == 0)
-                    {
-                        resultMethod = await DatabaseHelper.InsertDischange(DischangeChangeset);
-                    }
-                    else
-                    {
-                        DischangeChangeset.Id = notebooks[0].Id;
-                        resultMethod = await DatabaseHelper.InsertReplaceDischange(DischangeChangeset);
-                    }
+                if (notebooks.Count() == 0)
+                {
+                    resultMethod = await DatabaseHelper.InsertDischange(DischangeChangeset);
                 }
-            });
-            task0.Start();
-            await task0;
+                else
+                {
+                    DischangeChangeset.Id = notebooks[0].Id;
+                    resultMethod = await DatabaseHelper.InsertReplaceDischange(DischangeChangeset);
+                }
+            }
 
+      
+
+               
+            
             
 
             return resultMethod;

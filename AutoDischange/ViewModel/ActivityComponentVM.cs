@@ -1,11 +1,13 @@
 ﻿using AutoDischange.Model;
 using AutoDischange.ViewModel.Commands;
+using AutoDischange.ViewModel.Helpers;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
 
 namespace AutoDischange.ViewModel
 {
@@ -68,6 +70,26 @@ namespace AutoDischange.ViewModel
             ActivityComponentCommand = new ActivityComponentCommand(this);
             activityComponent = new ActivityComponent();
             ActivityVisible = true;
+        }
+
+        public async void ExcuteActivityExport(string pathUser)
+        {
+            try
+            {
+                activityStatus = $"Leyendo paquetes";
+                ActivityVisible = false;
+                //await DiffComponentHelper.DiffFiles(DiffComponent, pathUser);
+                await ActivityHelper.ExportActivity(activityComponent, pathUser);
+                ActivityVisible = true;
+                activityStatus = $"Tarea comparación de paquetes finalizada";
+                MessageBox.Show("Listo ", "Listo", MessageBoxButton.OK, MessageBoxImage.Information);
+            }
+            catch (Exception ex)
+            {
+                ActivityVisible = true;
+                activityStatus = $"Error al ejecutar Excel de entrega: { ex.Message}.";
+                MessageBox.Show("Error al ejecutar Excel de entrega: " + ex.Message, "Error al ejecutar Excel de entrega", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
         }
 
 

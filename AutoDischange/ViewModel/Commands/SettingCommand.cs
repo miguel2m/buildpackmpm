@@ -30,7 +30,8 @@ namespace AutoDischange.ViewModel.Commands
             //ViewModel.DischangeStatus = "Cargando lista de changesets...";
             //TODO: Call login from ViewModel
             OpenFileDialog dialog = new OpenFileDialog();
-            dialog.Filter = "Excel Files|*.xls;*.xlsx;*.xlsm";
+            //dialog.Filter = "Excel Files|*.xls;*.xlsx;*.xlsm"; 
+            dialog.Filter = "CSV Files (*.csv)|*.csv";
             dialog.InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
 
             if (dialog.ShowDialog() == true)

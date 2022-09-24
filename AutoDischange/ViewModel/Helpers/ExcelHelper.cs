@@ -8,6 +8,8 @@ using System.Text;
 using System.Threading.Tasks;
 using DocumentFormat.OpenXml;
 using DocumentFormat.OpenXml.Spreadsheet;
+using System.IO;
+
 
 namespace AutoDischange.ViewModel.Helpers
 {
@@ -91,7 +93,7 @@ namespace AutoDischange.ViewModel.Helpers
 
         }
 
-        //Create excel aand insert worksheet
+        //Create excel aand insert worksheet for Comparacion de componeentes
         public static void CreateExcelDiffComapre(List<DiffCompareModel> diffCompareModelList,string pathUser, DiffComponent diffComponent)
         {
             string rtfFile = System.IO.Path.Combine(pathUser, $"InformeComparacionComponentes_{Math.Abs(diffCompareModelList.GetHashCode())}.xlsx");
@@ -318,6 +320,58 @@ namespace AutoDischange.ViewModel.Helpers
 
         }
 
+        //READ Local DIS_Changes
+        public static void ReadExcelEntrega(List<ActivityModel> ActivityModelList, string filePath)
+        {
 
+
+            //bool result = false;
+            //List<DischangePath> DischangeChangesets = new List<DischangePath>();
+            //FileStream fs = new FileStream(rtfFile, FileMode.Open);
+            //MemoryStream msFirstPass = new MemoryStream();
+
+
+
+            string rtfFile = System.IO.Path.Combine(Environment.CurrentDirectory, "ExcelEntrega.xlsx");
+            FileStream fs = new FileStream(rtfFile, FileMode.Open);
+            MemoryStream msPass = new MemoryStream();
+            //MemoryStream msPassTemp;
+            SLDocument slOriginal = new SLDocument(fs);
+            slOriginal.SaveAs(msPass);
+
+            SLDocument sl = new SLDocument(msPass);
+            foreach (ActivityModel item in ActivityModelList)
+            {
+                //ActivityModel item = ActivityModelList.First();
+                sl.SelectWorksheet(item.Workbook);
+
+                int _index = 2;
+                int contador = 1;
+                foreach (string fileType in item.ListFile)
+                {
+
+                    //SET Header
+                    sl.SetCellValue(_index, 1, contador);
+                    //SET Header Paquete A
+                    sl.SetCellValue(_index, 2, fileType);
+                    _index++;
+                    contador++;
+                }
+                //msPassTemp = new MemoryStream();
+                //sl.SaveAs(msPass);
+            }
+
+            //SLDocument slUpdated = new SLDocument(msPass);
+            fs.Close();
+            //MemoryStream msPassUpdate = new MemoryStream();
+            //slUpdated.SaveAs("OpenFromStreamModified2.xlsx");
+            char backSlash = Path.DirectorySeparatorChar;
+            sl.SaveAs($"{@filePath}{backSlash}ExcelEntrega_{DateTime.Now.ToString("yyyyMMddHHmmss")}.xlsx");
+            //sl.SaveAs(msPassUpdate);
+            //msPassUpdate.Position = 0;
+            //File(ms, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "Report.xlsx");
+
+
+        }
     }
 }

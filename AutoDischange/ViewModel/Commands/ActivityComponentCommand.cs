@@ -53,6 +53,7 @@ namespace AutoDischange.ViewModel.Commands
                 if (!string.IsNullOrWhiteSpace(fbd.SelectedPath))
                 {
                     //ViewModel.GenericInput(fbd.SelectedPath);
+                    ViewModel.ExcuteActivityExport(fbd.SelectedPath);
 
                 }
             }

@@ -52,7 +52,8 @@ namespace AutoDischange.ViewModel
                
                 StatusExcel = "Cargando Excel....";
                 SyncStatus = false ;
-                SyncStatus = await ExcelHelper.ReadExcelDIS_Changes(filePath);
+                //SyncStatus = await ExcelHelper.ReadExcelDIS_Changes(filePath);
+                SyncStatus = await CsvHelper.ReadCSVDIS_Changes(filePath);              
                 SyncStatus = true;
                 //string dbFile = Path.Combine(Environment.CurrentDirectory, "dischangesPath.db3");
                 StatusExcel = "Carga Excel finalizada.";

@@ -361,22 +361,24 @@ namespace AutoDischange.ViewModel.Helpers
             SLDocument sl = new SLDocument(msPass);
             sl.SelectWorksheet(listData.First().Workbook);
             int _index = 2;
+            int _contador = 1;
             foreach (ActivityComponentListAlojables item in listData)
             {
 
                 
                 //sl.SetCellValue(_index, 1, item.Id);
                 int _indexComponet = _index;
+                
                 foreach (string itemComponent in item.DischangeComponentName)
                 {
 
 
-                    sl.SetCellValue(_indexComponet, 1, item.Id);
-                    sl.SetCellValue(_indexComponet, 2, itemComponent);
-                    _indexComponet++;
+                        sl.SetCellValue(_index, 1, _contador);
+                        sl.SetCellValue(_index, 2, itemComponent);
+                        _index++;
+                        _contador++;
                 }
                 
-                _index++;
             }
             //char backSlash = Path.DirectorySeparatorChar;
            
@@ -394,19 +396,19 @@ namespace AutoDischange.ViewModel.Helpers
             SLDocument sl = new SLDocument(msPass);
             sl.SelectWorksheet(listData.First().Workbook);
             int _index = 2;
+            int _contador = 1;
             foreach (ActivityComponentListConfigurables item in listData)
             {
-
-                int _indexComponet = _index;
+               
                 foreach (string itemComponent in item.DischangeComponentName)
                 {
-                    sl.SetCellValue(_indexComponet, 1, item.Id);
-                    sl.SetCellValue(_indexComponet, 2, itemComponent);
-                    sl.SetCellValue(_indexComponet, 3, item.ComponentEnv);
-                    _indexComponet++;
+                    sl.SetCellValue(_index, 1, _contador);
+                    sl.SetCellValue(_index, 2, itemComponent);
+                    sl.SetCellValue(_index, 3, item.ComponentEnv);
+                    _index++;
+                    _contador++;
                 }
                 
-                _index++;
             }
             //char backSlash = Path.DirectorySeparatorChar;
             sl.SaveAs(msPassTemp);
@@ -423,19 +425,20 @@ namespace AutoDischange.ViewModel.Helpers
             SLDocument sl = new SLDocument(msPass);
             sl.SelectWorksheet(listData.First().Workbook);
             int _index = 2;
+            int _contador = 1;
             foreach (ActivityComponentListScript item in listData)
             {
                 int _indexComponet = _index;
                 foreach (string itemComponent in item.DischangeComponentName)
                 {
-                    sl.SetCellValue(_indexComponet, 1, item.Id);
-                    sl.SetCellValue(_indexComponet, 2, itemComponent);
-                    sl.SetCellValue(_indexComponet, 3, item.TypeScript);
-                    _indexComponet++;
+                    sl.SetCellValue(_index, 1, _contador);
+                    sl.SetCellValue(_index, 2, itemComponent);
+                    sl.SetCellValue(_index, 3, item.TypeScript);
+                    _index++;
+                    _contador++;
                 }
 
-                
-                _index++;
+               
             }
             //char backSlash = Path.DirectorySeparatorChar;
             sl.SaveAs(msPassTemp);

@@ -321,56 +321,137 @@ namespace AutoDischange.ViewModel.Helpers
         }
 
         //READ Local DIS_Changes
-        public static void ReadExcelEntrega(List<ActivityModel> ActivityModelList, string filePath)
-        {
-
-
-            //bool result = false;
-            //List<DischangePath> DischangeChangesets = new List<DischangePath>();
-            //FileStream fs = new FileStream(rtfFile, FileMode.Open);
-            //MemoryStream msFirstPass = new MemoryStream();
-
-
+        public static MemoryStream ReadExcelEntrega()
+        {          
 
             string rtfFile = System.IO.Path.Combine(Environment.CurrentDirectory, "ExcelEntrega.xlsx");
             FileStream fs = new FileStream(rtfFile, FileMode.Open);
             MemoryStream msPass = new MemoryStream();
-            //MemoryStream msPassTemp;
             SLDocument slOriginal = new SLDocument(fs);
             slOriginal.SaveAs(msPass);
 
-            SLDocument sl = new SLDocument(msPass);
-            foreach (ActivityModel item in ActivityModelList)
-            {
-                //ActivityModel item = ActivityModelList.First();
-                sl.SelectWorksheet(item.Workbook);
+            //SLDocument sl = new SLDocument(msPass);
+            //foreach (ActivityModel item in ActivityModelList)
+            //{
+            //    sl.SelectWorksheet(item.Workbook);
 
-                int _index = 2;
-                int contador = 1;
-                foreach (string fileType in item.ListFile)
+            //    int _index = 2;
+            //    int contador = 1;
+            //    foreach (string fileType in item.ListFile)
+            //    {
+            //        sl.SetCellValue(_index, 1, contador);
+            //        sl.SetCellValue(_index, 2, fileType);
+            //        _index++;
+            //        contador++;
+            //    }
+            //}          
+            fs.Close();
+            //char backSlash = Path.DirectorySeparatorChar;
+            //sl.SaveAs($"{@filePath}{backSlash}ExcelEntrega_{DateTime.Now.ToString("yyyyMMddHHmmss")}.xlsx");
+            //msPass.Position = 0;
+            return msPass;
+
+        }
+
+        //Set ListadoAlojables
+        public static MemoryStream ListadoAlojables(MemoryStream msPass, List<ActivityComponentListAlojables>  listData)
+        {
+            msPass.Position = 0;
+            MemoryStream msPassTemp = new MemoryStream();
+            SLDocument sl = new SLDocument(msPass);
+            sl.SelectWorksheet(listData.First().Workbook);
+            int _index = 2;
+            foreach (ActivityComponentListAlojables item in listData)
+            {
+
+                
+                //sl.SetCellValue(_index, 1, item.Id);
+                int _indexComponet = _index;
+                foreach (string itemComponent in item.DischangeComponentName)
                 {
 
-                    //SET Header
-                    sl.SetCellValue(_index, 1, contador);
-                    //SET Header Paquete A
-                    sl.SetCellValue(_index, 2, fileType);
-                    _index++;
-                    contador++;
+
+                    sl.SetCellValue(_indexComponet, 1, item.Id);
+                    sl.SetCellValue(_indexComponet, 2, itemComponent);
+                    _indexComponet++;
                 }
-                //msPassTemp = new MemoryStream();
-                //sl.SaveAs(msPass);
+                
+                _index++;
             }
+            //char backSlash = Path.DirectorySeparatorChar;
+           
+            sl.SaveAs(msPassTemp);
+            //msPassTemp.Position = 0;
+            return msPassTemp;
 
-            //SLDocument slUpdated = new SLDocument(msPass);
-            fs.Close();
-            //MemoryStream msPassUpdate = new MemoryStream();
-            //slUpdated.SaveAs("OpenFromStreamModified2.xlsx");
+        }
+
+        //Set ListadoConfigurables
+        public static MemoryStream ListadoConfigurables(MemoryStream msPass, List<ActivityComponentListConfigurables> listData)
+        {
+            msPass.Position = 0;
+            MemoryStream msPassTemp = new MemoryStream();
+            SLDocument sl = new SLDocument(msPass);
+            sl.SelectWorksheet(listData.First().Workbook);
+            int _index = 2;
+            foreach (ActivityComponentListConfigurables item in listData)
+            {
+
+                int _indexComponet = _index;
+                foreach (string itemComponent in item.DischangeComponentName)
+                {
+                    sl.SetCellValue(_indexComponet, 1, item.Id);
+                    sl.SetCellValue(_indexComponet, 2, itemComponent);
+                    sl.SetCellValue(_indexComponet, 3, item.ComponentEnv);
+                    _indexComponet++;
+                }
+                
+                _index++;
+            }
+            //char backSlash = Path.DirectorySeparatorChar;
+            sl.SaveAs(msPassTemp);
+
+            return msPassTemp;
+
+        }
+
+        //Set ListadoScript
+        public static MemoryStream ListadoScript(MemoryStream msPass, List<ActivityComponentListScript> listData)
+        {
+            msPass.Position = 0;
+            MemoryStream msPassTemp = new MemoryStream();
+            SLDocument sl = new SLDocument(msPass);
+            sl.SelectWorksheet(listData.First().Workbook);
+            int _index = 2;
+            foreach (ActivityComponentListScript item in listData)
+            {
+                int _indexComponet = _index;
+                foreach (string itemComponent in item.DischangeComponentName)
+                {
+                    sl.SetCellValue(_indexComponet, 1, item.Id);
+                    sl.SetCellValue(_indexComponet, 2, itemComponent);
+                    sl.SetCellValue(_indexComponet, 3, item.TypeScript);
+                    _indexComponet++;
+                }
+
+                
+                _index++;
+            }
+            //char backSlash = Path.DirectorySeparatorChar;
+            sl.SaveAs(msPassTemp);
+
+            return msPassTemp;
+
+        }
+
+        //READ Local DIS_Changes
+        public static void SaveExcelEntrega (MemoryStream msPass, string filePath)
+        {
+            msPass.Position = 0;
+            SLDocument sl = new SLDocument(msPass);
             char backSlash = Path.DirectorySeparatorChar;
+            //msPass.Position = 0;
             sl.SaveAs($"{@filePath}{backSlash}ExcelEntrega_{DateTime.Now.ToString("yyyyMMddHHmmss")}.xlsx");
-            //sl.SaveAs(msPassUpdate);
-            //msPassUpdate.Position = 0;
-            //File(ms, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "Report.xlsx");
-
 
         }
     }

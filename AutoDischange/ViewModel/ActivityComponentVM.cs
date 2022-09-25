@@ -87,7 +87,7 @@ namespace AutoDischange.ViewModel
             catch (Exception ex)
             {
                 ActivityVisible = true;
-                activityStatus = $"Error al ejecutar Excel de entrega: { ex.Message}.";
+                ActivityStatus = $"Error al ejecutar Excel de entrega: { ex.Message}.";
                 MessageBox.Show("Error al ejecutar Excel de entrega: " + ex.Message, "Error al ejecutar Excel de entrega", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }

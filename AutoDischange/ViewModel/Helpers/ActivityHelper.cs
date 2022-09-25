@@ -27,85 +27,87 @@ namespace AutoDischange.ViewModel.Helpers
             IEnumerable<System.IO.FileInfo> listConfigurables;
             IEnumerable<System.IO.FileInfo> listScript;
 
-            List<ActivityModel> ActivityModelList = new List<ActivityModel> ();
-            ActivityModel ActivityModel;
+            
+
+            List<ActivityComponentListAlojables> ActivityComponentListAlojablesList;
+            List<ActivityComponentListConfigurables> ActivityComponentListConfigurablesList = new List<ActivityComponentListConfigurables>();
+            List<ActivityComponentListScript> ActivityComponentListScriptList = new List<ActivityComponentListScript>();
+
+
             
 
             if (!Directory.Exists(pathAlojables) && !Directory.Exists(pathConfigurables) && !Directory.Exists(pathScript))
             {
                 throw new DirectoryNotFoundException("Debe seleccionar carpeta de componentes");
             }
-            
 
+            //MemoryStream msPass = ExcelHelper.ReadExcelEntrega();
+            MemoryStream msPass = new MemoryStream();
+            ExcelHelper.ReadExcelEntrega().WriteTo(msPass);
             //Listado de Alojables
             if (Directory.Exists(pathAlojables))
             {
                 dirAlojables = new System.IO.DirectoryInfo(pathAlojables);
                 listAlojables = dirAlojables.GetFiles("*.*", System.IO.SearchOption.AllDirectories);
-                
-                
-                ActivityModel = new ActivityModel();
-                ActivityModel.ListFile = await ListPathDischange(listAlojables);
-                ActivityModel.Workbook = "ListadoAlojables";
-                ActivityModelList.Add(ActivityModel);
-                //ExcelHelper.ReadExcelEntrega(listAlojables, pathUser, "ListadoAlojables");
+                List<string> DischangePathList = await ListPathDischange(listAlojables);
+                ActivityComponentListAlojablesList = await ListAlojables(DischangePathList);        
+                if (ActivityComponentListAlojablesList.Any())
+                {
+
+                    MemoryStream msPassTemp = new MemoryStream();
+                    ExcelHelper.ListadoAlojables(msPass, ActivityComponentListAlojablesList).WriteTo(msPassTemp) ;
+                    msPass = new MemoryStream();
+                    msPassTemp.WriteTo(msPass);
+                   
+                }
             }
             //Listado de Configurables
             if (Directory.Exists(pathConfigurables))
             {
                 dirConfigurables = new System.IO.DirectoryInfo(pathConfigurables);
                 listConfigurables = dirConfigurables.GetFiles("*.*", System.IO.SearchOption.AllDirectories);
-                ActivityModel = new ActivityModel();
-                ActivityModel.ListFile = await ListPathDischange(listConfigurables);
-                ActivityModel.Workbook = "ListadoConfigurables";
-                ActivityModelList.Add(ActivityModel);
-                //msPass = ExcelHelper.ReadExcelEntrega(msPass, listConfigurables, pathUser, "ListadoConfigurables");
+                List<string> DischangePathList = await ListPathDischange(listConfigurables);
+                ActivityComponentListConfigurablesList = await ListConfigurables(DischangePathList);
+                if (ActivityComponentListConfigurablesList.Any())
+                {
+
+                    MemoryStream msPassTemp = new MemoryStream();
+                    ExcelHelper.ListadoConfigurables(msPass, ActivityComponentListConfigurablesList).WriteTo(msPassTemp);
+                    msPass = new MemoryStream();
+                    msPassTemp.WriteTo(msPass);
+
+                }
             }
+
             //Listado de Script
-            if (Directory.Exists(pathScript))
+            if (Directory.Exists(pathConfigurables))
             {
                 dirScript = new System.IO.DirectoryInfo(pathScript);
                 listScript = dirScript.GetFiles("*.*", System.IO.SearchOption.AllDirectories);
-                ActivityModel = new ActivityModel();
-                ActivityModel.ListFile = await ListPathDischange(listScript);
-                ActivityModel.Workbook = "ListadoScripts";
-                ActivityModelList.Add(ActivityModel);
-                //msPass = ExcelHelper.ReadExcelEntrega(msPass, listScript, pathUser, "ListadoScripts");
+                List<string> DischangePathList = await ListPathDischange(listScript);
+                ActivityComponentListScriptList = await ListScript(DischangePathList);
+                if (ActivityComponentListScriptList.Any())
+                {
+
+                    MemoryStream msPassTemp = new MemoryStream();
+                    ExcelHelper.ListadoScript(msPass, ActivityComponentListScriptList).WriteTo(msPassTemp);
+                    msPass = new MemoryStream();
+                    msPassTemp.WriteTo(msPass);
+
+                }
             }
 
-            if (ActivityModelList.Any())
-            {
-                //ExcelHelper.ReadExcelEntrega(listAlojables, pathUser, "ListadoAlojables");
-                ExcelHelper.ReadExcelEntrega(ActivityModelList, pathUser);
-            }
+            ExcelHelper.SaveExcelEntrega(msPass, pathUser);
         }
 
         public static async Task<List<string>> ListPathDischange(IEnumerable<System.IO.FileInfo> listInput)
         {
             List<string> DischangePathList = new List<string>();
 
-            Task task0 = new Task(async () =>
+            Task task0 = new Task( () =>
             {
                 foreach (System.IO.FileInfo item in listInput)
                 {
-                    //Task<List<DischangePath>> task1 = new Task<List<DischangePath>>(() =>
-                    //{
-                    //    return (DatabaseHelper.Read<DischangePath>()).Where(n => n.Path.Contains(item.Name)).ToList();
-                    //});
-                    //task1.Start();
-                    //List<DischangePath> dischangePathListTemp = await task1;
-                    //if (dischangePathListTemp.Any())
-                    //{
-                    //    //DischangePathList.Add(dischangePathListTemp.First().Path);
-                    //    foreach (DischangePath itemTemp in dischangePathListTemp)
-                    //    {
-                    //        DischangePathList.Add(itemTemp.Path);
-                    //    }
-                    //}
-                    //else
-                    //{
-                    //    DischangePathList.Add(item.Name);
-                    //}
                     DischangePathList.Add(item.Name);
                 }
             });
@@ -113,6 +115,134 @@ namespace AutoDischange.ViewModel.Helpers
             await task0;
             
             return DischangePathList;
+        }
+
+        //ListadoAlojables Sheet
+        public static async Task<List<ActivityComponentListAlojables>> ListAlojables(List<string> listInput)
+        {
+            
+           
+            Task<List<ActivityComponentListAlojables>> task0 = new Task<List<ActivityComponentListAlojables>>(() =>
+            {
+                List<ActivityComponentListAlojables> ActivityComponentListAlojablesListTask = new List<ActivityComponentListAlojables>();
+                ActivityComponentListAlojables ActivityComponentListAlojables;
+                int _contador = 1;
+                foreach (string item in listInput)
+                {
+                    
+                    List<DischangePath> dischangePathListTemp = (DatabaseHelper.Read<DischangePath>()).Where(n => n.Path.Contains(item)).ToList(); ;
+                    ActivityComponentListAlojables = new ActivityComponentListAlojables();
+                    ActivityComponentListAlojables.Id = _contador;
+                    ActivityComponentListAlojables.Workbook = "ListadoAlojables";
+                    if (dischangePathListTemp.Any())
+                    {
+                        //DischangePathList.Add(dischangePathListTemp.First().Path);
+                        foreach (DischangePath itemTemp in dischangePathListTemp)
+                        {
+                            ActivityComponentListAlojables.DischangeComponentName.Add(itemTemp.Path);
+
+                        }
+                    }
+                    else
+                    {
+                        ActivityComponentListAlojables.DischangeComponentName.Add(item);
+                    }
+                    ActivityComponentListAlojablesListTask.Add(ActivityComponentListAlojables);
+                    _contador++;
+                }
+                return ActivityComponentListAlojablesListTask;
+            });
+            task0.Start();
+
+            return await task0;
+        }
+
+        //ListadoConfigurables Sheet
+        public static async Task<List<ActivityComponentListConfigurables>> ListConfigurables(List<string> listInput)
+        {
+            
+           
+            Task<List<ActivityComponentListConfigurables>> task0 = new Task<List<ActivityComponentListConfigurables>>( () =>
+            {
+                List<ActivityComponentListConfigurables> ActivityComponentListConfigurablesList = new List<ActivityComponentListConfigurables>();
+                ActivityComponentListConfigurables ActivityComponentConfigurables;
+                int _contador = 1;
+                foreach (string item in listInput)
+                {
+                   
+                    List<DischangePath> dischangePathListTemp = (DatabaseHelper.Read<DischangePath>()).Where(n => n.Path.Contains(item)).ToList();
+                    ActivityComponentConfigurables = new ActivityComponentListConfigurables();
+                    ActivityComponentConfigurables.Id = _contador;
+                    ActivityComponentConfigurables.Workbook = "ListadoConfigurables";
+                    ActivityComponentConfigurables.ComponentEnv = "TEST";
+
+                    if (dischangePathListTemp.Any())
+                    {
+                        //DischangePathList.Add(dischangePathListTemp.First().Path);
+                        foreach (DischangePath itemTemp in dischangePathListTemp)
+                        {
+                            ActivityComponentConfigurables.DischangeComponentName.Add(itemTemp.Path);
+
+                        }
+                    }
+                    else
+                    {
+                        ActivityComponentConfigurables.DischangeComponentName.Add(item);
+                    }
+                    ActivityComponentListConfigurablesList.Add(ActivityComponentConfigurables);
+                    _contador++;
+                }
+                return ActivityComponentListConfigurablesList;
+            });
+            task0.Start();
+            
+
+            return await task0;
+        }
+
+        //ListadoScript Sheet
+        public static async Task<List<ActivityComponentListScript>> ListScript(List<string> listInput)
+        {
+            
+            Task<List<ActivityComponentListScript>> task0 = new Task<List<ActivityComponentListScript>>( () =>
+            {
+                List<ActivityComponentListScript> ActivityComponentScriptList = new List<ActivityComponentListScript>();
+                ActivityComponentListScript ActivityComponentScript;
+                int _contador = 1;
+                foreach (string item in listInput)
+                {
+                    
+                    List<DischangePath> dischangePathListTemp = (DatabaseHelper.Read<DischangePath>()).Where(n => n.Path.Contains(item)).ToList();
+                    ActivityComponentScript = new ActivityComponentListScript();
+                    ActivityComponentScript.Id = _contador;
+                    ActivityComponentScript.Workbook = "ListadoScripts";
+                    if (item.Contains("DDL")) ActivityComponentScript.TypeScript = "DDL";
+                    if (item.Contains("DML")) ActivityComponentScript.TypeScript = "DML";
+                    if (item.Contains("SIN")) ActivityComponentScript.TypeScript = "SIN";
+                    if (item.Contains("SIB")) ActivityComponentScript.TypeScript = "SIB";
+                    if (dischangePathListTemp.Any())
+                    {
+                        //DischangePathList.Add(dischangePathListTemp.First().Path);
+                        foreach (DischangePath itemTemp in dischangePathListTemp)
+                        {
+                            ActivityComponentScript.DischangeComponentName.Add(itemTemp.Path);
+                            
+
+                        }
+                    }
+                    else
+                    {
+                        ActivityComponentScript.DischangeComponentName.Add(item);
+                    }
+                    ActivityComponentScriptList.Add(ActivityComponentScript);
+                    _contador++;
+                }
+                return ActivityComponentScriptList;
+            });
+            task0.Start();
+            
+
+            return await task0;
         }
     }
 }

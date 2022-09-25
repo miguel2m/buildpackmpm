@@ -54,10 +54,11 @@ namespace AutoDischange.ViewModel.Helpers
                 if (ActivityComponentListAlojablesList.Any())
                 {
 
-                    MemoryStream msPassTemp = new MemoryStream();
-                    ExcelHelper.ListadoAlojables(msPass, ActivityComponentListAlojablesList).WriteTo(msPassTemp) ;
+                    //MemoryStream msPassTemp = new MemoryStream();
+                    MemoryStream msPassTemp = ExcelHelper.ListadoAlojables(msPass, ActivityComponentListAlojablesList) ;
                     msPass = new MemoryStream();
-                    msPassTemp.WriteTo(msPass);
+                    msPassTemp.Position = 0;
+                    msPassTemp.CopyTo(msPass);
                    
                 }
             }
@@ -130,7 +131,7 @@ namespace AutoDischange.ViewModel.Helpers
                 foreach (string item in listInput)
                 {
                     
-                    List<DischangePath> dischangePathListTemp = (DatabaseHelper.Read<DischangePath>()).Where(n => n.Path.Contains(item)).ToList(); ;
+                    List<DischangePath> dischangePathListTemp = (DatabaseHelper.Read<DischangePath>()).Where(n => n.Path.Contains(item)).ToList();
                     ActivityComponentListAlojables = new ActivityComponentListAlojables();
                     ActivityComponentListAlojables.Id = _contador;
                     ActivityComponentListAlojables.Workbook = "ListadoAlojables";

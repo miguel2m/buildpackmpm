@@ -226,7 +226,8 @@ namespace AutoDischange.ViewModel.Helpers
 
 
             }
-            ExcelHelper.SaveExcelEntrega(msPass, pathUser);
+            if(msPass.CanRead)
+                ExcelHelper.SaveExcelEntrega(msPass, pathUser);
         }
         //Read  ListPathDischange (Guia de ubicaciones)
         public static async Task<List<string>> ListPathDischange(IEnumerable<System.IO.FileInfo> listInput)
@@ -499,8 +500,8 @@ namespace AutoDischange.ViewModel.Helpers
                     ActivityComponentPrePro.PendindActivity = $"{_pendingActivity} y {_pendingActivity + _pendingActivity + 1 }";
                     ActivityComponentPrePro.TypeActivity = "Despliegue";
                     ActivityComponentPrePro.Activity = $@"Desplegar las siguientes CRs:{ System.Environment.NewLine}";
-                    ActivityComponentPrePro.Activity += $@"<b>Alojables/b>{ System.Environment.NewLine}";
-                    ActivityComponentPrePro.Activity += $@"<b>Configurables/b>{ System.Environment.NewLine}";
+                    ActivityComponentPrePro.Activity += $@"<b>Alojables</b>{ System.Environment.NewLine}";
+                    ActivityComponentPrePro.Activity += $@"<b>Configurables</b>{ System.Environment.NewLine}";
                     ActivityComponentPreProList.Add(ActivityComponentPrePro);
 
                     int _actividadPending = _pendingActivity + ActivityComponentPreProList.Count();
@@ -508,7 +509,7 @@ namespace AutoDischange.ViewModel.Helpers
                     ActivityComponentPrePro.PendindActivity = $"{_actividadPending}";
                     ActivityComponentPrePro.TypeActivity = "Despliegue";
                     ActivityComponentPrePro.Activity = $@"En el servidor WEBNEUIVWMX03 con dirección ip 180.181.105.137, abrir la línea de comandos y dirigirse a D:\MPM\DIS para ejecutar el comando:{ System.Environment.NewLine}";
-                    ActivityComponentPrePro.Activity += $@"<b>dir /s *.* /o:-d > webn03_caida.txt/b>{ System.Environment.NewLine}";
+                    ActivityComponentPrePro.Activity += $@"<b>dir /s *.* /o:-d > webn03_caida.txt</b>{ System.Environment.NewLine}";
                     ActivityComponentPrePro.Activity += $@"Entregar al Gestor del cambio el archivo webn03_caida.txt.{ System.Environment.NewLine}";
                     ActivityComponentPrePro.Activity += $@"Esperar validación para continuar con la siguiente actividad.{ System.Environment.NewLine}";
                     ActivityComponentPreProList.Add(ActivityComponentPrePro);
@@ -517,7 +518,7 @@ namespace AutoDischange.ViewModel.Helpers
                     ActivityComponentPrePro.PendindActivity = $"{_actividadPending}";
                     ActivityComponentPrePro.TypeActivity = "Despliegue";
                     ActivityComponentPrePro.Activity = $@"En el servidor SRNEUIWM1MXR309 con dirección ip 180.228.64.204, abrir la línea de comandos y dirigirse a D:\MPM\DIS para ejecutar el comando:{ System.Environment.NewLine}";
-                    ActivityComponentPrePro.Activity += $@"<b>dir /s *.* /o:-d > srvn09_caida.txt/b>{ System.Environment.NewLine}";
+                    ActivityComponentPrePro.Activity += $@"<b>dir /s *.* /o:-d > srvn09_caida.txt</b>{ System.Environment.NewLine}";
                     ActivityComponentPrePro.Activity += $@"Entregar al Gestor del cambio el archivo srvn09_caida.txt.{ System.Environment.NewLine}";
                     ActivityComponentPrePro.Activity += $@"Esperar validación para continuar con la siguiente actividad.{ System.Environment.NewLine}";
                     ActivityComponentPreProList.Add(ActivityComponentPrePro);
@@ -526,7 +527,7 @@ namespace AutoDischange.ViewModel.Helpers
                     ActivityComponentPrePro.PendindActivity = $"{_actividadPending}";
                     ActivityComponentPrePro.TypeActivity = "Despliegue";
                     ActivityComponentPrePro.Activity = $@"En el servidor SRVNEUIVWMX01  con dirección ip 180.181.105.139, abrir la línea de comandos y dirigirse a D:\MPM\DIS para ejecutar el comando:{ System.Environment.NewLine}";
-                    ActivityComponentPrePro.Activity += $@"<b>dir /s *.* /o:-d > srvn01_caida.txt/b>{ System.Environment.NewLine}";
+                    ActivityComponentPrePro.Activity += $@"<b>dir /s *.* /o:-d > srvn01_caida.txt</b>{ System.Environment.NewLine}";
                     ActivityComponentPrePro.Activity += $@"Entregar al Gestor del cambio el archivo srvn01_caida.txt.{ System.Environment.NewLine}";
                     ActivityComponentPrePro.Activity += $@"Esperar validación para continuar con la siguiente actividad.{ System.Environment.NewLine}";
                     ActivityComponentPreProList.Add(ActivityComponentPrePro);
@@ -535,7 +536,7 @@ namespace AutoDischange.ViewModel.Helpers
                     ActivityComponentPrePro.PendindActivity = $"{_actividadPending}";
                     ActivityComponentPrePro.TypeActivity = "Despliegue";
                     ActivityComponentPrePro.Activity = $@"En el servidor SRNEUIWM1MXR307  con dirección ip 180.228.64.206, abrir la línea de comandos y dirigirse a D:\MPM\DIS para ejecutar el comando:{ System.Environment.NewLine}";
-                    ActivityComponentPrePro.Activity += $@"<b>dir /s *.* /o:-d > srvn07_caida.txt/b>{ System.Environment.NewLine}";
+                    ActivityComponentPrePro.Activity += $@"<b>dir /s *.* /o:-d > srvn07_caida.txt</b>{ System.Environment.NewLine}";
                     ActivityComponentPrePro.Activity += $@"Entregar al Gestor del cambio el archivo srvn07_caida.txt.{ System.Environment.NewLine}";
                     ActivityComponentPrePro.Activity += $@"Esperar validación para continuar con la siguiente actividad.{ System.Environment.NewLine}";
                     ActivityComponentPreProList.Add(ActivityComponentPrePro);
@@ -559,8 +560,8 @@ namespace AutoDischange.ViewModel.Helpers
                     ActivityComponentPrePro.PendindActivity = $"{_pendingActivity} y {_pendingActivity + 1 }";
                     ActivityComponentPrePro.TypeActivity = "Despliegue";
                     ActivityComponentPrePro.Activity = $@"Desplegar las siguientes CRs:{ System.Environment.NewLine}";
-                    ActivityComponentPrePro.Activity += $@"<b>Alojables/b>{ System.Environment.NewLine}";
-                    ActivityComponentPrePro.Activity += $@"<b>Configurables/b>{ System.Environment.NewLine}";
+                    ActivityComponentPrePro.Activity += $@"<b>Alojables</b>{ System.Environment.NewLine}";
+                    ActivityComponentPrePro.Activity += $@"<b>Configurables</b>{ System.Environment.NewLine}";
                     ActivityComponentPreProList.Add(ActivityComponentPrePro);
 
                     int _actividadPending = _pendingActivity + ActivityComponentPreProList.Count();
@@ -568,7 +569,7 @@ namespace AutoDischange.ViewModel.Helpers
                     ActivityComponentPrePro.PendindActivity = $"{_actividadPending}";
                     ActivityComponentPrePro.TypeActivity = "Despliegue";
                     ActivityComponentPrePro.Activity = $@"En el servidor WEBNEUPVWMX03 con dirección ip 180.181.165.93, abrir la línea de comandos y dirigirse a D:\MPM\DIS para ejecutar el comando:{ System.Environment.NewLine}";
-                    ActivityComponentPrePro.Activity += $@"<b>dir /s *.* /o:-d > webn03_caida.txt/b>{ System.Environment.NewLine}";
+                    ActivityComponentPrePro.Activity += $@"<b>dir /s *.* /o:-d > webn03_caida.txt</b>{ System.Environment.NewLine}";
                     ActivityComponentPrePro.Activity += $@"Entregar al Gestor del cambio el archivo webn03_caida.txt.{ System.Environment.NewLine}";
                     ActivityComponentPrePro.Activity += $@"Esperar validación para continuar con la siguiente actividad.{ System.Environment.NewLine}";
                     ActivityComponentPreProList.Add(ActivityComponentPrePro);
@@ -577,7 +578,7 @@ namespace AutoDischange.ViewModel.Helpers
                     ActivityComponentPrePro.PendindActivity = $"{_actividadPending}";
                     ActivityComponentPrePro.TypeActivity = "Despliegue";
                     ActivityComponentPrePro.Activity = $@"En el servidor SRVNEUPVWMX09 con dirección ip 180.181.167.59, abrir la línea de comandos y dirigirse a D:\MPM\DIS para ejecutar el comando:{ System.Environment.NewLine}";
-                    ActivityComponentPrePro.Activity += $@"<b>dir /s *.* /o:-d > srvn09_caida.txt/b>{ System.Environment.NewLine}";
+                    ActivityComponentPrePro.Activity += $@"<b>dir /s *.* /o:-d > srvn09_caida.txt</b>{ System.Environment.NewLine}";
                     ActivityComponentPrePro.Activity += $@"Entregar al Gestor del cambio el archivo srvn09_caida.txt.{ System.Environment.NewLine}";
                     ActivityComponentPrePro.Activity += $@"Esperar validación para continuar con la siguiente actividad.{ System.Environment.NewLine}";
                     ActivityComponentPreProList.Add(ActivityComponentPrePro);
@@ -586,7 +587,7 @@ namespace AutoDischange.ViewModel.Helpers
                     ActivityComponentPrePro.PendindActivity = $"{_actividadPending}";
                     ActivityComponentPrePro.TypeActivity = "Despliegue";
                     ActivityComponentPrePro.Activity = $@"En el servidor SRVNEUPVWMX01  con dirección ip 180.181.167.51, abrir la línea de comandos y dirigirse a D:\MPM\DIS para ejecutar el comando:{ System.Environment.NewLine}";
-                    ActivityComponentPrePro.Activity += $@"<b>dir /s *.* /o:-d > srvn01_caida.txt/b>{ System.Environment.NewLine}";
+                    ActivityComponentPrePro.Activity += $@"<b>dir /s *.* /o:-d > srvn01_caida.txt</b>{ System.Environment.NewLine}";
                     ActivityComponentPrePro.Activity += $@"Entregar al Gestor del cambio el archivo srvn01_caida.txt.{ System.Environment.NewLine}";
                     ActivityComponentPrePro.Activity += $@"Esperar validación para continuar con la siguiente actividad.{ System.Environment.NewLine}";
                     ActivityComponentPreProList.Add(ActivityComponentPrePro);
@@ -595,7 +596,7 @@ namespace AutoDischange.ViewModel.Helpers
                     ActivityComponentPrePro.PendindActivity = $"{_actividadPending}";
                     ActivityComponentPrePro.TypeActivity = "Despliegue";
                     ActivityComponentPrePro.Activity = $@"En el servidor SRVNEUPVWMX07  con dirección ip 180.181.167.57, abrir la línea de comandos y dirigirse a D:\MPM\DIS para ejecutar el comando:{ System.Environment.NewLine}";
-                    ActivityComponentPrePro.Activity += $@"<b>dir /s *.* /o:-d > srvn07_caida.txt/b>{ System.Environment.NewLine}";
+                    ActivityComponentPrePro.Activity += $@"<b>dir /s *.* /o:-d > srvn07_caida.txt</b>{ System.Environment.NewLine}";
                     ActivityComponentPrePro.Activity += $@"Entregar al Gestor del cambio el archivo srvn07_caida.txt.{ System.Environment.NewLine}";
                     ActivityComponentPrePro.Activity += $@"Esperar validación para continuar con la siguiente actividad.{ System.Environment.NewLine}";
                     ActivityComponentPreProList.Add(ActivityComponentPrePro);

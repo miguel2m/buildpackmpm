@@ -396,6 +396,8 @@ namespace AutoDischange.ViewModel.Helpers
             {
                 List<ActivityComponentPrePro> ActivityComponentPreProList = new List<ActivityComponentPrePro>();
                 ActivityComponentPrePro ActivityComponentPrePro = new ActivityComponentPrePro();
+                ActivityComponentPrePro.font = new SLFont();
+                ActivityComponentPrePro.font.Bold = true;
                 //int _contador = 1;
                 if (!_poolManager)
                 {
@@ -403,16 +405,28 @@ namespace AutoDischange.ViewModel.Helpers
                     {   //PRE
                         ActivityComponentPrePro.PendindActivity = "Ninguna";
                         ActivityComponentPrePro.TypeActivity = "Despliegue";
-                        ActivityComponentPrePro.Activity = $"Entrar al servidor <b>SRNEUIWM1MXR309 180.228.64.204 Batch</b> y hacer las siguientes acciones:{ System.Environment.NewLine}";
-                        ActivityComponentPrePro.Activity += @"1.- <b>Eliminar el contenido de la carpeta</b> D:\MPM\DIS\InstallBSM\Resources\ProcesosFull";
+                        //ActivityComponentPrePro.Activity = $"Entrar al servidor <b>SRNEUIWM1MXR309 180.228.64.204 Batch</b> y hacer las siguientes acciones:{ System.Environment.NewLine}";
+                        ActivityComponentPrePro.rst.AppendText($"Entrar al servidor");
+                        ActivityComponentPrePro.rst.AppendText( $"SRNEUIWM1MXR309 180.228.64.204 Batch ", ActivityComponentPrePro.font);
+                        ActivityComponentPrePro.rst.AppendText($"y hacer las siguientes acciones:{ System.Environment.NewLine}");
+                        ActivityComponentPrePro.rst.AppendText($"1.-");
+                        ActivityComponentPrePro.rst.AppendText($"Eliminar el contenido de la carpeta ", ActivityComponentPrePro.font);
+                        ActivityComponentPrePro.rst.AppendText($@"D:\MPM\DIS\InstallBSM\Resources\ProcesosFull");
                         ActivityComponentPreProList.Add(ActivityComponentPrePro);
                     }
                     else
                     {   //PRO
                         ActivityComponentPrePro.PendindActivity = "Ninguna";
                         ActivityComponentPrePro.TypeActivity = "Despliegue";
-                        ActivityComponentPrePro.Activity = $"Entrar al servidor <b>SRVNEUPVWMX09 180.181.167.59 Batch</b> y hacer las siguientes acciones:{ System.Environment.NewLine}";
-                        ActivityComponentPrePro.Activity += @"1.- <b>Eliminar el contenido de la carpeta</b> D:\MPM\DIS\InstallBSM\Resources\ProcesosFull";
+                        ActivityComponentPrePro.rst.AppendText($"Entrar al servidor");
+                        ActivityComponentPrePro.rst.AppendText($"SRVNEUPVWMX09 180.181.167.59 Batch", ActivityComponentPrePro.font);
+                        ActivityComponentPrePro.rst.AppendText($"y hacer las siguientes acciones:{ System.Environment.NewLine}");
+                        ActivityComponentPrePro.rst.AppendText($"1.-");
+                        ActivityComponentPrePro.rst.AppendText($"Eliminar el contenido de la carpeta", ActivityComponentPrePro.font);
+                        ActivityComponentPrePro.rst.AppendText($@"D:\MPM\DIS\InstallBSM\Resources\ProcesosFull");
+
+                        //ActivityComponentPrePro.Activity = $"Entrar al servidor <b>SRVNEUPVWMX09 180.181.167.59 Batch</b> y hacer las siguientes acciones:{ System.Environment.NewLine}";
+                        //ActivityComponentPrePro.Activity += @"1.- <b>Eliminar el contenido de la carpeta</b> D:\MPM\DIS\InstallBSM\Resources\ProcesosFull";
                         ActivityComponentPreProList.Add(ActivityComponentPrePro);
                     }
                 }
@@ -420,53 +434,99 @@ namespace AutoDischange.ViewModel.Helpers
                 {
                     if (_env == 0)
                     {   //PRE
+
+
                         ActivityComponentPrePro.PendindActivity = _pendingActivity.ToString();
                         ActivityComponentPrePro.TypeActivity = "Despliegue";
-                        ActivityComponentPrePro.Activity = $"En el servidor <b>SRNEUIWM1MXR309 180.228.64.204 Batch</b>:{ System.Environment.NewLine}";
-                        ActivityComponentPrePro.Activity += $@"Abrir como Administrador la línea de comandos{ System.Environment.NewLine}";
-                        ActivityComponentPrePro.Activity += $@"Ir a la carpeta D:\MPM\DIS\InstallBSM\{ System.Environment.NewLine}";
-                        ActivityComponentPrePro.Activity += $@"Ejecutar el archivo <b>Install-DIS-Procesos.cmd</b>{ System.Environment.NewLine}";
-                        ActivityComponentPrePro.Activity += $@"Al finalizar la ejecución compartir el archivo log-import-file.log que se encuentra en D:\MPM\DIS\MPM.FullProcessImport\Logs\Import{ System.Environment.NewLine}";
-                        ActivityComponentPrePro.Activity += $@"Esperar validación de los logs para continuar con la siguiente actividad.{ System.Environment.NewLine}";
+
+                        ActivityComponentPrePro.rst.AppendText($"Entrar al servidor");
+                        ActivityComponentPrePro.rst.AppendText($"SRNEUIWM1MXR309 180.228.64.204 Batch", ActivityComponentPrePro.font);
+                        ActivityComponentPrePro.rst.AppendText($"Abrir como Administrador la línea de comandos{ System.Environment.NewLine}");
+                        ActivityComponentPrePro.rst.AppendText($@"Ir a la carpeta D:\MPM\DIS\InstallBSM\{ System.Environment.NewLine}");
+                        ActivityComponentPrePro.rst.AppendText($"Ejecutar el archivo");
+                        ActivityComponentPrePro.rst.AppendText($"Install-DIS-Procesos.cmd{ System.Environment.NewLine}", ActivityComponentPrePro.font);
+                        ActivityComponentPrePro.rst.AppendText($@"Al finalizar la ejecución compartir el archivo log-import-file.log que se encuentra en D:\MPM\DIS\MPM.FullProcessImport\Logs\Import{ System.Environment.NewLine}");
+                        ActivityComponentPrePro.rst.AppendText($"Esperar validación de los logs para continuar con la siguiente actividad.{ System.Environment.NewLine}");
                         ActivityComponentPreProList.Add(ActivityComponentPrePro);
+
+                        //ActivityComponentPrePro.Activity = $"En el servidor <b>SRNEUIWM1MXR309 180.228.64.204 Batch</b>:{ System.Environment.NewLine}";
+                        //ActivityComponentPrePro.Activity += $@"Abrir como Administrador la línea de comandos{ System.Environment.NewLine}";
+                        //ActivityComponentPrePro.Activity += $@"Ir a la carpeta D:\MPM\DIS\InstallBSM\{ System.Environment.NewLine}";
+                        //ActivityComponentPrePro.Activity += $@"Ejecutar el archivo <b>Install-DIS-Procesos.cmd</b>{ System.Environment.NewLine}";
+                        //ActivityComponentPrePro.Activity += $@"Al finalizar la ejecución compartir el archivo log-import-file.log que se encuentra en D:\MPM\DIS\MPM.FullProcessImport\Logs\Import{ System.Environment.NewLine}";
+                        //ActivityComponentPrePro.Activity += $@"Esperar validación de los logs para continuar con la siguiente actividad.{ System.Environment.NewLine}";
+                        //ActivityComponentPreProList.Add(ActivityComponentPrePro);
 
                         ActivityComponentPrePro = new ActivityComponentPrePro();
                         ActivityComponentPrePro.PendindActivity = (_pendingActivity+ActivityComponentPreProList.Count()).ToString();
                         ActivityComponentPrePro.TypeActivity = "Despliegue";
-                        ActivityComponentPrePro.Activity = $"<b>Reinicio de Pools.</b>:{ System.Environment.NewLine}";
-                        ActivityComponentPrePro.Activity += $@"• WEBNEUIVWMX03 180.181.105.137 Web{ System.Environment.NewLine}";
-                        ActivityComponentPrePro.Activity += $@"• WEBNEUIVWMX04 180.181.105.136 Web{ System.Environment.NewLine}";
-                        ActivityComponentPrePro.Activity += $@"{ System.Environment.NewLine}";
-                        ActivityComponentPrePro.Activity += $@"Reiniciar los siguientes pools:{ System.Environment.NewLine}";
-                        ActivityComponentPrePro.Activity += $@"• DIS_ecDataProvider{ System.Environment.NewLine}";
-                        ActivityComponentPrePro.Activity += $@"• DIS_eClient { System.Environment.NewLine}";
-                        ActivityComponentPrePro.Activity += $@"• DIS_LoginManagerService{ System.Environment.NewLine}";
+
+                        ActivityComponentPrePro.rst.AppendText($"Reinicio de Pools.{ System.Environment.NewLine}", ActivityComponentPrePro.font);
+                        ActivityComponentPrePro.rst.AppendText($@"• WEBNEUIVWMX03 180.181.105.137 Web{ System.Environment.NewLine}");
+                        ActivityComponentPrePro.rst.AppendText($@"• WEBNEUIVWMX04 180.181.105.136 Web{ System.Environment.NewLine}");
+                        ActivityComponentPrePro.rst.AppendText($@"{ System.Environment.NewLine}");
+                        ActivityComponentPrePro.rst.AppendText($@"Reiniciar los siguientes pools:{ System.Environment.NewLine}");
+                        ActivityComponentPrePro.rst.AppendText($@"• DIS_ecDataProvider{ System.Environment.NewLine}");
+                        ActivityComponentPrePro.rst.AppendText($@"• DIS_eClient { System.Environment.NewLine}");
+                        ActivityComponentPrePro.rst.AppendText($@"• DIS_LoginManagerService{ System.Environment.NewLine}");
                         ActivityComponentPreProList.Add(ActivityComponentPrePro);
+
+                        //ActivityComponentPrePro.Activity = $"<b>Reinicio de Pools.</b>:{ System.Environment.NewLine}";
+                        //ActivityComponentPrePro.Activity += $@"• WEBNEUIVWMX03 180.181.105.137 Web{ System.Environment.NewLine}";
+                        //ActivityComponentPrePro.Activity += $@"• WEBNEUIVWMX04 180.181.105.136 Web{ System.Environment.NewLine}";
+                        //ActivityComponentPrePro.Activity += $@"{ System.Environment.NewLine}";
+                        //ActivityComponentPrePro.Activity += $@"Reiniciar los siguientes pools:{ System.Environment.NewLine}";
+                        //ActivityComponentPrePro.Activity += $@"• DIS_ecDataProvider{ System.Environment.NewLine}";
+                        //ActivityComponentPrePro.Activity += $@"• DIS_eClient { System.Environment.NewLine}";
+                        //ActivityComponentPrePro.Activity += $@"• DIS_LoginManagerService{ System.Environment.NewLine}";
+                        
                     }
                     else
                     {   //PRO
                         ActivityComponentPrePro.PendindActivity = _pendingActivity.ToString();
                         ActivityComponentPrePro.TypeActivity = "Despliegue";
-                        ActivityComponentPrePro.Activity = $"En el servidor <b>SRVNEUPVWMX09 180.181.167.59 Batch</b>:{ System.Environment.NewLine}";
-                        ActivityComponentPrePro.Activity += $@"Abrir como Administrador la línea de comandos{ System.Environment.NewLine}";
-                        ActivityComponentPrePro.Activity += $@"Ir a la carpeta D:\MPM\DIS\InstallBSM\{ System.Environment.NewLine}";
-                        ActivityComponentPrePro.Activity += $@"Ejecutar el archivo <b>Install-DIS-Procesos.cmd</b>{ System.Environment.NewLine}";
-                        ActivityComponentPrePro.Activity += $@"Al finalizar la ejecución compartir el archivo log-import-file.log que se encuentra en D:\MPM\DIS\MPM.FullProcessImport\Logs\Import{ System.Environment.NewLine}";
-                        ActivityComponentPrePro.Activity += $@"Esperar validación de los logs para continuar con la siguiente actividad.{ System.Environment.NewLine}";
+
+                        ActivityComponentPrePro.rst.AppendText($"Entrar al servidor");
+                        ActivityComponentPrePro.rst.AppendText($"SRVNEUPVWMX09 180.181.167.59 Batch", ActivityComponentPrePro.font);
+                        ActivityComponentPrePro.rst.AppendText($"Abrir como Administrador la línea de comandos{ System.Environment.NewLine}");
+                        ActivityComponentPrePro.rst.AppendText($@"Ir a la carpeta D:\MPM\DIS\InstallBSM\{ System.Environment.NewLine}");
+                        ActivityComponentPrePro.rst.AppendText($"Ejecutar el archivo");
+                        ActivityComponentPrePro.rst.AppendText($"Install-DIS-Procesos.cmd{ System.Environment.NewLine}", ActivityComponentPrePro.font);
+                        ActivityComponentPrePro.rst.AppendText($@"Al finalizar la ejecución compartir el archivo log-import-file.log que se encuentra en D:\MPM\DIS\MPM.FullProcessImport\Logs\Import{ System.Environment.NewLine}");
+                        ActivityComponentPrePro.rst.AppendText($"Esperar validación de los logs para continuar con la siguiente actividad.{ System.Environment.NewLine}");
                         ActivityComponentPreProList.Add(ActivityComponentPrePro);
+
+                        //ActivityComponentPrePro.Activity = $"En el servidor <b>SRVNEUPVWMX09 180.181.167.59 Batch</b>:{ System.Environment.NewLine}";
+                        //ActivityComponentPrePro.Activity += $@"Abrir como Administrador la línea de comandos{ System.Environment.NewLine}";
+                        //ActivityComponentPrePro.Activity += $@"Ir a la carpeta D:\MPM\DIS\InstallBSM\{ System.Environment.NewLine}";
+                        //ActivityComponentPrePro.Activity += $@"Ejecutar el archivo <b>Install-DIS-Procesos.cmd</b>{ System.Environment.NewLine}";
+                        //ActivityComponentPrePro.Activity += $@"Al finalizar la ejecución compartir el archivo log-import-file.log que se encuentra en D:\MPM\DIS\MPM.FullProcessImport\Logs\Import{ System.Environment.NewLine}";
+                        //ActivityComponentPrePro.Activity += $@"Esperar validación de los logs para continuar con la siguiente actividad.{ System.Environment.NewLine}";
+                        //ActivityComponentPreProList.Add(ActivityComponentPrePro);
 
                         ActivityComponentPrePro = new ActivityComponentPrePro();
                         ActivityComponentPrePro.PendindActivity = (_pendingActivity + ActivityComponentPreProList.Count()).ToString();
                         ActivityComponentPrePro.TypeActivity = "Despliegue";
-                        ActivityComponentPrePro.Activity = $"<b>Reinicio de Pools.</b>:{ System.Environment.NewLine}";
-                        ActivityComponentPrePro.Activity += $@"• WEBNEUPVWMX03 180.181.165.93 Web{ System.Environment.NewLine}";
-                        ActivityComponentPrePro.Activity += $@"• WEBNEUPVWMX04 180.181.165.97 Web{ System.Environment.NewLine}";
-                        ActivityComponentPrePro.Activity += $@"{ System.Environment.NewLine}";
-                        ActivityComponentPrePro.Activity += $@"Reiniciar los siguientes pools:{ System.Environment.NewLine}";
-                        ActivityComponentPrePro.Activity += $@"• DIS_ecDataProvider{ System.Environment.NewLine}";
-                        ActivityComponentPrePro.Activity += $@"• DIS_eClient { System.Environment.NewLine}";
-                        ActivityComponentPrePro.Activity += $@"• DIS_LoginManagerService{ System.Environment.NewLine}";
+
+                        ActivityComponentPrePro.rst.AppendText($"Reinicio de Pools.{ System.Environment.NewLine}", ActivityComponentPrePro.font);
+                        ActivityComponentPrePro.rst.AppendText($@"• WEBNEUPVWMX03 180.181.165.93 Web{ System.Environment.NewLine}");
+                        ActivityComponentPrePro.rst.AppendText($@"• WEBNEUPVWMX04 180.181.165.97 Web{ System.Environment.NewLine}");
+                        ActivityComponentPrePro.rst.AppendText($@"{ System.Environment.NewLine}");
+                        ActivityComponentPrePro.rst.AppendText($@"Reiniciar los siguientes pools:{ System.Environment.NewLine}");
+                        ActivityComponentPrePro.rst.AppendText($@"• DIS_ecDataProvider{ System.Environment.NewLine}");
+                        ActivityComponentPrePro.rst.AppendText($@"• DIS_eClient { System.Environment.NewLine}");
+                        ActivityComponentPrePro.rst.AppendText($@"• DIS_LoginManagerService{ System.Environment.NewLine}");
                         ActivityComponentPreProList.Add(ActivityComponentPrePro);
+
+                        //ActivityComponentPrePro.Activity = $"<b>Reinicio de Pools.</b>:{ System.Environment.NewLine}";
+                        //ActivityComponentPrePro.Activity += $@"• WEBNEUPVWMX03 180.181.165.93 Web{ System.Environment.NewLine}";
+                        //ActivityComponentPrePro.Activity += $@"• WEBNEUPVWMX04 180.181.165.97 Web{ System.Environment.NewLine}";
+                        //ActivityComponentPrePro.Activity += $@"{ System.Environment.NewLine}";
+                        //ActivityComponentPrePro.Activity += $@"Reiniciar los siguientes pools:{ System.Environment.NewLine}";
+                        //ActivityComponentPrePro.Activity += $@"• DIS_ecDataProvider{ System.Environment.NewLine}";
+                        //ActivityComponentPrePro.Activity += $@"• DIS_eClient { System.Environment.NewLine}";
+                        //ActivityComponentPrePro.Activity += $@"• DIS_LoginManagerService{ System.Environment.NewLine}";
+                        //ActivityComponentPreProList.Add(ActivityComponentPrePro);
                     }
                 }
                 
@@ -487,65 +547,112 @@ namespace AutoDischange.ViewModel.Helpers
             {
                 List<ActivityComponentPrePro> ActivityComponentPreProList = new List<ActivityComponentPrePro>();
                 ActivityComponentPrePro ActivityComponentPrePro = new ActivityComponentPrePro();
+                ActivityComponentPrePro.font = new SLFont();
+                ActivityComponentPrePro.font.Bold = true;
                 //int _contador = 1;
                 if (_env == 0) //0 Pre 1 Pro
                 {   //PRE
                     
                     ActivityComponentPrePro.PendindActivity = "Ninguna";
                     ActivityComponentPrePro.TypeActivity = "Despliegue";
-                    ActivityComponentPrePro.Activity = $@"<b>Bajar pools</b> de todos los servidores.";
+                    ActivityComponentPrePro.rst.AppendText($"Bajar pools", ActivityComponentPrePro.font);
+                    ActivityComponentPrePro.rst.AppendText($"de todos los servidores.");
+                    //ActivityComponentPrePro.Activity = $@"<b>Bajar pools</b> de todos los servidores.";
                     ActivityComponentPreProList.Add(ActivityComponentPrePro);
 
                     ActivityComponentPrePro = new ActivityComponentPrePro();
+                    ActivityComponentPrePro.font = new SLFont();
+                    ActivityComponentPrePro.font.Bold = true;
+
                     ActivityComponentPrePro.PendindActivity = $"{_pendingActivity} y {_pendingActivity + _pendingActivity + 1 }";
                     ActivityComponentPrePro.TypeActivity = "Despliegue";
-                    ActivityComponentPrePro.Activity = $@"Desplegar las siguientes CRs:{ System.Environment.NewLine}";
-                    ActivityComponentPrePro.Activity += $@"<b>Alojables</b>{ System.Environment.NewLine}";
-                    ActivityComponentPrePro.Activity += $@"<b>Configurables</b>{ System.Environment.NewLine}";
+                    ActivityComponentPrePro.rst.AppendText($@"Desplegar las siguientes CRs:{ System.Environment.NewLine}");
+                    ActivityComponentPrePro.rst.AppendText($"Alojables", ActivityComponentPrePro.font);
+                    ActivityComponentPrePro.rst.AppendText($@"{ System.Environment.NewLine}");
+                    ActivityComponentPrePro.rst.AppendText($"Configurables", ActivityComponentPrePro.font);
+                    //ActivityComponentPrePro.Activity = $@"Desplegar las siguientes CRs:{ System.Environment.NewLine}";
+                    //ActivityComponentPrePro.Activity += $@"<b>Alojables</b>{ System.Environment.NewLine}";
+                    //ActivityComponentPrePro.Activity += $@"<b>Configurables</b>{ System.Environment.NewLine}";
                     ActivityComponentPreProList.Add(ActivityComponentPrePro);
 
                     int _actividadPending = _pendingActivity + ActivityComponentPreProList.Count();
                     ActivityComponentPrePro = new ActivityComponentPrePro();
+                    ActivityComponentPrePro.font = new SLFont();
+                    ActivityComponentPrePro.font.Bold = true;
+
                     ActivityComponentPrePro.PendindActivity = $"{_actividadPending}";
                     ActivityComponentPrePro.TypeActivity = "Despliegue";
-                    ActivityComponentPrePro.Activity = $@"En el servidor WEBNEUIVWMX03 con dirección ip 180.181.105.137, abrir la línea de comandos y dirigirse a D:\MPM\DIS para ejecutar el comando:{ System.Environment.NewLine}";
-                    ActivityComponentPrePro.Activity += $@"<b>dir /s *.* /o:-d > webn03_caida.txt</b>{ System.Environment.NewLine}";
-                    ActivityComponentPrePro.Activity += $@"Entregar al Gestor del cambio el archivo webn03_caida.txt.{ System.Environment.NewLine}";
-                    ActivityComponentPrePro.Activity += $@"Esperar validación para continuar con la siguiente actividad.{ System.Environment.NewLine}";
+                    ActivityComponentPrePro.rst.AppendText($@"En el servidor WEBNEUIVWMX03 con dirección ip 180.181.105.137, abrir la línea de comandos y dirigirse a D:\MPM\DIS para ejecutar el comando:{ System.Environment.NewLine}");
+                    ActivityComponentPrePro.rst.AppendText($"dir /s *.* /o:-d > webn03_caida.txt", ActivityComponentPrePro.font);
+                    ActivityComponentPrePro.rst.AppendText($@"{ System.Environment.NewLine}");
+                    ActivityComponentPrePro.rst.AppendText($@"Entregar al Gestor del cambio el archivo webn03_caida.txt.{ System.Environment.NewLine}");
+                    ActivityComponentPrePro.rst.AppendText($@"Esperar validación para continuar con la siguiente actividad.{ System.Environment.NewLine}");
+                    //ActivityComponentPrePro.Activity = $@"En el servidor WEBNEUIVWMX03 con dirección ip 180.181.105.137, abrir la línea de comandos y dirigirse a D:\MPM\DIS para ejecutar el comando:{ System.Environment.NewLine}";
+                    //ActivityComponentPrePro.Activity += $@"<b>dir /s *.* /o:-d > webn03_caida.txt</b>{ System.Environment.NewLine}";
+                    //ActivityComponentPrePro.Activity += $@"Entregar al Gestor del cambio el archivo webn03_caida.txt.{ System.Environment.NewLine}";
+                    //ActivityComponentPrePro.Activity += $@"Esperar validación para continuar con la siguiente actividad.{ System.Environment.NewLine}";
                     ActivityComponentPreProList.Add(ActivityComponentPrePro);
 
                     ActivityComponentPrePro = new ActivityComponentPrePro();
+                    ActivityComponentPrePro.font = new SLFont();
+                    ActivityComponentPrePro.font.Bold = true;
+
                     ActivityComponentPrePro.PendindActivity = $"{_actividadPending}";
                     ActivityComponentPrePro.TypeActivity = "Despliegue";
-                    ActivityComponentPrePro.Activity = $@"En el servidor SRNEUIWM1MXR309 con dirección ip 180.228.64.204, abrir la línea de comandos y dirigirse a D:\MPM\DIS para ejecutar el comando:{ System.Environment.NewLine}";
-                    ActivityComponentPrePro.Activity += $@"<b>dir /s *.* /o:-d > srvn09_caida.txt</b>{ System.Environment.NewLine}";
-                    ActivityComponentPrePro.Activity += $@"Entregar al Gestor del cambio el archivo srvn09_caida.txt.{ System.Environment.NewLine}";
-                    ActivityComponentPrePro.Activity += $@"Esperar validación para continuar con la siguiente actividad.{ System.Environment.NewLine}";
+                    ActivityComponentPrePro.rst.AppendText($@"En el servidor SRNEUIWM1MXR309 con dirección ip 180.228.64.204, abrir la línea de comandos y dirigirse a D:\MPM\DIS para ejecutar el comando:{ System.Environment.NewLine}");
+                    ActivityComponentPrePro.rst.AppendText($"dir /s *.* /o:-d > srvn09_caida.txt", ActivityComponentPrePro.font);
+                    ActivityComponentPrePro.rst.AppendText($@"{ System.Environment.NewLine}");
+                    ActivityComponentPrePro.rst.AppendText($@"Entregar al Gestor del cambio el archivo srvn09_caida.txt.{ System.Environment.NewLine}");
+                    ActivityComponentPrePro.rst.AppendText($@"Esperar validación para continuar con la siguiente actividad.{ System.Environment.NewLine}");
+                    //ActivityComponentPrePro.Activity = $@"En el servidor SRNEUIWM1MXR309 con dirección ip 180.228.64.204, abrir la línea de comandos y dirigirse a D:\MPM\DIS para ejecutar el comando:{ System.Environment.NewLine}";
+                    //ActivityComponentPrePro.Activity += $@"<b>dir /s *.* /o:-d > srvn09_caida.txt</b>{ System.Environment.NewLine}";
+                    //ActivityComponentPrePro.Activity += $@"Entregar al Gestor del cambio el archivo srvn09_caida.txt.{ System.Environment.NewLine}";
+                    //ActivityComponentPrePro.Activity += $@"Esperar validación para continuar con la siguiente actividad.{ System.Environment.NewLine}";
                     ActivityComponentPreProList.Add(ActivityComponentPrePro);
 
                     ActivityComponentPrePro = new ActivityComponentPrePro();
+                    ActivityComponentPrePro.font = new SLFont();
+                    ActivityComponentPrePro.font.Bold = true;
+
                     ActivityComponentPrePro.PendindActivity = $"{_actividadPending}";
                     ActivityComponentPrePro.TypeActivity = "Despliegue";
-                    ActivityComponentPrePro.Activity = $@"En el servidor SRVNEUIVWMX01  con dirección ip 180.181.105.139, abrir la línea de comandos y dirigirse a D:\MPM\DIS para ejecutar el comando:{ System.Environment.NewLine}";
-                    ActivityComponentPrePro.Activity += $@"<b>dir /s *.* /o:-d > srvn01_caida.txt</b>{ System.Environment.NewLine}";
-                    ActivityComponentPrePro.Activity += $@"Entregar al Gestor del cambio el archivo srvn01_caida.txt.{ System.Environment.NewLine}";
-                    ActivityComponentPrePro.Activity += $@"Esperar validación para continuar con la siguiente actividad.{ System.Environment.NewLine}";
+                    ActivityComponentPrePro.rst.AppendText($@"En el servidor SRVNEUIVWMX01  con dirección ip 180.181.105.139, abrir la línea de comandos y dirigirse a D:\MPM\DIS para ejecutar el comando:{ System.Environment.NewLine}");
+                    ActivityComponentPrePro.rst.AppendText($"dir /s *.* /o:-d > srvn01_caida.txt", ActivityComponentPrePro.font);
+                    ActivityComponentPrePro.rst.AppendText($@"{ System.Environment.NewLine}");
+                    ActivityComponentPrePro.rst.AppendText($@"Entregar al Gestor del cambio el archivo srvn01_caida.txt.{ System.Environment.NewLine}");
+                    ActivityComponentPrePro.rst.AppendText($@"Esperar validación para continuar con la siguiente actividad.{ System.Environment.NewLine}");
+                    //ActivityComponentPrePro.Activity = $@"En el servidor SRVNEUIVWMX01  con dirección ip 180.181.105.139, abrir la línea de comandos y dirigirse a D:\MPM\DIS para ejecutar el comando:{ System.Environment.NewLine}";
+                    //ActivityComponentPrePro.Activity += $@"<b>dir /s *.* /o:-d > srvn01_caida.txt</b>{ System.Environment.NewLine}";
+                    //ActivityComponentPrePro.Activity += $@"Entregar al Gestor del cambio el archivo srvn01_caida.txt.{ System.Environment.NewLine}";
+                    //ActivityComponentPrePro.Activity += $@"Esperar validación para continuar con la siguiente actividad.{ System.Environment.NewLine}";
                     ActivityComponentPreProList.Add(ActivityComponentPrePro);
 
                     ActivityComponentPrePro = new ActivityComponentPrePro();
+                    ActivityComponentPrePro.font = new SLFont();
+                    ActivityComponentPrePro.font.Bold = true;
+
                     ActivityComponentPrePro.PendindActivity = $"{_actividadPending}";
                     ActivityComponentPrePro.TypeActivity = "Despliegue";
-                    ActivityComponentPrePro.Activity = $@"En el servidor SRNEUIWM1MXR307  con dirección ip 180.228.64.206, abrir la línea de comandos y dirigirse a D:\MPM\DIS para ejecutar el comando:{ System.Environment.NewLine}";
-                    ActivityComponentPrePro.Activity += $@"<b>dir /s *.* /o:-d > srvn07_caida.txt</b>{ System.Environment.NewLine}";
-                    ActivityComponentPrePro.Activity += $@"Entregar al Gestor del cambio el archivo srvn07_caida.txt.{ System.Environment.NewLine}";
-                    ActivityComponentPrePro.Activity += $@"Esperar validación para continuar con la siguiente actividad.{ System.Environment.NewLine}";
+                    ActivityComponentPrePro.rst.AppendText($@"En el servidor SRNEUIWM1MXR307  con dirección ip 180.228.64.206, abrir la línea de comandos y dirigirse a D:\MPM\DIS para ejecutar el comando:{ System.Environment.NewLine}");
+                    ActivityComponentPrePro.rst.AppendText($"dir /s *.* /o:-d > srvn07_caida.txt", ActivityComponentPrePro.font);
+                    ActivityComponentPrePro.rst.AppendText($@"{ System.Environment.NewLine}");
+                    ActivityComponentPrePro.rst.AppendText($@"Entregar al Gestor del cambio el archivo srvn07_caida.txt.{ System.Environment.NewLine}");
+                    ActivityComponentPrePro.rst.AppendText($@"Esperar validación para continuar con la siguiente actividad.{ System.Environment.NewLine}");
+                    //ActivityComponentPrePro.Activity = $@"En el servidor SRNEUIWM1MXR307  con dirección ip 180.228.64.206, abrir la línea de comandos y dirigirse a D:\MPM\DIS para ejecutar el comando:{ System.Environment.NewLine}";
+                    //ActivityComponentPrePro.Activity += $@"<b>dir /s *.* /o:-d > srvn07_caida.txt</b>{ System.Environment.NewLine}";
+                    //ActivityComponentPrePro.Activity += $@"Entregar al Gestor del cambio el archivo srvn07_caida.txt.{ System.Environment.NewLine}";
+                    //ActivityComponentPrePro.Activity += $@"Esperar validación para continuar con la siguiente actividad.{ System.Environment.NewLine}";
                     ActivityComponentPreProList.Add(ActivityComponentPrePro);
 
                     ActivityComponentPrePro = new ActivityComponentPrePro();
-                    
+                    ActivityComponentPrePro.font = new SLFont();
+                    ActivityComponentPrePro.font.Bold = true;
+
                     ActivityComponentPrePro.PendindActivity = (_pendingActivity+ActivityComponentPreProList.Count()).ToString();
                     ActivityComponentPrePro.TypeActivity = "Despliegue";
-                    ActivityComponentPrePro.Activity = $@"<b>Prender pools</b> de todos los servidores.";
+                    ActivityComponentPrePro.rst.AppendText($"Prender pools", ActivityComponentPrePro.font);
+                    ActivityComponentPrePro.rst.AppendText($@"de todos los servidores.{ System.Environment.NewLine}");
+                    //ActivityComponentPrePro.Activity = $@"<b>Prender pools</b> de todos los servidores.";
                     ActivityComponentPreProList.Add(ActivityComponentPrePro);
                 }
                 else
@@ -553,59 +660,107 @@ namespace AutoDischange.ViewModel.Helpers
                    
                     ActivityComponentPrePro.PendindActivity = "Ninguna";
                     ActivityComponentPrePro.TypeActivity = "Despliegue";
-                    ActivityComponentPrePro.Activity = $@"<b>Bajar pools</b> de todos los servidores.";
+                    ActivityComponentPrePro.rst.AppendText($"Bajar pools", ActivityComponentPrePro.font);
+                    ActivityComponentPrePro.rst.AppendText($"de todos los servidores.");
+                    //ActivityComponentPrePro.Activity = $@"<b>Bajar pools</b> de todos los servidores.";
                     ActivityComponentPreProList.Add(ActivityComponentPrePro);
 
                     ActivityComponentPrePro = new ActivityComponentPrePro();
+                    ActivityComponentPrePro.font = new SLFont();
+                    ActivityComponentPrePro.font.Bold = true;
+
                     ActivityComponentPrePro.PendindActivity = $"{_pendingActivity} y {_pendingActivity + 1 }";
                     ActivityComponentPrePro.TypeActivity = "Despliegue";
-                    ActivityComponentPrePro.Activity = $@"Desplegar las siguientes CRs:{ System.Environment.NewLine}";
-                    ActivityComponentPrePro.Activity += $@"<b>Alojables</b>{ System.Environment.NewLine}";
-                    ActivityComponentPrePro.Activity += $@"<b>Configurables</b>{ System.Environment.NewLine}";
+                    ActivityComponentPrePro.rst.AppendText($@"Desplegar las siguientes CRs:{ System.Environment.NewLine}");
+                    ActivityComponentPrePro.rst.AppendText($"Alojables", ActivityComponentPrePro.font);
+                    ActivityComponentPrePro.rst.AppendText($@"{ System.Environment.NewLine}");
+                    ActivityComponentPrePro.rst.AppendText($"Configurables", ActivityComponentPrePro.font);
+                    //ActivityComponentPrePro.Activity = $@"Desplegar las siguientes CRs:{ System.Environment.NewLine}";
+                    //ActivityComponentPrePro.Activity += $@"<b>Alojables</b>{ System.Environment.NewLine}";
+                    //ActivityComponentPrePro.Activity += $@"<b>Configurables</b>{ System.Environment.NewLine}";
                     ActivityComponentPreProList.Add(ActivityComponentPrePro);
 
                     int _actividadPending = _pendingActivity + ActivityComponentPreProList.Count();
                     ActivityComponentPrePro = new ActivityComponentPrePro();
+                    ActivityComponentPrePro.font = new SLFont();
+                    ActivityComponentPrePro.font.Bold = true;
+
                     ActivityComponentPrePro.PendindActivity = $"{_actividadPending}";
                     ActivityComponentPrePro.TypeActivity = "Despliegue";
-                    ActivityComponentPrePro.Activity = $@"En el servidor WEBNEUPVWMX03 con dirección ip 180.181.165.93, abrir la línea de comandos y dirigirse a D:\MPM\DIS para ejecutar el comando:{ System.Environment.NewLine}";
-                    ActivityComponentPrePro.Activity += $@"<b>dir /s *.* /o:-d > webn03_caida.txt</b>{ System.Environment.NewLine}";
-                    ActivityComponentPrePro.Activity += $@"Entregar al Gestor del cambio el archivo webn03_caida.txt.{ System.Environment.NewLine}";
-                    ActivityComponentPrePro.Activity += $@"Esperar validación para continuar con la siguiente actividad.{ System.Environment.NewLine}";
+                    ActivityComponentPrePro.rst.AppendText($@"En el servidor WEBNEUPVWMX03 con dirección ip 180.181.165.93, abrir la línea de comandos y dirigirse a D:\MPM\DIS para ejecutar el comando:{ System.Environment.NewLine}");
+                    ActivityComponentPrePro.rst.AppendText($"dir /s *.* /o:-d > webn03_caida.txt", ActivityComponentPrePro.font);
+                    ActivityComponentPrePro.rst.AppendText($@"{ System.Environment.NewLine}");
+                    ActivityComponentPrePro.rst.AppendText($@"Entregar al Gestor del cambio el archivo webn03_caida.txt.{ System.Environment.NewLine}");
+                    ActivityComponentPrePro.rst.AppendText($@"Esperar validación para continuar con la siguiente actividad.{ System.Environment.NewLine}");
+                    //ActivityComponentPrePro.Activity = $@"En el servidor WEBNEUPVWMX03 con dirección ip 180.181.165.93, abrir la línea de comandos y dirigirse a D:\MPM\DIS para ejecutar el comando:{ System.Environment.NewLine}";
+                    //ActivityComponentPrePro.Activity += $@"<b>dir /s *.* /o:-d > webn03_caida.txt</b>{ System.Environment.NewLine}";
+                    //ActivityComponentPrePro.Activity += $@"Entregar al Gestor del cambio el archivo webn03_caida.txt.{ System.Environment.NewLine}";
+                    //ActivityComponentPrePro.Activity += $@"Esperar validación para continuar con la siguiente actividad.{ System.Environment.NewLine}";
                     ActivityComponentPreProList.Add(ActivityComponentPrePro);
 
                     ActivityComponentPrePro = new ActivityComponentPrePro();
+                    ActivityComponentPrePro.font = new SLFont();
+                    ActivityComponentPrePro.font.Bold = true;
+
                     ActivityComponentPrePro.PendindActivity = $"{_actividadPending}";
                     ActivityComponentPrePro.TypeActivity = "Despliegue";
-                    ActivityComponentPrePro.Activity = $@"En el servidor SRVNEUPVWMX09 con dirección ip 180.181.167.59, abrir la línea de comandos y dirigirse a D:\MPM\DIS para ejecutar el comando:{ System.Environment.NewLine}";
-                    ActivityComponentPrePro.Activity += $@"<b>dir /s *.* /o:-d > srvn09_caida.txt</b>{ System.Environment.NewLine}";
-                    ActivityComponentPrePro.Activity += $@"Entregar al Gestor del cambio el archivo srvn09_caida.txt.{ System.Environment.NewLine}";
-                    ActivityComponentPrePro.Activity += $@"Esperar validación para continuar con la siguiente actividad.{ System.Environment.NewLine}";
+                    ActivityComponentPrePro.rst.AppendText($@"En el servidor SRVNEUPVWMX09 con dirección ip 180.181.167.59, abrir la línea de comandos y dirigirse a D:\MPM\DIS para ejecutar el comando:{ System.Environment.NewLine}");
+                    ActivityComponentPrePro.rst.AppendText($"dir /s *.* /o:-d > srvn09_caida.txt", ActivityComponentPrePro.font);
+                    ActivityComponentPrePro.rst.AppendText($@"{ System.Environment.NewLine}");
+                    ActivityComponentPrePro.rst.AppendText($@"Entregar al Gestor del cambio el archivo srvn09_caida.txt.{ System.Environment.NewLine}");
+                    ActivityComponentPrePro.rst.AppendText($@"Esperar validación para continuar con la siguiente actividad.{ System.Environment.NewLine}");
+                    //ActivityComponentPrePro.Activity = $@"En el servidor SRVNEUPVWMX09 con dirección ip 180.181.167.59, abrir la línea de comandos y dirigirse a D:\MPM\DIS para ejecutar el comando:{ System.Environment.NewLine}";
+                    //ActivityComponentPrePro.Activity += $@"<b>dir /s *.* /o:-d > srvn09_caida.txt</b>{ System.Environment.NewLine}";
+                    //ActivityComponentPrePro.Activity += $@"Entregar al Gestor del cambio el archivo srvn09_caida.txt.{ System.Environment.NewLine}";
+                    //ActivityComponentPrePro.Activity += $@"Esperar validación para continuar con la siguiente actividad.{ System.Environment.NewLine}";
                     ActivityComponentPreProList.Add(ActivityComponentPrePro);
 
                     ActivityComponentPrePro = new ActivityComponentPrePro();
+                    ActivityComponentPrePro.font = new SLFont();
+                    ActivityComponentPrePro.font.Bold = true;
+
                     ActivityComponentPrePro.PendindActivity = $"{_actividadPending}";
                     ActivityComponentPrePro.TypeActivity = "Despliegue";
-                    ActivityComponentPrePro.Activity = $@"En el servidor SRVNEUPVWMX01  con dirección ip 180.181.167.51, abrir la línea de comandos y dirigirse a D:\MPM\DIS para ejecutar el comando:{ System.Environment.NewLine}";
-                    ActivityComponentPrePro.Activity += $@"<b>dir /s *.* /o:-d > srvn01_caida.txt</b>{ System.Environment.NewLine}";
-                    ActivityComponentPrePro.Activity += $@"Entregar al Gestor del cambio el archivo srvn01_caida.txt.{ System.Environment.NewLine}";
-                    ActivityComponentPrePro.Activity += $@"Esperar validación para continuar con la siguiente actividad.{ System.Environment.NewLine}";
+
+                    ActivityComponentPrePro.rst.AppendText($@"En el servidor SRVNEUPVWMX01  con dirección ip 180.181.167.51, abrir la línea de comandos y dirigirse a D:\MPM\DIS para ejecutar el comando:{ System.Environment.NewLine}");
+                    ActivityComponentPrePro.rst.AppendText($"dir /s *.* /o:-d > srvn01_caida.txt", ActivityComponentPrePro.font);
+                    ActivityComponentPrePro.rst.AppendText($@"{ System.Environment.NewLine}");
+                    ActivityComponentPrePro.rst.AppendText($@"Entregar al Gestor del cambio el archivo srvn01_caida.txt.{ System.Environment.NewLine}");
+                    ActivityComponentPrePro.rst.AppendText($@"Esperar validación para continuar con la siguiente actividad.{ System.Environment.NewLine}");
+
+                    //ActivityComponentPrePro.Activity = $@"En el servidor SRVNEUPVWMX01  con dirección ip 180.181.167.51, abrir la línea de comandos y dirigirse a D:\MPM\DIS para ejecutar el comando:{ System.Environment.NewLine}";
+                    //ActivityComponentPrePro.Activity += $@"<b>dir /s *.* /o:-d > srvn01_caida.txt</b>{ System.Environment.NewLine}";
+                    //ActivityComponentPrePro.Activity += $@"Entregar al Gestor del cambio el archivo srvn01_caida.txt.{ System.Environment.NewLine}";
+                    //ActivityComponentPrePro.Activity += $@"Esperar validación para continuar con la siguiente actividad.{ System.Environment.NewLine}";
                     ActivityComponentPreProList.Add(ActivityComponentPrePro);
 
                     ActivityComponentPrePro = new ActivityComponentPrePro();
+                    ActivityComponentPrePro.font = new SLFont();
+                    ActivityComponentPrePro.font.Bold = true;
+
                     ActivityComponentPrePro.PendindActivity = $"{_actividadPending}";
                     ActivityComponentPrePro.TypeActivity = "Despliegue";
-                    ActivityComponentPrePro.Activity = $@"En el servidor SRVNEUPVWMX07  con dirección ip 180.181.167.57, abrir la línea de comandos y dirigirse a D:\MPM\DIS para ejecutar el comando:{ System.Environment.NewLine}";
-                    ActivityComponentPrePro.Activity += $@"<b>dir /s *.* /o:-d > srvn07_caida.txt</b>{ System.Environment.NewLine}";
-                    ActivityComponentPrePro.Activity += $@"Entregar al Gestor del cambio el archivo srvn07_caida.txt.{ System.Environment.NewLine}";
-                    ActivityComponentPrePro.Activity += $@"Esperar validación para continuar con la siguiente actividad.{ System.Environment.NewLine}";
+
+                    ActivityComponentPrePro.rst.AppendText($@"En el servidor SRVNEUPVWMX07  con dirección ip 180.181.167.57, abrir la línea de comandos y dirigirse a D:\MPM\DIS para ejecutar el comando:{ System.Environment.NewLine}");
+                    ActivityComponentPrePro.rst.AppendText($"dir /s *.* /o:-d > srvn07_caida.txt", ActivityComponentPrePro.font);
+                    ActivityComponentPrePro.rst.AppendText($@"{ System.Environment.NewLine}");
+                    ActivityComponentPrePro.rst.AppendText($@"Entregar al Gestor del cambio el archivo srvn07_caida.txt.{ System.Environment.NewLine}");
+                    ActivityComponentPrePro.rst.AppendText($@"Esperar validación para continuar con la siguiente actividad.{ System.Environment.NewLine}");
+                    //ActivityComponentPrePro.Activity = $@"En el servidor SRVNEUPVWMX07  con dirección ip 180.181.167.57, abrir la línea de comandos y dirigirse a D:\MPM\DIS para ejecutar el comando:{ System.Environment.NewLine}";
+                    //ActivityComponentPrePro.Activity += $@"<b>dir /s *.* /o:-d > srvn07_caida.txt</b>{ System.Environment.NewLine}";
+                    //ActivityComponentPrePro.Activity += $@"Entregar al Gestor del cambio el archivo srvn07_caida.txt.{ System.Environment.NewLine}";
+                    //ActivityComponentPrePro.Activity += $@"Esperar validación para continuar con la siguiente actividad.{ System.Environment.NewLine}";
                     ActivityComponentPreProList.Add(ActivityComponentPrePro);
 
                     ActivityComponentPrePro = new ActivityComponentPrePro();
+                    ActivityComponentPrePro.font = new SLFont();
+                    ActivityComponentPrePro.font.Bold = true;
 
                     ActivityComponentPrePro.PendindActivity = (_pendingActivity+ActivityComponentPreProList.Count()).ToString();
                     ActivityComponentPrePro.TypeActivity = "Despliegue";
-                    ActivityComponentPrePro.Activity = $@"<b>Prender pools</b> de todos los servidores.";
+                    ActivityComponentPrePro.rst.AppendText($"Prender pools", ActivityComponentPrePro.font);
+                    ActivityComponentPrePro.rst.AppendText($@"de todos los servidores.{ System.Environment.NewLine}");
+                    //ActivityComponentPrePro.Activity = $@"<b>Prender pools</b> de todos los servidores.";
                     ActivityComponentPreProList.Add(ActivityComponentPrePro);
                 }
 
@@ -625,34 +780,60 @@ namespace AutoDischange.ViewModel.Helpers
             {
                 List<ActivityComponentPrePro> ActivityComponentPreProList = new List<ActivityComponentPrePro>();
                 ActivityComponentPrePro ActivityComponentPrePro = new ActivityComponentPrePro();
+                ActivityComponentPrePro.font = new SLFont();
+                ActivityComponentPrePro.font.Bold = true;
                 //int _contador = 1;
 
                 if (_env == 0)
                 {   //PRE
                     ActivityComponentPrePro.PendindActivity = _pendingActivity.ToString();
                     ActivityComponentPrePro.TypeActivity = "Despliegue";
-                    ActivityComponentPrePro.Activity = $"En el servidor <b>SRNEUIWM1MXR309 180.228.64.204 Batch</b>:{ System.Environment.NewLine}";
-                    ActivityComponentPrePro.Activity += $@"Abrir como Administrador la línea de comandos{ System.Environment.NewLine}";
-                    ActivityComponentPrePro.Activity += $@"Ir a la carpeta D:\MPM\DIS\InstallBSM\Resources\ImportarRecursos{ System.Environment.NewLine}";
-                    ActivityComponentPrePro.Activity += $@"Ejecutar el archivo <b>ImportarRecursos_1.cmd</b> y al finalizar devolver:{ System.Environment.NewLine}";
-                    ActivityComponentPrePro.Activity += $@"-El archivo cookies.txt ubicado en D:\MPM\DIS\InstallBSM\Resources\ImportarRecursos{ System.Environment.NewLine}";
-                    ActivityComponentPrePro.Activity += $@"-El archivo salida1_DDMMAAAA.html{ System.Environment.NewLine}";
-                    ActivityComponentPrePro.Activity += $@"-El archivo salida1_errores_DDMMAAAA.log{ System.Environment.NewLine}";
-                    ActivityComponentPrePro.Activity += $@"Esperar revisión de los logs de esta tarea para continuar con la siguiente actividad.{ System.Environment.NewLine}";
+                    ActivityComponentPrePro.rst.AppendText($@"En el servidor.{ System.Environment.NewLine}");
+                    ActivityComponentPrePro.rst.AppendText($"SRNEUIWM1MXR309 180.228.64.204 Batch:", ActivityComponentPrePro.font);
+                    ActivityComponentPrePro.rst.AppendText($@"{ System.Environment.NewLine}");
+                    ActivityComponentPrePro.rst.AppendText($@"Abrir como Administrador la línea de comandos { System.Environment.NewLine}");
+                    ActivityComponentPrePro.rst.AppendText($@"Ir a la carpeta D:\MPM\DIS\InstallBSM\Resources\ImportarRecursos { System.Environment.NewLine}");
+                    ActivityComponentPrePro.rst.AppendText($@"Ejecutar el archivo { System.Environment.NewLine}");
+                    ActivityComponentPrePro.rst.AppendText($"ImportarRecursos_1.cmd ", ActivityComponentPrePro.font);
+                    ActivityComponentPrePro.rst.AppendText($@"y al finalizar devolver: { System.Environment.NewLine}");
+                    ActivityComponentPrePro.rst.AppendText($@"-El archivo cookies.txt ubicado en D:\MPM\DIS\InstallBSM\Resources\ImportarRecursos { System.Environment.NewLine}");
+                    ActivityComponentPrePro.rst.AppendText($@"-El archivo salida1_DDMMAAAA.html { System.Environment.NewLine}");
+                    ActivityComponentPrePro.rst.AppendText($@"-El archivo salida1_errores_DDMMAAAA.log { System.Environment.NewLine}");
+                    ActivityComponentPrePro.rst.AppendText($@"Esperar revisión de los logs de esta tarea para continuar con la siguiente actividad. { System.Environment.NewLine}");
+                    //ActivityComponentPrePro.Activity = $"En el servidor <b>SRNEUIWM1MXR309 180.228.64.204 Batch</b>:{ System.Environment.NewLine}";
+                    //ActivityComponentPrePro.Activity += $@"Abrir como Administrador la línea de comandos{ System.Environment.NewLine}";
+                    //ActivityComponentPrePro.Activity += $@"Ir a la carpeta D:\MPM\DIS\InstallBSM\Resources\ImportarRecursos{ System.Environment.NewLine}";
+                    //ActivityComponentPrePro.Activity += $@"Ejecutar el archivo <b>ImportarRecursos_1.cmd</b> y al finalizar devolver:{ System.Environment.NewLine}";
+                    //ActivityComponentPrePro.Activity += $@"-El archivo cookies.txt ubicado en D:\MPM\DIS\InstallBSM\Resources\ImportarRecursos{ System.Environment.NewLine}";
+                    //ActivityComponentPrePro.Activity += $@"-El archivo salida1_DDMMAAAA.html{ System.Environment.NewLine}";
+                    //ActivityComponentPrePro.Activity += $@"-El archivo salida1_errores_DDMMAAAA.log{ System.Environment.NewLine}";
+                    //ActivityComponentPrePro.Activity += $@"Esperar revisión de los logs de esta tarea para continuar con la siguiente actividad.{ System.Environment.NewLine}";
                     ActivityComponentPreProList.Add(ActivityComponentPrePro);
                 }
                 else
                 {   //PRO
                     ActivityComponentPrePro.PendindActivity = _pendingActivity.ToString();
                     ActivityComponentPrePro.TypeActivity = "Despliegue";
-                    ActivityComponentPrePro.Activity = $"En el servidor <b>SRVNEUPVWMX09 180.181.167.59 Batch</b>:{ System.Environment.NewLine}";
-                    ActivityComponentPrePro.Activity += $@"Abrir como Administrador la línea de comandos{ System.Environment.NewLine}";
-                    ActivityComponentPrePro.Activity += $@"Ir a la carpeta D:\MPM\DIS\InstallBSM\Resources\ImportarRecursos{ System.Environment.NewLine}";
-                    ActivityComponentPrePro.Activity += $@"Ejecutar el archivo <b>ImportarRecursos_1.cmd</b> y al finalizar devolver:{ System.Environment.NewLine}";
-                    ActivityComponentPrePro.Activity += $@"-El archivo cookies.txt ubicado en D:\MPM\DIS\InstallBSM\Resources\ImportarRecursos{ System.Environment.NewLine}";
-                    ActivityComponentPrePro.Activity += $@"-El archivo salida1_DDMMAAAA.html{ System.Environment.NewLine}";
-                    ActivityComponentPrePro.Activity += $@"-El archivo salida1_errores_DDMMAAAA.log{ System.Environment.NewLine}";
-                    ActivityComponentPrePro.Activity += $@"Esperar revisión de los logs de esta tarea para continuar con la siguiente actividad.{ System.Environment.NewLine}";
+                    ActivityComponentPrePro.rst.AppendText($@"En el servidor.{ System.Environment.NewLine}");
+                    ActivityComponentPrePro.rst.AppendText($"SRVNEUPVWMX09 180.181.167.59 Batch:", ActivityComponentPrePro.font);
+                    ActivityComponentPrePro.rst.AppendText($@"{ System.Environment.NewLine}");
+                    ActivityComponentPrePro.rst.AppendText($@"Abrir como Administrador la línea de comandos { System.Environment.NewLine}");
+                    ActivityComponentPrePro.rst.AppendText($@"Ir a la carpeta D:\MPM\DIS\InstallBSM\Resources\ImportarRecursos { System.Environment.NewLine}");
+                    ActivityComponentPrePro.rst.AppendText($@"Ejecutar el archivo { System.Environment.NewLine}");
+                    ActivityComponentPrePro.rst.AppendText($"ImportarRecursos_1.cmd ", ActivityComponentPrePro.font);
+                    ActivityComponentPrePro.rst.AppendText($@"y al finalizar devolver: { System.Environment.NewLine}");
+                    ActivityComponentPrePro.rst.AppendText($@"-El archivo cookies.txt ubicado en D:\MPM\DIS\InstallBSM\Resources\ImportarRecursos { System.Environment.NewLine}");
+                    ActivityComponentPrePro.rst.AppendText($@"-El archivo salida1_DDMMAAAA.html { System.Environment.NewLine}");
+                    ActivityComponentPrePro.rst.AppendText($@"-El archivo salida1_errores_DDMMAAAA.log { System.Environment.NewLine}");
+                    ActivityComponentPrePro.rst.AppendText($@"Esperar revisión de los logs de esta tarea para continuar con la siguiente actividad. { System.Environment.NewLine}");
+                    //ActivityComponentPrePro.Activity = $"En el servidor <b>SRVNEUPVWMX09 180.181.167.59 Batch</b>:{ System.Environment.NewLine}";
+                    //ActivityComponentPrePro.Activity += $@"Abrir como Administrador la línea de comandos{ System.Environment.NewLine}";
+                    //ActivityComponentPrePro.Activity += $@"Ir a la carpeta D:\MPM\DIS\InstallBSM\Resources\ImportarRecursos{ System.Environment.NewLine}";
+                    //ActivityComponentPrePro.Activity += $@"Ejecutar el archivo <b>ImportarRecursos_1.cmd</b> y al finalizar devolver:{ System.Environment.NewLine}";
+                    //ActivityComponentPrePro.Activity += $@"-El archivo cookies.txt ubicado en D:\MPM\DIS\InstallBSM\Resources\ImportarRecursos{ System.Environment.NewLine}";
+                    //ActivityComponentPrePro.Activity += $@"-El archivo salida1_DDMMAAAA.html{ System.Environment.NewLine}";
+                    //ActivityComponentPrePro.Activity += $@"-El archivo salida1_errores_DDMMAAAA.log{ System.Environment.NewLine}";
+                    //ActivityComponentPrePro.Activity += $@"Esperar revisión de los logs de esta tarea para continuar con la siguiente actividad.{ System.Environment.NewLine}";
                     ActivityComponentPreProList.Add(ActivityComponentPrePro);
                 }
                 
@@ -674,16 +855,23 @@ namespace AutoDischange.ViewModel.Helpers
             {
                 List<ActivityComponentPrePro> ActivityComponentPreProList = new List<ActivityComponentPrePro>();
                 ActivityComponentPrePro ActivityComponentPrePro = new ActivityComponentPrePro();
+                ActivityComponentPrePro.font = new SLFont();
+                ActivityComponentPrePro.font.Bold = true;
                 //int _contador = 1;
                 ActivityComponentPrePro.PendindActivity = _pendingActivity.ToString();
                 ActivityComponentPrePro.TypeActivity = "Despliegue";
-                ActivityComponentPrePro.Activity = $"<b>Generar fingerprint</b>{ System.Environment.NewLine}";
+                ActivityComponentPrePro.rst.AppendText($"Generar fingerprint { System.Environment.NewLine}", ActivityComponentPrePro.font);
+                //ActivityComponentPrePro.Activity = $"<b>Generar fingerprint</b>{ System.Environment.NewLine}";
                 ActivityComponentPreProList.Add(ActivityComponentPrePro);
 
                 ActivityComponentPrePro = new ActivityComponentPrePro();
+                ActivityComponentPrePro.font = new SLFont();
+                ActivityComponentPrePro.font.Bold = true;
+
                 ActivityComponentPrePro.PendindActivity = (_pendingActivity + ActivityComponentPreProList.Count()).ToString();
                 ActivityComponentPrePro.TypeActivity = "Despliegue";
-                ActivityComponentPrePro.Activity = $"<b>Solicitar logs</b>{ System.Environment.NewLine}";
+                ActivityComponentPrePro.rst.AppendText($"Solicitar logs { System.Environment.NewLine}", ActivityComponentPrePro.font);
+                //ActivityComponentPrePro.Activity = $"<b>Solicitar logs</b>{ System.Environment.NewLine}";
                 ActivityComponentPreProList.Add(ActivityComponentPrePro);
 
                 if (_env == 0)
@@ -691,17 +879,25 @@ namespace AutoDischange.ViewModel.Helpers
                     
 
                     ActivityComponentPrePro = new ActivityComponentPrePro();
+                    ActivityComponentPrePro.font = new SLFont();
+                    ActivityComponentPrePro.font.Bold = true;
+
                     ActivityComponentPrePro.PendindActivity = "";
                     ActivityComponentPrePro.TypeActivity = "";
-                    ActivityComponentPrePro.Activity = $"<b>Post despliegue.</b>{ System.Environment.NewLine}";
+                    ActivityComponentPrePro.rst.AppendText($"Post despliegue. { System.Environment.NewLine}", ActivityComponentPrePro.font);
+                    //ActivityComponentPrePro.Activity = $"<b>Post despliegue.</b>{ System.Environment.NewLine}";
                     ActivityComponentPreProList.Add(ActivityComponentPrePro);
                 }
                 else
                 {   //PRO
                     ActivityComponentPrePro = new ActivityComponentPrePro();
+                    ActivityComponentPrePro.font = new SLFont();
+                    ActivityComponentPrePro.font.Bold = true;
+
                     ActivityComponentPrePro.PendindActivity = "";
                     ActivityComponentPrePro.TypeActivity = "";
-                    ActivityComponentPrePro.Activity = $"<b>Creación del producto y expedientes de hogar.</b>{ System.Environment.NewLine}";
+                    ActivityComponentPrePro.rst.AppendText($"Creación del producto y expedientes de hogar. { System.Environment.NewLine}", ActivityComponentPrePro.font);
+                    //ActivityComponentPrePro.Activity = $"<b>Creación del producto y expedientes de hogar.</b>{ System.Environment.NewLine}";
                     ActivityComponentPreProList.Add(ActivityComponentPrePro);
                 }
 

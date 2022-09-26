@@ -1,4 +1,5 @@
-﻿using System;
+﻿using SpreadsheetLight;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -35,7 +36,9 @@ namespace AutoDischange.Model
         //public int IdExect { get; set; } //Orden de ejcucion
         public string PendindActivity { get; set; } //Actividad Pendiente
         public string TypeActivity { get; set; } //Tipo Actividad
-        public string Activity{ get; set; } // Actividad PRE o PRO
+        //public string Activity{ get; set; } // Actividad PRE o PRO
+        public SLRstType rst = new SLRstType(); // Actividad PRE o PRO
+        public SLFont font = new SLFont();
     }
 
     //Model For View

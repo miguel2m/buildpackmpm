@@ -456,13 +456,21 @@ namespace AutoDischange.ViewModel.Helpers
             sl.SelectWorksheet(_workbook);
             int _index = 2;
             int _contador = 1;
+            SLStyle style = sl.CreateStyle();
+            style.SetWrapText(true);
+            style.Alignment.JustifyLastLine = true;
+
             foreach (ActivityComponentPrePro item in listData)
             {
 
                 sl.SetCellValue(_index, 1, _contador);
+                sl.SetCellStyle(_index, 1, style);
                 sl.SetCellValue(_index, 2, item.PendindActivity);
+                sl.SetCellStyle(_index, 2, style);
                 sl.SetCellValue(_index, 3, item.TypeActivity);
-                sl.SetCellValue(_index, 4, item.Activity);
+                sl.SetCellStyle(_index, 3, style);
+                sl.SetCellValue(_index, 4, item.rst);
+                sl.SetCellStyle(_index, 4, style);
                 _index++;
                 _contador++;
 

@@ -37,6 +37,10 @@ namespace AutoDischange.ViewModel.Helpers
             List<ActivityComponentPrePro> ActivityResultListPre                             = new List<ActivityComponentPrePro>();//Despliegue Result PRE
             List<ActivityComponentPrePro> ActivityResultListPro                             = new List<ActivityComponentPrePro>();//Despliegue Result PRO
 
+            //Actividades 
+            List<ActivityComponentPrePro> ActivityScriptListPre = new List<ActivityComponentPrePro>();//Lista de Script PRE
+            List<ActivityComponentPrePro> ActivityScriptListPro = new List<ActivityComponentPrePro>();//Lista de Script PRO
+
             List<ActivityComponentPrePro> ActivityProcessImportListPre                      = new List<ActivityComponentPrePro>();//Importancion de procesos PRE
             List<ActivityComponentPrePro> ActivityProcessImportListPro                      = new List<ActivityComponentPrePro>();//Importancion de procesos PRO
 
@@ -88,7 +92,7 @@ namespace AutoDischange.ViewModel.Helpers
                 }
             }
 
-            //Listado de Script
+            //Listado de Script para la hoja de lista
             if (Directory.Exists(pathConfigurables))
             {
                 dirScript = new System.IO.DirectoryInfo(pathScript);
@@ -105,7 +109,72 @@ namespace AutoDischange.ViewModel.Helpers
             }
 
             //Listado de Actividades para despliegue ActividadesParaDesplegarPre  ActividadesParaDesplegarPro
-            //Script TODO
+
+            if (ActivityComponentListScriptList.Any())
+            {
+                List<ActividadDespliegue> lstActDesp = new List<ActividadDespliegue>();
+                List<ActividadDespliegue> lstExcel = new List<ActividadDespliegue>();
+                string cadNomEsq = string.Empty;
+                //CONOCER LAS ESTRUCTURA DEL NOMBRE DEL ARCHIVO
+                foreach (ActivityComponentListScript item in ActivityComponentListScriptList)
+                {
+                    ActividadDespliegue actividadDespliegues = new ActividadDespliegue();
+                    if ((item.DischangeComponentName[0].Contains("DML") || item.DischangeComponentName[0].Contains("DDL") || item.DischangeComponentName[0].Contains("SIN")) && 
+                        (item.DischangeComponentName[0].Contains("DOC") || item.DischangeComponentName[0].Contains("SEG") || item.DischangeComponentName[0].Contains("ECL") || item.DischangeComponentName[0].Contains("APR") || item.DischangeComponentName[0].Contains("HST")) &&
+                        (item.DischangeComponentName[0].Contains("ESQ") || item.DischangeComponentName[0].Contains("CON")) &&
+                        item.DischangeComponentName[0].Contains(".sql"))
+                    {
+                        actividadDespliegues.OrdenEjec = item.DischangeComponentName[0].Substring(0, 2);
+                        actividadDespliegues.TipoScrpt = GetAttrbScript(1, item.DischangeComponentName[0]);
+                        actividadDespliegues.NombArchv = item.DischangeComponentName[0];
+                        actividadDespliegues.NombEsqum = GetAttrbScript(2, item.DischangeComponentName[0]);
+                        actividadDespliegues.TipoUsr = GetAttrbScript(3, item.DischangeComponentName[0]);
+                        actividadDespliegues.ServerPre = "DBNEUIVLMX01";
+                        actividadDespliegues.ServerPro = "DBNEUPVLMX01 y DBNEUPVLMX02";
+                        actividadDespliegues.InstanciaPre = "otmxdisp";
+                        actividadDespliegues.InstanciaPro = "oemxdisp";
+                        actividadDespliegues.EsquemaPre = "gchtm" + GetAttrbScript(2, item.DischangeComponentName[0]).ToLower();
+                        actividadDespliegues.EsquemaPro = "prhtm" + GetAttrbScript(2, item.DischangeComponentName[0]).ToLower();
+                        actividadDespliegues.Puerto = "1660";
+                        lstActDesp.Add(actividadDespliegues);
+                    }
+                }
+
+                //ALGORITMO QUE EVALUA LISTA CONTRA SI MISMA Y ORDENARLA
+                //AGRUPE LOS ARCHIVOS SQL POR EL ATRIBUTO IdGroup PARA QUE SE TE HAGA SENCILLO AGREGARLOS AL EXCEL
+                
+                int i = 0, grupo = 1;
+                foreach (var item in lstActDesp)
+                {
+                    if (!lstExcel.Contains(item))
+                    {
+                        foreach (var item0 in lstActDesp)
+                        {
+                            if (item.OrdenEjec == item0.OrdenEjec)
+                            {
+                                lstExcel.Add(item0);
+                                lstExcel[i].IdGroup = grupo;
+                                i++;
+                            }
+                            else
+                            {
+                                if (item.TipoScrpt == item0.TipoScrpt &&
+                                    item.NombEsqum == item0.NombEsqum &&
+                                    item.TipoUsr == item0.TipoUsr)
+                                {
+                                    lstExcel.Add(item0);
+                                    lstExcel[i].IdGroup = grupo;
+                                    i++;
+                                }
+                            }
+                        }
+                    }
+                    grupo++;
+                }
+            }
+
+
+
             //Si traigo xml en ProcesosFull entonces debo ejecutar actividades de importación de procesos 
             //(importación de procesos)
             if (ActivityComponentListAlojablesList.Any())
@@ -252,6 +321,77 @@ namespace AutoDischange.ViewModel.Helpers
             if (msPass.CanRead)
                 ExcelHelper.SaveExcelEntrega(msPass, pathUser);
         }
+
+        private static string GetAttrbScript(int part, string fullNameFile)
+        {
+            int valCad = 0;
+            string fileFullName = string.Empty;
+
+            switch (part)
+            {
+                case 1:
+                    if (fullNameFile.Contains("DML"))
+                    {
+                        valCad = fullNameFile.IndexOf("DML");
+                        fileFullName = fullNameFile.Substring(valCad, 3);
+                    }
+                    else if (fullNameFile.Contains("DDL"))
+                    {
+                        valCad = fullNameFile.IndexOf("DDL");
+                        fileFullName = fullNameFile.Substring(valCad, 3);
+                    }
+                    else
+                    {
+                        valCad = fullNameFile.IndexOf("DDL");
+                        fileFullName = fullNameFile.Substring(valCad, 3);
+                    }
+                    break;
+                case 2:
+                    if (fullNameFile.Contains("DOC"))
+                    {
+                        valCad = fullNameFile.IndexOf("DOC");
+                        fileFullName = fullNameFile.Substring(valCad, 3);
+                    }
+                    else if (fullNameFile.Contains("SEG"))
+                    {
+                        valCad = fullNameFile.IndexOf("SEG");
+                        fileFullName = fullNameFile.Substring(valCad, 3);
+                    }
+                    else if (fullNameFile.Contains("ECL"))
+                    {
+                        valCad = fullNameFile.IndexOf("ECL");
+                        fileFullName = fullNameFile.Substring(valCad, 3);
+                    }
+                    else if (fullNameFile.Contains("APR"))
+                    {
+                        valCad = fullNameFile.IndexOf("APR");
+                        fileFullName = fullNameFile.Substring(valCad, 3);
+                    }
+                    else
+                    {
+                        valCad = fullNameFile.IndexOf("HST");
+                        fileFullName = fullNameFile.Substring(valCad, 3);
+                    }
+                    break;
+                case 3:
+                    if (fullNameFile.Contains("ESQ"))
+                    {
+                        valCad = fullNameFile.IndexOf("ESQ");
+                        fileFullName = fullNameFile.Substring(valCad, 3);
+                    }
+                    else
+                    {
+                        valCad = fullNameFile.IndexOf("CON");
+                        fileFullName = fullNameFile.Substring(valCad, 3);
+                    }
+                    break;
+                default:
+                    fileFullName = "No hayado";
+                    break;
+            }
+            return fileFullName;
+        }
+
         //Read  ListPathDischange (Guia de ubicaciones)
         public static async Task<List<string>> ListPathDischange(IEnumerable<System.IO.FileInfo> listInput)
         {

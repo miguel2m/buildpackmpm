@@ -459,7 +459,7 @@ namespace AutoDischange.ViewModel.Helpers
             SLStyle style = sl.CreateStyle();
             style.SetWrapText(true);
             style.Alignment.JustifyLastLine = true;
-
+            //style.Font.FontSize = 14;
             foreach (ActivityComponentPrePro item in listData)
             {
 

@@ -1,6 +1,7 @@
 ﻿
 using AutoDischange.Model;
 using AutoDischange.View.CustomControl;
+using AutoDischange.ViewModel.Helpers;
 using System;
 using System.Collections.Generic;
 using System.Configuration;
@@ -28,33 +29,21 @@ namespace AutoDischange.View
         List<BranchJenkins> lstNombDir = new List<BranchJenkins>();
         public MainWindow()
         {
-            InitializeComponent();
-            InitializeCmbBranch();
-        }
-        private void InitializeCmbBranch()
-        {
-            //string rutaBranch = ConfigurationManager.AppSettings["rutaJenkins"];
-            //string[] subDir = Directory.GetDirectories(rutaBranch);
-            //foreach (var item in subDir.Select((value, i) => new { i, value }))
-            //{
-            //    var value = nameDir(item.value);
-            //    var index = item.i;
-            //    lstNombDir.Add(new BranchJenkins { CodBranch = index, NameBranch = value });
-            //}
-            //this.CmbNameBranch.DisplayMemberPath = "NameBranch";
-            //this.CmbNameBranch.SelectedValuePath = "CodBranch";
-            //this.CmbNameBranch.ItemsSource = lstNombDir;
+            //InitializeComponent();
+
+            //SOLO CON PROPOSITOS DEL EXCEL DE ENTREGA
+            CargaDatosExcel();
         }
 
-        public string nameDir(string url)
+        public void CargaDatosExcel()
         {
-            List<string> list = new List<string>();
-            list = url.Split('\\').ToList();
-            int count = list.Count;
-            string result = list[count - 1];
+            //necesito acceder a la carpeta del paquete y usare esta ruta de ejemplo
+            string rutaPrueba = "C:\\Users\\edgar.linarez\\OneDrive - MPM SOFTWARE SLU\\Escritorio\\pruebasAuth\\PrimerEntrega\\Componentes\\Scripts\\DIS\\";
 
-            return result;
+            //vamos a verificar si el directorio existe
+            ExcelHelper.ObtenerDatosScriptSql(rutaPrueba);
         }
+
 
         private void MenuItem_Click(object sender, RoutedEventArgs e)
         {

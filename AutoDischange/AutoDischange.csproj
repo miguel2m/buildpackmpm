@@ -213,6 +213,7 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="Model\ActivityModel.cs" />
+    <Compile Include="Model\ActividadDespliegue.cs" />
     <Compile Include="Model\BranchJenkins.cs" />
     <Compile Include="Model\CompareFile.cs" />
     <Compile Include="Model\DiffCompareModel.cs" />

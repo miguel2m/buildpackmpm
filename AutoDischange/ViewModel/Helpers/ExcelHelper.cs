@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 using DocumentFormat.OpenXml;
 using DocumentFormat.OpenXml.Spreadsheet;
 using System.IO;
-
+using System.Configuration;
 
 namespace AutoDischange.ViewModel.Helpers
 {
@@ -20,6 +20,7 @@ namespace AutoDischange.ViewModel.Helpers
         public static async Task<List<DischangeChangeset>> ReadExcel (string path) 
         {
             List<DischangeChangeset> DischangeChangesets = new List<DischangeChangeset>();
+           
                
             SLDocument sl = new SLDocument(path);
 
@@ -319,10 +320,328 @@ namespace AutoDischange.ViewModel.Helpers
 
 
         }
+      
+        public static void ObtenerDatosScriptSql(string url)
+        {
+            List<ActividadDespliegue> lstActDesp = new List<ActividadDespliegue>();
+            try
+            {
+                //VERIFIQUEMOS QUE LA RUTA EXISTE
+                if (Directory.Exists(url))
+                {
+                    string ext = string.Empty;
+                    //VAMOS A BUSCAR LOS SQL QUE CONTENGAN ESTE PAQUETE
+                    //TENEMOS QUE VERIFICAR QUE CONTIENE LOS ARCHIVOS SQL
+                    DirectoryInfo directoryInfo = new DirectoryInfo(url);
+                    FileInfo[] filesSql = directoryInfo.GetFiles("*.sql");
+                    foreach (FileInfo file in filesSql)
+                    {
+                        ActividadDespliegue actividadDespliegues = new ActividadDespliegue();
+                        string[] divNameFile = file.ToString().Split('_');
+                        actividadDespliegues.OrdenEjec = divNameFile[0];
 
-        //READ Local DIS_Changes
+                        for (int i = 0; i < divNameFile.Count(); i++)
+                        {
+                            //NECESITO VERIFICAR QUE EL ARCHIVO TENGA LA ESTRUCTURA
+                            if (divNameFile[i] == "DML" || divNameFile[i] == "DDL" || divNameFile[i] == "SIN")
+                            {
+                                actividadDespliegues.TipoScrpt = divNameFile[i];
+                            }
+
+                            if (divNameFile[i] == "DOC" || divNameFile[i] == "SEG" || divNameFile[i] == "ECL" ||
+                                divNameFile[i] == "APR" || divNameFile[i] == "HST")
+                            {
+                                actividadDespliegues.NombEsqum = divNameFile[i];
+                            }
+                            
+                            if ((divNameFile[i].Length > 3) && (divNameFile[i].Substring(0, 3) == "ESQ" || divNameFile[i].Substring(0, 3) == "CON"))
+                            {
+                                actividadDespliegues.TipoUsr = divNameFile[i].Substring(0,3);
+                            }
+                        }
+                        actividadDespliegues.NombArchv = file.Name;
+                        lstActDesp.Add(actividadDespliegues);
+                    }                   
+                }
+                //Cargar el Excel
+                string rutaXlsx = "C:\\Users\\edgar.linarez\\OneDrive - MPM SOFTWARE SLU\\Escritorio\\pruebasAuth\\PrimerEntrega\\ExcelEntregaEjemplo.xlsx";
+                string[] tipAmbiente = { "ActividadesParaDesplegarPre", "ActividadesParaDesplegarPro" };
+                foreach (var item in tipAmbiente)
+                {
+                    CargarDatosActividadesDespliegue(lstActDesp, rutaXlsx, item);
+                }
+            }
+            catch (Exception e)
+            {
+                var problem = e.ToString();
+                throw;
+            }
+        }
+        public static void CargarDatosActividadesDespliegue(List<ActividadDespliegue> actividads, string pathXlsx, string Hoja_amb)
+        {
+            try
+            {
+                               
+                SLDocument sl = new SLDocument(pathXlsx, Hoja_amb);
+                string cadAct = string.Empty;
+                
+                //ORDENO LA LISTA POR ORDEN DE EJECUCION
+                IEnumerable<ActividadDespliegue> lstOrdenaActvdds = actividads.OrderBy(x => x.TipoScrpt)
+                    .ThenBy(x => x.NombEsqum)
+                    .ThenBy(x => x.TipoUsr).ToList();
+
+                //VOY A CREAR UNA LISTA QUE VOY A USAR PARA AGREGAR EN EL EXCEL
+                List<ActividadDespliegue> lstExcel = new List<ActividadDespliegue>();
+
+                int cell = 2;
+                int numReg = 1;
+                string concatNomArch = string.Empty;
+                bool flag = false;
+                //voy a recorrer la lista que traigo y comparo lista con lista
+                foreach (var item in actividads)
+                {
+                    if (!lstExcel.Contains(item))
+                    {
+                        foreach (var item0 in lstOrdenaActvdds)
+                        {
+                            if (item.OrdenEjec == item0.OrdenEjec)
+                            {
+                                lstExcel.Add(item0);
+                                concatNomArch = item0.NombArchv + "\n";
+                                flag = true;
+                            }
+                            else
+                            {
+                                if (item.TipoScrpt == item0.TipoScrpt && item.NombEsqum == item0.NombEsqum && item.TipoUsr == item0.TipoUsr)
+                                {
+                                    lstExcel.Add(item0);
+                                    concatNomArch += item0.NombArchv;
+                                    flag = true;
+                                }
+                            }
+                        }
+                    }
+                    else
+                    {
+                        flag = false;
+                    }
+                    
+                    if (flag)
+                    {
+                        //ACA EMPIEZA A CARGAR LOS ATRIBUTOS DEL SQL EN EL EXCEL 
+                        sl.SetCellValue($"A{cell}", numReg);
+                        sl.SetCellValue($"B{cell}", "Ninguna");
+                        sl.SetCellValue($"C{cell}", "Despliegue");
+                        if (Hoja_amb == "ActividadesParaDesplegarPre")
+                        {
+                            cadAct = $"Ejecutar los siguientes scripts {item.TipoScrpt} en el orden indicado: \n" +
+                                $"{concatNomArch}\n\r" +
+                                $"Servidor: DBNEUIVLMX01\n" +
+                                $"Instancia: otmxdisp\n" +
+                                $"Esquema: gchtm{item.NombEsqum.ToLower()}\n" +
+                                $"Puerto: 1660\r";
+                        }
+                        else
+                        {
+                            cadAct = $"Ejecutar los siguientes scripts {item.TipoScrpt} en el orden indicado: \n" +
+                                $"{concatNomArch}\n\r" +
+                                $"Servidor: DBNEUPVLMX01 y DBNEUPVLMX02\n" +
+                                $"Instancia: oemxdisp\n" +
+                                $"Esquema: prhtm{item.NombEsqum.ToLower()}\n" +
+                                $"Puerto: 1660\r";
+                        }
+                        sl.SetCellValue($"D{cell}", cadAct);
+                        cell++;
+                        numReg++;
+                    }
+                }
+
+                //VAMOS A CARGAR LOS DATOS PARA LA TAREA IMPORTACION DE PROCESOS
+                string ImpProc = string.Empty, PathImpProc = string.Empty, cadImpProc = string.Empty;
+                PathImpProc = ConfigurationManager.AppSettings["PathServerBatchImpProc"];
+                if (Hoja_amb == "ActividadesParaDesplegarPre")
+                {
+                    ImpProc = ConfigurationManager.AppSettings["ServerBatchImpProcPre"];
+                }
+                else
+                {
+                    ImpProc = ConfigurationManager.AppSettings["ServerBatchImpProcPro"];
+                }
+                cadImpProc = $"Entrar al servidor {ImpProc} y hacer las siguientes acciones: \n" +
+                    $"1.- Eliminar el contenido de la carpeta {PathImpProc}";
+                sl.SetCellValue($"A{cell}", numReg);
+                sl.SetCellValue($"B{cell}", "Ninguna");
+                sl.SetCellValue($"C{cell}", "Despliegue");
+                sl.SetCellValue($"D{cell}", cadImpProc);
+                cell++;
+                numReg++;
+
+                //VAMOS A BAJAR LOS POOLS
+                sl.SetCellValue($"A{cell}", numReg);
+                sl.SetCellValue($"B{cell}", "Ninguna");
+                sl.SetCellValue($"C{cell}", "Despliegue");
+                sl.SetCellValue($"D{cell}", "Bajar pools de todos los servidores.");                
+                cell++;
+                numReg++;
+
+                int prec1 = cell - 3, prec2 = cell - 2;
+
+
+                //DESPLEGAR LOS CR
+                sl.SetCellValue($"A{cell}", numReg);
+                sl.SetCellValue($"B{cell}", $"{prec1} y {prec2}");
+                sl.SetCellValue($"C{cell}", "Despliegue");
+                sl.SetCellValue($"D{cell}", $"Desplegar las siguientes CRs:\n Alojables \n Configurables");
+                cell++;
+                numReg++;
+
+                prec1 = cell - 2;
+
+                ///VALIDACIONES
+                string serv1 = string.Empty, serv2 = string.Empty, serv3 = string.Empty, serv4 = string.Empty, serv5 = string.Empty;
+                string ip1 = string.Empty, ip2 = string.Empty, ip3 = string.Empty, ip4 = string.Empty, ip5 = string.Empty;
+                if (Hoja_amb == "ActividadesParaDesplegarPre")
+                {
+                    serv1 = "WEBNEUIVWMX03";
+                    serv2 = "SRNEUIWM1MXR309";
+                    serv3 = "SRVNEUIVWMX01";
+                    serv4 = "SRNEUIWM1MXR307";
+                    serv5 = "WEBNEUIVWMX04";
+                    ip1 = "180.181.105.137";
+                    ip2 = "180.228.64.204";
+                    ip3 = "180.181.105.139";
+                    ip4 = "180.228.64.206";
+                    ip5 = "180.181.105.136";
+                }
+                else
+                {
+                    serv1 = "WEBNEUPVWMX03";
+                    serv2 = "SRVNEUPVWMX09";
+                    serv3 = "SRVNEUPVWMX01";
+                    serv4 = "SRVNEUPVWMX07";
+                    serv5 = "WEBNEUPVWMX04";
+                    ip1 = "180.181.165.93";
+                    ip2 = "180.181.167.59";
+                    ip3 = "180.181.167.51";
+                    ip4 = "180.181.167.57";
+                    ip5 = "180.181.165.97";
+                }
+
+                //VALIDACIONES 1
+                sl.SetCellValue($"A{cell}", numReg);
+                sl.SetCellValue($"B{cell}", $"{prec1}");
+                sl.SetCellValue($"C{cell}", "Despliegue");                
+                sl.SetCellValue($"D{cell}", $"En el servidor {serv1} con dirección {ip1}, abrir la línea de comandos y dirigirse a D:\\MPM\\DIS para ejecutar el comando:\n " +
+                    $"dir / s *.* / o:-d > webn03_caida.txt\n" +
+                    $"Entregar al Gestor del cambio el archivo webn03_caida.txt.\n" +
+                    $"Esperar validación para continuar con la siguiente actividad.\n");
+                cell++;
+                //VALIDACIONES 2
+                sl.SetCellValue($"A{cell}", numReg);
+                sl.SetCellValue($"B{cell}", $"{prec1}");
+                sl.SetCellValue($"C{cell}", "Despliegue");
+                sl.SetCellValue($"D{cell}", $"En el servidor {serv2} con dirección {ip2}, abrir la línea de comandos y dirigirse a D:\\MPM\\DIS para ejecutar el comando:\n " +
+                    $"dir /s *.* /o:-d > srvn09_caida.txt\n" +
+                    $"Entregar al Gestor del cambio el archivo srvn09_caida.txt.\n" +
+                    $"Esperar validación para continuar con la siguiente actividad.\n");
+                cell++;
+                //VALIDACIONES 3
+                sl.SetCellValue($"A{cell}", numReg);
+                sl.SetCellValue($"B{cell}", $"{prec1}");
+                sl.SetCellValue($"C{cell}", "Despliegue");
+                sl.SetCellValue($"D{cell}", $"En el servidor {serv3} con dirección {ip3}, abrir la línea de comandos y dirigirse a D:\\MPM\\DIS para ejecutar el comando:\n " +
+                    $"dir /s *.* /o:-d > srvn01_caida.txt\n" +
+                    $"Entregar al Gestor del cambio el archivo srvn01_caida.txt.\n" +
+                    $"Esperar validación para continuar con la siguiente actividad.\n");
+                cell++;
+                //VALIDACIONES 4
+                sl.SetCellValue($"A{cell}", numReg);
+                sl.SetCellValue($"B{cell}", $"{prec1}");
+                sl.SetCellValue($"C{cell}", "Despliegue");
+                sl.SetCellValue($"D{cell}", $"En el servidor {serv4} con dirección {ip4}, abrir la línea de comandos y dirigirse a D:\\MPM\\DIS para ejecutar el comando:\n " +
+                    $"dir /s *.* /o:-d > srvn07_caida.txt\n" +
+                    $"Entregar al Gestor del cambio el archivo srvn07_caida.txt.\n" +
+                    $"Esperar validación para continuar con la siguiente actividad.\n");
+                prec1 = numReg;
+                cell++;
+                numReg++;
+
+                //PRENDER LOS POOLS
+                sl.SetCellValue($"A{cell}", numReg);
+                sl.SetCellValue($"B{cell}", $"{prec1}");
+                sl.SetCellValue($"C{cell}", "Despliegue");
+                sl.SetCellValue($"D{cell}", $"Prender pools de todos los servidores.\n");
+                prec1 = numReg;
+                cell++;
+                numReg++;
+
+                //VALIDACION DE LOGS
+                sl.SetCellValue($"A{cell}", numReg);
+                sl.SetCellValue($"B{cell}", $"{prec1}");
+                sl.SetCellValue($"C{cell}", "Despliegue");
+                sl.SetCellValue($"D{cell}", $"En el servidor {serv2} {ip2} Batch:\n " +
+                    $"Abrir como Administrador la línea de comandos \n" +
+                    $"Ir a la carpeta D:\\MPM\\DIS\\InstallBSM\\ \n" +
+                    $"Ejecutar el archivo Install - DIS - Procesos.cmd \n" +
+                    $"Al finalizar la ejecución compartir el archivo log - import - file.log que se encuentra en D:\\MPM\\DIS\\MPM.FullProcessImport\\Logs\\Import \n" +
+                    $"Esperar validación de los logs para continuar con la siguiente actividad. \n");
+                prec1 = numReg;
+                cell++;
+                numReg++;
+
+                //REINICIO DE POOLS
+                sl.SetCellValue($"A{cell}", numReg);
+                sl.SetCellValue($"B{cell}", $"{prec1}");
+                sl.SetCellValue($"C{cell}", "Despliegue");
+                sl.SetCellValue($"D{cell}", $"Reinicio de Pools.\n" +
+                    $"- {serv1} {ip1} Web. \n" +
+                    $"- {serv2} {ip2} Web. \n" +
+                    $"Reiniciar los siguientes pools: \n" +
+                    $"- DIS_ecDataProvider. \n" +
+                    $"- DIS_eClient. \n" +
+                    $"- DIS_LoginManagerService. \n");
+                prec1 = numReg;
+                cell++;
+                numReg++;
+
+                //IMPORTAR RECURSOS
+                sl.SetCellValue($"A{cell}", numReg);
+                sl.SetCellValue($"B{cell}", $"{prec1}");
+                sl.SetCellValue($"C{cell}", "Despliegue");
+                sl.SetCellValue($"D{cell}", $"En el servidor {serv2} {ip2} Batch:\n" +
+                    $"Abrir como Administrador la línea de comandos\n" +
+                    $"Ir a la carpeta D:\\MPM\\DIS\\InstallBSM\\Resources\\ImportarRecursos\n" +
+                    $"Ejecutar el archivo ImportarRecursos_1.cmd y al finalizar devolver:\n" +
+                    $"- El archivo cookies.txt ubicado en D:\\MPM\\DIS\\InstallBSM\\Resources\\ImportarRecursos\n" +
+                    $"- El archivo salida1_DDMMAAAA.html\n" +
+                    $"- El archivo salida1_errores_DDMMAAAA.log\n" +
+                    $"Esperar revisión de los logs de esta tarea para continuar con la siguiente actividad.\n");
+                prec1 = numReg;
+                cell++;
+                numReg++;
+
+                //SOLICITAR LOGS
+                sl.SetCellValue($"A{cell}", numReg);
+                sl.SetCellValue($"B{cell}", $"{prec1}");
+                sl.SetCellValue($"C{cell}", "Despliegue");
+                sl.SetCellValue($"D{cell}", $"Solicitar logs.\n");
+                cell++;
+                numReg++;
+
+                sl.SaveAs(pathXlsx);
+            }
+            catch (Exception)
+            {
+               
+                throw;
+            }
+            
+
+
+        }
+
         public static MemoryStream ReadExcelEntrega()
-        {          
+        {
 
             string rtfFile = System.IO.Path.Combine(Environment.CurrentDirectory, "ExcelEntrega.xlsx");
             FileStream fs = new FileStream(rtfFile, FileMode.Open);

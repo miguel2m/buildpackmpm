@@ -95,6 +95,5 @@ namespace AutoDischange.ViewModel.Helpers
             }
             return lstNombDir;
         }
-
     }
 }

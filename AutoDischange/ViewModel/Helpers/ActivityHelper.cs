@@ -208,7 +208,7 @@ namespace AutoDischange.ViewModel.Helpers
                 if (ActivityResoruceImportListPre.Any()) //PRE
                 {
                     ActivityResultListPre.AddRange(ActivityResoruceImportListPre);
-                    ActivityResultListPre.AddRange(await ListEndActivity(1,ActivityResultListPre.Count)); //END PRE
+                    ActivityResultListPre.AddRange(await ListEndActivity(0,ActivityResultListPre.Count)); //END PRE
                     MemoryStream msPassTemp = new MemoryStream();
                     ExcelHelper.DeployActivity(msPass, ActivityResultListPre, "ActividadesParaDesplegarPre").WriteTo(msPassTemp);
                     msPass = new MemoryStream();
@@ -217,7 +217,7 @@ namespace AutoDischange.ViewModel.Helpers
                 if (ActivityResoruceImportListPro.Any()) //PRO
                 {
                     ActivityResultListPro.AddRange(ActivityResoruceImportListPro);
-                    ActivityResultListPre.AddRange(await ListEndActivity(1, ActivityResultListPro.Count)); //END PRO
+                    ActivityResultListPro.AddRange(await ListEndActivity(1, ActivityResultListPro.Count)); //END PRO
                     MemoryStream msPassTemp = new MemoryStream();
                     ExcelHelper.DeployActivity(msPass, ActivityResultListPro, "ActividadesParaDesplegarPro").WriteTo(msPassTemp);
                     msPass = new MemoryStream();

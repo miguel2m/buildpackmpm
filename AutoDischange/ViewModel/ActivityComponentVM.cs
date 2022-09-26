@@ -8,6 +8,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Controls;
 
 namespace AutoDischange.ViewModel
 {
@@ -65,21 +66,50 @@ namespace AutoDischange.ViewModel
             }
         }
 
+        private string envEntrega;
+        public string EnvEntrega
+        {
+            get { return envEntrega; }
+            set
+            {
+                envEntrega = value;             
+                OnPropertyChanged("EnvEntrega");
+            }
+        }
+
         public ActivityComponentVM()
         {
             ActivityComponentCommand = new ActivityComponentCommand(this);
             activityComponent = new ActivityComponent();
             ActivityVisible = true;
+            EnvEntrega = "PRE";
         }
 
         public async void ExcuteActivityExport(string pathUser)
         {
             try
             {
+                Console.WriteLine(EnvEntrega);
                 ActivityStatus = $"Leyendo paquetes";
                 ActivityVisible = false;
+                string ambiente;
+                switch (EnvEntrega.ToUpper())
+                {
+                    case "PRE":
+                        ambiente = "Pre";
+                        // code block
+                        break;
+                    case "PRO":
+                        ambiente = "Pro";
+                        // code block
+                        break;
+                    default:
+                        ambiente = "Pre Pro";
+                        // code block
+                        break;
+                }
                 //await DiffComponentHelper.DiffFiles(DiffComponent, pathUser);
-                await ActivityHelper.ExportActivity(activityComponent, pathUser);
+                await ActivityHelper.ExportActivity(activityComponent, pathUser, ambiente);
                 ActivityVisible = true;
                 ActivityStatus = $"Tarea comparación de paquetes finalizada";
                 MessageBox.Show("Listo ", "Listo", MessageBoxButton.OK, MessageBoxImage.Information);

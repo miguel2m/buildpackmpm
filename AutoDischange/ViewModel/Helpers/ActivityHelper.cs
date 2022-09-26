@@ -12,7 +12,7 @@ namespace AutoDischange.ViewModel.Helpers
     public class ActivityHelper
     {
 
-        public static async Task ExportActivity(ActivityComponent activityComponent, string pathUser)
+        public static async Task ExportActivity(ActivityComponent activityComponent, string pathUser,string envExcel)
         {
             char backSlash = Path.DirectorySeparatorChar;
             string pathAlojables = $"{@activityComponent.PathStart}{backSlash}Alojables";
@@ -57,8 +57,8 @@ namespace AutoDischange.ViewModel.Helpers
                     //MemoryStream msPassTemp = new MemoryStream();
                     MemoryStream msPassTemp = ExcelHelper.ListadoAlojables(msPass, ActivityComponentListAlojablesList) ;
                     msPass = new MemoryStream();
-                    msPassTemp.Position = 0;
-                    msPassTemp.CopyTo(msPass);
+                    //msPassTemp.Position = 0;
+                    msPassTemp.WriteTo(msPass);
                    
                 }
             }
@@ -68,7 +68,7 @@ namespace AutoDischange.ViewModel.Helpers
                 dirConfigurables = new System.IO.DirectoryInfo(pathConfigurables);
                 listConfigurables = dirConfigurables.GetFiles("*.*", System.IO.SearchOption.AllDirectories);
                 List<string> DischangePathList = await ListPathDischange(listConfigurables);
-                ActivityComponentListConfigurablesList = await ListConfigurables(DischangePathList);
+                ActivityComponentListConfigurablesList = await ListConfigurables(DischangePathList, envExcel);
                 if (ActivityComponentListConfigurablesList.Any())
                 {
 
@@ -112,10 +112,11 @@ namespace AutoDischange.ViewModel.Helpers
                     DischangePathList.Add(item.Name);
                 }
             });
+            
             task0.Start();
             await task0;
             
-            return DischangePathList;
+            return (DischangePathList.Any())?DischangePathList.Distinct().ToList(): DischangePathList;
         }
 
         //ListadoAlojables Sheet
@@ -159,7 +160,7 @@ namespace AutoDischange.ViewModel.Helpers
         }
 
         //ListadoConfigurables Sheet
-        public static async Task<List<ActivityComponentListConfigurables>> ListConfigurables(List<string> listInput)
+        public static async Task<List<ActivityComponentListConfigurables>> ListConfigurables(List<string> listInput,string envExcel)
         {
             
            
@@ -171,19 +172,29 @@ namespace AutoDischange.ViewModel.Helpers
                 foreach (string item in listInput)
                 {
                    
-                    List<DischangePath> dischangePathListTemp = (DatabaseHelper.Read<DischangePath>()).Where(n => n.Path.Contains(item)).ToList();
+                    List<DischangePath> dischangePathListTemp = (DatabaseHelper.Read<DischangePath>()).Where(n => n.Path.Contains($"{item}")).ToList();
                     ActivityComponentConfigurables = new ActivityComponentListConfigurables();
                     ActivityComponentConfigurables.Id = _contador;
                     ActivityComponentConfigurables.Workbook = "ListadoConfigurables";
-                    ActivityComponentConfigurables.ComponentEnv = "TEST";
+                    ActivityComponentConfigurables.ComponentEnv = envExcel.ToUpper();
 
                     if (dischangePathListTemp.Any())
                     {
                         //DischangePathList.Add(dischangePathListTemp.First().Path);
                         foreach (DischangePath itemTemp in dischangePathListTemp)
                         {
-                            ActivityComponentConfigurables.DischangeComponentName.Add(itemTemp.Path);
-
+                            if (itemTemp.Path.Contains($@"\{ envExcel}\"))
+                                ActivityComponentConfigurables.DischangeComponentName.Add(itemTemp.Path);
+                            else
+                            {
+                                if (envExcel.Equals("Pre Pro"))
+                                {
+                                    if (itemTemp.Path.Contains($@"\Pre\"))
+                                        ActivityComponentConfigurables.DischangeComponentName.Add(itemTemp.Path);
+                                    if (itemTemp.Path.Contains($@"\Pro\"))
+                                        ActivityComponentConfigurables.DischangeComponentName.Add(itemTemp.Path);
+                                }
+                            }
                         }
                     }
                     else

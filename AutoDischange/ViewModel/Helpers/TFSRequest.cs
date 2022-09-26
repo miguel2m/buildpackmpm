@@ -2,6 +2,7 @@
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.IO;
 using System.Linq;
 using System.Net.Http;
@@ -35,6 +36,8 @@ namespace AutoDischange.ViewModel.Helpers
         //GET Changeset
         public static async Task<List<TfsItem>> GetChangeset(string changeset)
         {
+            //ConfigurationManager.AppSettings["rutaJenkins"];
+
             List<TfsItem> tfsReponse = new List<TfsItem>();
 
             string ext = string.Empty;
@@ -43,8 +46,9 @@ namespace AutoDischange.ViewModel.Helpers
 
             using (HttpClient client = new HttpClient())
             {
+                string credentialsTFS = $@"{ConfigurationManager.AppSettings["userTFS"]}:{ConfigurationManager.AppSettings["passTFS"]}";
 
-                var byteArray = Encoding.ASCII.GetBytes($"SEGWIN\\miguelangel.medina:6qpt4zyxkac6n6vhhql4ha6qyjnmz6c5jmhx3d3bwszmmfzrl4gq");
+                var byteArray = Encoding.ASCII.GetBytes(credentialsTFS);
 
                 client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Basic", Convert.ToBase64String(byteArray));
 

@@ -406,7 +406,7 @@ namespace AutoDischange.ViewModel.Helpers
                         ActivityComponentPrePro.PendindActivity = "Ninguna";
                         ActivityComponentPrePro.TypeActivity = "Despliegue";
                         //ActivityComponentPrePro.Activity = $"Entrar al servidor <b>SRNEUIWM1MXR309 180.228.64.204 Batch</b> y hacer las siguientes acciones:{ System.Environment.NewLine}";
-                        ActivityComponentPrePro.rst.AppendText($"Entrar al servidor");
+                        ActivityComponentPrePro.rst.AppendText($"Entrar al servidor ");
                         ActivityComponentPrePro.rst.AppendText( $"SRNEUIWM1MXR309 180.228.64.204 Batch ", ActivityComponentPrePro.font);
                         ActivityComponentPrePro.rst.AppendText($"y hacer las siguientes acciones:{ System.Environment.NewLine}");
                         ActivityComponentPrePro.rst.AppendText($"1.-");
@@ -418,7 +418,7 @@ namespace AutoDischange.ViewModel.Helpers
                     {   //PRO
                         ActivityComponentPrePro.PendindActivity = "Ninguna";
                         ActivityComponentPrePro.TypeActivity = "Despliegue";
-                        ActivityComponentPrePro.rst.AppendText($"Entrar al servidor");
+                        ActivityComponentPrePro.rst.AppendText($"Entrar al servidor ");
                         ActivityComponentPrePro.rst.AppendText($"SRVNEUPVWMX09 180.181.167.59 Batch", ActivityComponentPrePro.font);
                         ActivityComponentPrePro.rst.AppendText($"y hacer las siguientes acciones:{ System.Environment.NewLine}");
                         ActivityComponentPrePro.rst.AppendText($"1.-");
@@ -439,12 +439,12 @@ namespace AutoDischange.ViewModel.Helpers
                         ActivityComponentPrePro.PendindActivity = _pendingActivity.ToString();
                         ActivityComponentPrePro.TypeActivity = "Despliegue";
 
-                        ActivityComponentPrePro.rst.AppendText($"Entrar al servidor");
+                        ActivityComponentPrePro.rst.AppendText($"Entrar al servidor ");
                         ActivityComponentPrePro.rst.AppendText($"SRNEUIWM1MXR309 180.228.64.204 Batch", ActivityComponentPrePro.font);
                         ActivityComponentPrePro.rst.AppendText($"Abrir como Administrador la línea de comandos{ System.Environment.NewLine}");
                         ActivityComponentPrePro.rst.AppendText($@"Ir a la carpeta D:\MPM\DIS\InstallBSM\{ System.Environment.NewLine}");
-                        ActivityComponentPrePro.rst.AppendText($"Ejecutar el archivo");
-                        ActivityComponentPrePro.rst.AppendText($"Install-DIS-Procesos.cmd{ System.Environment.NewLine}", ActivityComponentPrePro.font);
+                        ActivityComponentPrePro.rst.AppendText($"Ejecutar el archivo ");
+                        ActivityComponentPrePro.rst.AppendText($"Install-DIS-Procesos.cmd{ System.Environment.NewLine} ", ActivityComponentPrePro.font);
                         ActivityComponentPrePro.rst.AppendText($@"Al finalizar la ejecución compartir el archivo log-import-file.log que se encuentra en D:\MPM\DIS\MPM.FullProcessImport\Logs\Import{ System.Environment.NewLine}");
                         ActivityComponentPrePro.rst.AppendText($"Esperar validación de los logs para continuar con la siguiente actividad.{ System.Environment.NewLine}");
                         ActivityComponentPreProList.Add(ActivityComponentPrePro);
@@ -458,6 +458,9 @@ namespace AutoDischange.ViewModel.Helpers
                         //ActivityComponentPreProList.Add(ActivityComponentPrePro);
 
                         ActivityComponentPrePro = new ActivityComponentPrePro();
+                        ActivityComponentPrePro.font = new SLFont();
+                        ActivityComponentPrePro.font.Bold = true;
+
                         ActivityComponentPrePro.PendindActivity = (_pendingActivity+ActivityComponentPreProList.Count()).ToString();
                         ActivityComponentPrePro.TypeActivity = "Despliegue";
 
@@ -486,11 +489,11 @@ namespace AutoDischange.ViewModel.Helpers
                         ActivityComponentPrePro.PendindActivity = _pendingActivity.ToString();
                         ActivityComponentPrePro.TypeActivity = "Despliegue";
 
-                        ActivityComponentPrePro.rst.AppendText($"Entrar al servidor");
-                        ActivityComponentPrePro.rst.AppendText($"SRVNEUPVWMX09 180.181.167.59 Batch", ActivityComponentPrePro.font);
+                        ActivityComponentPrePro.rst.AppendText($"Entrar al servidor ");
+                        ActivityComponentPrePro.rst.AppendText($"SRVNEUPVWMX09 180.181.167.59 Batch ", ActivityComponentPrePro.font);
                         ActivityComponentPrePro.rst.AppendText($"Abrir como Administrador la línea de comandos{ System.Environment.NewLine}");
                         ActivityComponentPrePro.rst.AppendText($@"Ir a la carpeta D:\MPM\DIS\InstallBSM\{ System.Environment.NewLine}");
-                        ActivityComponentPrePro.rst.AppendText($"Ejecutar el archivo");
+                        ActivityComponentPrePro.rst.AppendText($"Ejecutar el archivo ");
                         ActivityComponentPrePro.rst.AppendText($"Install-DIS-Procesos.cmd{ System.Environment.NewLine}", ActivityComponentPrePro.font);
                         ActivityComponentPrePro.rst.AppendText($@"Al finalizar la ejecución compartir el archivo log-import-file.log que se encuentra en D:\MPM\DIS\MPM.FullProcessImport\Logs\Import{ System.Environment.NewLine}");
                         ActivityComponentPrePro.rst.AppendText($"Esperar validación de los logs para continuar con la siguiente actividad.{ System.Environment.NewLine}");
@@ -505,6 +508,9 @@ namespace AutoDischange.ViewModel.Helpers
                         //ActivityComponentPreProList.Add(ActivityComponentPrePro);
 
                         ActivityComponentPrePro = new ActivityComponentPrePro();
+                        ActivityComponentPrePro.font = new SLFont();
+                        ActivityComponentPrePro.font.Bold = true;
+
                         ActivityComponentPrePro.PendindActivity = (_pendingActivity + ActivityComponentPreProList.Count()).ToString();
                         ActivityComponentPrePro.TypeActivity = "Despliegue";
 
@@ -555,7 +561,7 @@ namespace AutoDischange.ViewModel.Helpers
                     
                     ActivityComponentPrePro.PendindActivity = "Ninguna";
                     ActivityComponentPrePro.TypeActivity = "Despliegue";
-                    ActivityComponentPrePro.rst.AppendText($"Bajar pools", ActivityComponentPrePro.font);
+                    ActivityComponentPrePro.rst.AppendText($"Bajar pools ", ActivityComponentPrePro.font);
                     ActivityComponentPrePro.rst.AppendText($"de todos los servidores.");
                     //ActivityComponentPrePro.Activity = $@"<b>Bajar pools</b> de todos los servidores.";
                     ActivityComponentPreProList.Add(ActivityComponentPrePro);
@@ -660,7 +666,7 @@ namespace AutoDischange.ViewModel.Helpers
                    
                     ActivityComponentPrePro.PendindActivity = "Ninguna";
                     ActivityComponentPrePro.TypeActivity = "Despliegue";
-                    ActivityComponentPrePro.rst.AppendText($"Bajar pools", ActivityComponentPrePro.font);
+                    ActivityComponentPrePro.rst.AppendText($"Bajar pools ", ActivityComponentPrePro.font);
                     ActivityComponentPrePro.rst.AppendText($"de todos los servidores.");
                     //ActivityComponentPrePro.Activity = $@"<b>Bajar pools</b> de todos los servidores.";
                     ActivityComponentPreProList.Add(ActivityComponentPrePro);

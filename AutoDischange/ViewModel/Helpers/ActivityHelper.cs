@@ -656,7 +656,7 @@ namespace AutoDischange.ViewModel.Helpers
 
                     ActivityComponentPrePro.PendindActivity = (_pendingActivity+ActivityComponentPreProList.Count()).ToString();
                     ActivityComponentPrePro.TypeActivity = "Despliegue";
-                    ActivityComponentPrePro.rst.AppendText($"Prender pools", ActivityComponentPrePro.font);
+                    ActivityComponentPrePro.rst.AppendText($"Prender pools ", ActivityComponentPrePro.font);
                     ActivityComponentPrePro.rst.AppendText($@"de todos los servidores.{ System.Environment.NewLine}");
                     //ActivityComponentPrePro.Activity = $@"<b>Prender pools</b> de todos los servidores.";
                     ActivityComponentPreProList.Add(ActivityComponentPrePro);
@@ -764,7 +764,7 @@ namespace AutoDischange.ViewModel.Helpers
 
                     ActivityComponentPrePro.PendindActivity = (_pendingActivity+ActivityComponentPreProList.Count()).ToString();
                     ActivityComponentPrePro.TypeActivity = "Despliegue";
-                    ActivityComponentPrePro.rst.AppendText($"Prender pools", ActivityComponentPrePro.font);
+                    ActivityComponentPrePro.rst.AppendText($"Prender pools ", ActivityComponentPrePro.font);
                     ActivityComponentPrePro.rst.AppendText($@"de todos los servidores.{ System.Environment.NewLine}");
                     //ActivityComponentPrePro.Activity = $@"<b>Prender pools</b> de todos los servidores.";
                     ActivityComponentPreProList.Add(ActivityComponentPrePro);

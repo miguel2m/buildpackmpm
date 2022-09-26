@@ -200,29 +200,33 @@ namespace AutoDischange.ViewModel.Helpers
             //importación de recursos
             if (ActivityComponentListAlojablesList.Any())
             {
+                List<ActivityComponentListAlojables> RecursosCsv = ActivityComponentListAlojablesList.FindAll(i => i.DischangeComponentName.FindAll(item => item.Contains($@"customer-resources.csv")).Any());
+                if (RecursosCsv.Any())
+                {
+                    ActivityResoruceImportListPre = await ListResoruceImport(0, ActivityProcessImportListPre.Count());//Listado PRE
+
+                    ActivityResoruceImportListPro = await ListResoruceImport(1, ActivityProcessImportListPro.Count());//Listado PRO
+
+                    if (ActivityResoruceImportListPre.Any()) //PRE
+                    {
+                        ActivityResultListPre.AddRange(ActivityResoruceImportListPre);
+                        ActivityResultListPre.AddRange(await ListEndActivity(0, ActivityResultListPre.Count)); //END EXCEL PRE
+                        MemoryStream msPassTemp = new MemoryStream();
+                        ExcelHelper.DeployActivity(msPass, ActivityResultListPre, "ActividadesParaDesplegarPre").WriteTo(msPassTemp);
+                        msPass = new MemoryStream();
+                        msPassTemp.WriteTo(msPass);
+                    }
+                    if (ActivityResoruceImportListPro.Any()) //PRO
+                    {
+                        ActivityResultListPro.AddRange(ActivityResoruceImportListPro);
+                        ActivityResultListPro.AddRange(await ListEndActivity(1, ActivityResultListPro.Count)); //END EXCEL PRO
+                        MemoryStream msPassTemp = new MemoryStream();
+                        ExcelHelper.DeployActivity(msPass, ActivityResultListPro, "ActividadesParaDesplegarPro").WriteTo(msPassTemp);
+                        msPass = new MemoryStream();
+                        msPassTemp.WriteTo(msPass);
+                    }
+                }
                 
-                ActivityResoruceImportListPre = await ListResoruceImport(0, ActivityProcessImportListPre.Count());//Listado PRE
-
-                ActivityResoruceImportListPro = await ListResoruceImport(1, ActivityProcessImportListPro.Count());//Listado PRO
-
-                if (ActivityResoruceImportListPre.Any()) //PRE
-                {
-                    ActivityResultListPre.AddRange(ActivityResoruceImportListPre);
-                    ActivityResultListPre.AddRange(await ListEndActivity(0,ActivityResultListPre.Count)); //END EXCEL PRE
-                    MemoryStream msPassTemp = new MemoryStream();
-                    ExcelHelper.DeployActivity(msPass, ActivityResultListPre, "ActividadesParaDesplegarPre").WriteTo(msPassTemp);
-                    msPass = new MemoryStream();
-                    msPassTemp.WriteTo(msPass);
-                }
-                if (ActivityResoruceImportListPro.Any()) //PRO
-                {
-                    ActivityResultListPro.AddRange(ActivityResoruceImportListPro);
-                    ActivityResultListPro.AddRange(await ListEndActivity(1, ActivityResultListPro.Count)); //END EXCEL PRO
-                    MemoryStream msPassTemp = new MemoryStream();
-                    ExcelHelper.DeployActivity(msPass, ActivityResultListPro, "ActividadesParaDesplegarPro").WriteTo(msPassTemp);
-                    msPass = new MemoryStream();
-                    msPassTemp.WriteTo(msPass);
-                }
 
 
             }

@@ -463,7 +463,7 @@ namespace AutoDischange.ViewModel.Helpers
                         ActivityComponentPrePro.TypeActivity = "Despliegue";
 
                         ActivityComponentPrePro.rst.AppendText($"Entrar al servidor ");
-                        ActivityComponentPrePro.rst.AppendText($"SRNEUIWM1MXR309 180.228.64.204 Batch", ActivityComponentPrePro.font);
+                        ActivityComponentPrePro.rst.AppendText($"SRNEUIWM1MXR309 180.228.64.204 Batch ", ActivityComponentPrePro.font);
                         ActivityComponentPrePro.rst.AppendText($"Abrir como Administrador la línea de comandos{ System.Environment.NewLine}");
                         ActivityComponentPrePro.rst.AppendText($@"Ir a la carpeta D:\MPM\DIS\InstallBSM\{ System.Environment.NewLine}");
                         ActivityComponentPrePro.rst.AppendText($"Ejecutar el archivo ");

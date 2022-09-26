@@ -32,7 +32,19 @@ namespace AutoDischange.ViewModel.Helpers
             List<ActivityComponentListAlojables> ActivityComponentListAlojablesList         = new List<ActivityComponentListAlojables>();
             List<ActivityComponentListConfigurables> ActivityComponentListConfigurablesList = new List<ActivityComponentListConfigurables>();
             List<ActivityComponentListScript> ActivityComponentListScriptList               = new List<ActivityComponentListScript>();
-            
+
+            //Actividades para despliegue
+            List<ActivityComponentPrePro> ActivityResultListPre                             = new List<ActivityComponentPrePro>();//Despliegue Result PRE
+            List<ActivityComponentPrePro> ActivityResultListPro                             = new List<ActivityComponentPrePro>();//Despliegue Result PRO
+
+            List<ActivityComponentPrePro> ActivityProcessImportListPre                      = new List<ActivityComponentPrePro>();//Importancion de procesos PRE
+            List<ActivityComponentPrePro> ActivityProcessImportListPro                      = new List<ActivityComponentPrePro>();//Importancion de procesos PRO
+
+            List<ActivityComponentPrePro> ActivityPoolListPre                               = new List<ActivityComponentPrePro>(); //Manejo de POOLS PRE
+            List<ActivityComponentPrePro> ActivityPoolListPro                               = new List<ActivityComponentPrePro>(); //Manejo de POOLS PRO
+
+            List<ActivityComponentPrePro> ActivityResoruceImportListPre = new List<ActivityComponentPrePro>(); //Importancion de recursos
+            List<ActivityComponentPrePro> ActivityResoruceImportListPro = new List<ActivityComponentPrePro>(); //Importancion de recursos
 
 
             if (!Directory.Exists(pathAlojables) && !Directory.Exists(pathConfigurables) && !Directory.Exists(pathScript))
@@ -105,22 +117,22 @@ namespace AutoDischange.ViewModel.Helpers
                     List<ActivityComponentListAlojables> ProcesosFullXml = ProcesosFull.FindAll(i => i.DischangeComponentName.FindAll(item => item.Contains($@"xml")).Any());
                     if (ProcesosFullXml.Any())
                     {
-                        List<ActivityComponentPrePro> ActivityProcessImportListPre = new List<ActivityComponentPrePro>(); //Listado PRE
-                        ActivityProcessImportListPre = await ListProcessImport(0,false,0);
-
-                        List<ActivityComponentPrePro> ActivityProcessImportListPro= new List<ActivityComponentPrePro>(); //Listado PRO
-                        ActivityProcessImportListPro = await ListProcessImport(1, false, 0);
-                        if (ActivityProcessImportListPre.Any() )
+                        ActivityProcessImportListPre = await ListProcessImport(0,false,0);//Listado PRE
+                        
+                        ActivityProcessImportListPro = await ListProcessImport(1, false, 0);//Listado PRO
+                        if (ActivityProcessImportListPre.Any() ) //PRE
                         {
+                            ActivityResultListPre.AddRange(ActivityProcessImportListPre);
                             MemoryStream msPassTemp = new MemoryStream();
-                            ExcelHelper.DeployActivity(msPass, ActivityProcessImportListPre, "ActividadesParaDesplegarPre").WriteTo(msPassTemp);
+                            ExcelHelper.DeployActivity(msPass, ActivityResultListPre, "ActividadesParaDesplegarPre").WriteTo(msPassTemp);
                             msPass = new MemoryStream();
                             msPassTemp.WriteTo(msPass);
                         }
-                        if (ActivityProcessImportListPro.Any())
-                        {
+                        if (ActivityProcessImportListPro.Any()) //PRO
+                        { 
+                            ActivityResultListPro.AddRange(ActivityProcessImportListPre);
                             MemoryStream msPassTemp = new MemoryStream();
-                            ExcelHelper.DeployActivity(msPass, ActivityProcessImportListPro, "ActividadesParaDesplegarPro").WriteTo(msPassTemp);
+                            ExcelHelper.DeployActivity(msPass, ActivityResultListPro, "ActividadesParaDesplegarPro").WriteTo(msPassTemp);
                             msPass = new MemoryStream();
                             msPassTemp.WriteTo(msPass);
                         }
@@ -134,21 +146,84 @@ namespace AutoDischange.ViewModel.Helpers
             //manejo de pools
             if (ActivityComponentListAlojablesList.Any() && ActivityComponentListConfigurablesList.Any())
             {
+                //PRE
+                if (ActivityProcessImportListPre.Any())
+                {
+                    ActivityPoolListPre = await ListPoolManager(0, ActivityProcessImportListPre.Count());
+                }
+                else
+                {
+                    ActivityPoolListPre = await ListPoolManager(0, 0);
+                }
 
-                
+                if (ActivityPoolListPre.Any())
+                {
+                    ActivityResultListPre.AddRange(ActivityPoolListPre);
+                    if (ActivityProcessImportListPre.Any())
+                    {
+
+                        ActivityResultListPre.AddRange(await ListProcessImport(0, true, ActivityResultListPre.Count()));
+                    }
+                    MemoryStream msPassTemp = new MemoryStream();
+                    ExcelHelper.DeployActivity(msPass, ActivityResultListPre, "ActividadesParaDesplegarPre").WriteTo(msPassTemp);
+                    msPass = new MemoryStream();
+                    msPassTemp.WriteTo(msPass);
+                }
+                //PRO
+                if (ActivityProcessImportListPro.Any())
+                {
+                    ActivityPoolListPro = await ListPoolManager(1, ActivityProcessImportListPro.Count());
+                }
+                else
+                {
+                    ActivityPoolListPro = await ListPoolManager(1, 0);
+                }
+
+                if (ActivityPoolListPro.Any())
+                {
+                    ActivityResultListPro.AddRange(ActivityPoolListPro);
+                    if (ActivityProcessImportListPro.Any())
+                    {
+
+                        ActivityResultListPro.AddRange(await ListProcessImport(1, true, ActivityResultListPro.Count()));
+                    }
+                    
+                    MemoryStream msPassTemp = new MemoryStream();
+                    ExcelHelper.DeployActivity(msPass, ActivityResultListPro, "ActividadesParaDesplegarPro").WriteTo(msPassTemp);
+                    msPass = new MemoryStream();
+                    msPassTemp.WriteTo(msPass);
+                }
+
 
             }
             //Si traigo el componente customer-resources.csv en Resources entonces ejecutar importación de recursos
             //importación de recursos
             if (ActivityComponentListAlojablesList.Any())
             {
+                
+                ActivityResoruceImportListPre = await ListResoruceImport(0, ActivityProcessImportListPre.Count());//Listado PRE
 
-                List<ActivityComponentListAlojables> CustomerResources = ActivityComponentListAlojablesList.FindAll(i => i.DischangeComponentName.Contains($@"customer-resources.csv"));
-                if (CustomerResources.Any())
+                ActivityResoruceImportListPro = await ListResoruceImport(1, ActivityProcessImportListPro.Count());//Listado PRO
+
+                if (ActivityResoruceImportListPre.Any()) //PRE
                 {
-                    
-
+                    ActivityResultListPre.AddRange(ActivityResoruceImportListPre);
+                    ActivityResultListPre.AddRange(await ListEndActivity(1,ActivityResultListPre.Count)); //END PRE
+                    MemoryStream msPassTemp = new MemoryStream();
+                    ExcelHelper.DeployActivity(msPass, ActivityResultListPre, "ActividadesParaDesplegarPre").WriteTo(msPassTemp);
+                    msPass = new MemoryStream();
+                    msPassTemp.WriteTo(msPass);
                 }
+                if (ActivityResoruceImportListPro.Any()) //PRO
+                {
+                    ActivityResultListPro.AddRange(ActivityResoruceImportListPro);
+                    ActivityResultListPre.AddRange(await ListEndActivity(1, ActivityResultListPro.Count)); //END PRO
+                    MemoryStream msPassTemp = new MemoryStream();
+                    ExcelHelper.DeployActivity(msPass, ActivityResultListPro, "ActividadesParaDesplegarPro").WriteTo(msPassTemp);
+                    msPass = new MemoryStream();
+                    msPassTemp.WriteTo(msPass);
+                }
+
 
             }
             ExcelHelper.SaveExcelEntrega(msPass, pathUser);
@@ -355,7 +430,7 @@ namespace AutoDischange.ViewModel.Helpers
                         ActivityComponentPreProList.Add(ActivityComponentPrePro);
 
                         ActivityComponentPrePro = new ActivityComponentPrePro();
-                        ActivityComponentPrePro.PendindActivity = ActivityComponentPreProList.Count().ToString();
+                        ActivityComponentPrePro.PendindActivity = (_pendingActivity+ActivityComponentPreProList.Count()).ToString();
                         ActivityComponentPrePro.TypeActivity = "Despliegue";
                         ActivityComponentPrePro.Activity = $"<b>Reinicio de Pools.</b>:{ System.Environment.NewLine}";
                         ActivityComponentPrePro.Activity += $@"• WEBNEUIVWMX03 180.181.105.137 Web{ System.Environment.NewLine}";
@@ -380,7 +455,7 @@ namespace AutoDischange.ViewModel.Helpers
                         ActivityComponentPreProList.Add(ActivityComponentPrePro);
 
                         ActivityComponentPrePro = new ActivityComponentPrePro();
-                        ActivityComponentPrePro.PendindActivity = ActivityComponentPreProList.Count().ToString();
+                        ActivityComponentPrePro.PendindActivity = (_pendingActivity + ActivityComponentPreProList.Count()).ToString();
                         ActivityComponentPrePro.TypeActivity = "Despliegue";
                         ActivityComponentPrePro.Activity = $"<b>Reinicio de Pools.</b>:{ System.Environment.NewLine}";
                         ActivityComponentPrePro.Activity += $@"• WEBNEUPVWMX03 180.181.165.93 Web{ System.Environment.NewLine}";
@@ -414,23 +489,23 @@ namespace AutoDischange.ViewModel.Helpers
                 //int _contador = 1;
                 if (_env == 0) //0 Pre 1 Pro
                 {   //PRE
-                    ActivityComponentPrePro.Id = _pendingActivity + 1;
+                    
                     ActivityComponentPrePro.PendindActivity = "Ninguna";
                     ActivityComponentPrePro.TypeActivity = "Despliegue";
                     ActivityComponentPrePro.Activity = $@"<b>Bajar pools</b> de todos los servidores.";
                     ActivityComponentPreProList.Add(ActivityComponentPrePro);
 
                     ActivityComponentPrePro = new ActivityComponentPrePro();
-                    ActivityComponentPrePro.PendindActivity = $"${_pendingActivity} y {ActivityComponentPrePro.Id }";
+                    ActivityComponentPrePro.PendindActivity = $"{_pendingActivity} y {_pendingActivity + ActivityComponentPreProList.Count() }";
                     ActivityComponentPrePro.TypeActivity = "Despliegue";
                     ActivityComponentPrePro.Activity = $@"Desplegar las siguientes CRs:{ System.Environment.NewLine}";
                     ActivityComponentPrePro.Activity += $@"<b>Alojables/b>{ System.Environment.NewLine}";
                     ActivityComponentPrePro.Activity += $@"<b>Configurables/b>{ System.Environment.NewLine}";
                     ActivityComponentPreProList.Add(ActivityComponentPrePro);
 
-                    int _actividadPending = _pendingActivity + ActivityComponentPreProList.Count() + 1;
+                    int _actividadPending = _pendingActivity + ActivityComponentPreProList.Count();
                     ActivityComponentPrePro = new ActivityComponentPrePro();
-                    ActivityComponentPrePro.PendindActivity = $"${_actividadPending}";
+                    ActivityComponentPrePro.PendindActivity = $"{_actividadPending}";
                     ActivityComponentPrePro.TypeActivity = "Despliegue";
                     ActivityComponentPrePro.Activity = $@"En el servidor WEBNEUIVWMX03 con dirección ip 180.181.105.137, abrir la línea de comandos y dirigirse a D:\MPM\DIS para ejecutar el comando:{ System.Environment.NewLine}";
                     ActivityComponentPrePro.Activity += $@"<b>dir /s *.* /o:-d > webn03_caida.txt/b>{ System.Environment.NewLine}";
@@ -439,7 +514,7 @@ namespace AutoDischange.ViewModel.Helpers
                     ActivityComponentPreProList.Add(ActivityComponentPrePro);
 
                     ActivityComponentPrePro = new ActivityComponentPrePro();
-                    ActivityComponentPrePro.PendindActivity = $"${_actividadPending}";
+                    ActivityComponentPrePro.PendindActivity = $"{_actividadPending}";
                     ActivityComponentPrePro.TypeActivity = "Despliegue";
                     ActivityComponentPrePro.Activity = $@"En el servidor SRNEUIWM1MXR309 con dirección ip 180.228.64.204, abrir la línea de comandos y dirigirse a D:\MPM\DIS para ejecutar el comando:{ System.Environment.NewLine}";
                     ActivityComponentPrePro.Activity += $@"<b>dir /s *.* /o:-d > srvn09_caida.txt/b>{ System.Environment.NewLine}";
@@ -448,7 +523,7 @@ namespace AutoDischange.ViewModel.Helpers
                     ActivityComponentPreProList.Add(ActivityComponentPrePro);
 
                     ActivityComponentPrePro = new ActivityComponentPrePro();
-                    ActivityComponentPrePro.PendindActivity = $"${_actividadPending}";
+                    ActivityComponentPrePro.PendindActivity = $"{_actividadPending}";
                     ActivityComponentPrePro.TypeActivity = "Despliegue";
                     ActivityComponentPrePro.Activity = $@"En el servidor SRVNEUIVWMX01  con dirección ip 180.181.105.139, abrir la línea de comandos y dirigirse a D:\MPM\DIS para ejecutar el comando:{ System.Environment.NewLine}";
                     ActivityComponentPrePro.Activity += $@"<b>dir /s *.* /o:-d > srvn01_caida.txt/b>{ System.Environment.NewLine}";
@@ -457,7 +532,7 @@ namespace AutoDischange.ViewModel.Helpers
                     ActivityComponentPreProList.Add(ActivityComponentPrePro);
 
                     ActivityComponentPrePro = new ActivityComponentPrePro();
-                    ActivityComponentPrePro.PendindActivity = $"${_actividadPending}";
+                    ActivityComponentPrePro.PendindActivity = $"{_actividadPending}";
                     ActivityComponentPrePro.TypeActivity = "Despliegue";
                     ActivityComponentPrePro.Activity = $@"En el servidor SRNEUIWM1MXR307  con dirección ip 180.228.64.206, abrir la línea de comandos y dirigirse a D:\MPM\DIS para ejecutar el comando:{ System.Environment.NewLine}";
                     ActivityComponentPrePro.Activity += $@"<b>dir /s *.* /o:-d > srvn07_caida.txt/b>{ System.Environment.NewLine}";
@@ -467,30 +542,30 @@ namespace AutoDischange.ViewModel.Helpers
 
                     ActivityComponentPrePro = new ActivityComponentPrePro();
                     
-                    ActivityComponentPrePro.PendindActivity = (_pendingActivity+ActivityComponentPreProList.Count() + 1).ToString();
+                    ActivityComponentPrePro.PendindActivity = (_pendingActivity+ActivityComponentPreProList.Count()).ToString();
                     ActivityComponentPrePro.TypeActivity = "Despliegue";
                     ActivityComponentPrePro.Activity = $@"<b>Prender pools</b> de todos los servidores.";
                     ActivityComponentPreProList.Add(ActivityComponentPrePro);
                 }
                 else
                 {   //PRO
-                    ActivityComponentPrePro.Id = _pendingActivity + 1;
+                   
                     ActivityComponentPrePro.PendindActivity = "Ninguna";
                     ActivityComponentPrePro.TypeActivity = "Despliegue";
                     ActivityComponentPrePro.Activity = $@"<b>Bajar pools</b> de todos los servidores.";
                     ActivityComponentPreProList.Add(ActivityComponentPrePro);
 
                     ActivityComponentPrePro = new ActivityComponentPrePro();
-                    ActivityComponentPrePro.PendindActivity = $"${_pendingActivity} y {ActivityComponentPrePro.Id }";
+                    ActivityComponentPrePro.PendindActivity = $"{_pendingActivity} y {ActivityComponentPreProList.Count() }";
                     ActivityComponentPrePro.TypeActivity = "Despliegue";
                     ActivityComponentPrePro.Activity = $@"Desplegar las siguientes CRs:{ System.Environment.NewLine}";
                     ActivityComponentPrePro.Activity += $@"<b>Alojables/b>{ System.Environment.NewLine}";
                     ActivityComponentPrePro.Activity += $@"<b>Configurables/b>{ System.Environment.NewLine}";
                     ActivityComponentPreProList.Add(ActivityComponentPrePro);
 
-                    int _actividadPending = _pendingActivity + ActivityComponentPreProList.Count() + 1;
+                    int _actividadPending = _pendingActivity + ActivityComponentPreProList.Count();
                     ActivityComponentPrePro = new ActivityComponentPrePro();
-                    ActivityComponentPrePro.PendindActivity = $"${_actividadPending}";
+                    ActivityComponentPrePro.PendindActivity = $"{_actividadPending}";
                     ActivityComponentPrePro.TypeActivity = "Despliegue";
                     ActivityComponentPrePro.Activity = $@"En el servidor WEBNEUPVWMX03 con dirección ip 180.181.165.93, abrir la línea de comandos y dirigirse a D:\MPM\DIS para ejecutar el comando:{ System.Environment.NewLine}";
                     ActivityComponentPrePro.Activity += $@"<b>dir /s *.* /o:-d > webn03_caida.txt/b>{ System.Environment.NewLine}";
@@ -499,7 +574,7 @@ namespace AutoDischange.ViewModel.Helpers
                     ActivityComponentPreProList.Add(ActivityComponentPrePro);
 
                     ActivityComponentPrePro = new ActivityComponentPrePro();
-                    ActivityComponentPrePro.PendindActivity = $"${_actividadPending}";
+                    ActivityComponentPrePro.PendindActivity = $"{_actividadPending}";
                     ActivityComponentPrePro.TypeActivity = "Despliegue";
                     ActivityComponentPrePro.Activity = $@"En el servidor SRVNEUPVWMX09 con dirección ip 180.181.167.59, abrir la línea de comandos y dirigirse a D:\MPM\DIS para ejecutar el comando:{ System.Environment.NewLine}";
                     ActivityComponentPrePro.Activity += $@"<b>dir /s *.* /o:-d > srvn09_caida.txt/b>{ System.Environment.NewLine}";
@@ -508,7 +583,7 @@ namespace AutoDischange.ViewModel.Helpers
                     ActivityComponentPreProList.Add(ActivityComponentPrePro);
 
                     ActivityComponentPrePro = new ActivityComponentPrePro();
-                    ActivityComponentPrePro.PendindActivity = $"${_actividadPending}";
+                    ActivityComponentPrePro.PendindActivity = $"{_actividadPending}";
                     ActivityComponentPrePro.TypeActivity = "Despliegue";
                     ActivityComponentPrePro.Activity = $@"En el servidor SRVNEUPVWMX01  con dirección ip 180.181.167.51, abrir la línea de comandos y dirigirse a D:\MPM\DIS para ejecutar el comando:{ System.Environment.NewLine}";
                     ActivityComponentPrePro.Activity += $@"<b>dir /s *.* /o:-d > srvn01_caida.txt/b>{ System.Environment.NewLine}";
@@ -517,7 +592,7 @@ namespace AutoDischange.ViewModel.Helpers
                     ActivityComponentPreProList.Add(ActivityComponentPrePro);
 
                     ActivityComponentPrePro = new ActivityComponentPrePro();
-                    ActivityComponentPrePro.PendindActivity = $"${_actividadPending}";
+                    ActivityComponentPrePro.PendindActivity = $"{_actividadPending}";
                     ActivityComponentPrePro.TypeActivity = "Despliegue";
                     ActivityComponentPrePro.Activity = $@"En el servidor SRVNEUPVWMX07  con dirección ip 180.181.167.57, abrir la línea de comandos y dirigirse a D:\MPM\DIS para ejecutar el comando:{ System.Environment.NewLine}";
                     ActivityComponentPrePro.Activity += $@"<b>dir /s *.* /o:-d > srvn07_caida.txt/b>{ System.Environment.NewLine}";
@@ -527,7 +602,7 @@ namespace AutoDischange.ViewModel.Helpers
 
                     ActivityComponentPrePro = new ActivityComponentPrePro();
 
-                    ActivityComponentPrePro.PendindActivity = (_pendingActivity+ActivityComponentPreProList.Count() + 1).ToString();
+                    ActivityComponentPrePro.PendindActivity = (_pendingActivity+ActivityComponentPreProList.Count()).ToString();
                     ActivityComponentPrePro.TypeActivity = "Despliegue";
                     ActivityComponentPrePro.Activity = $@"<b>Prender pools</b> de todos los servidores.";
                     ActivityComponentPreProList.Add(ActivityComponentPrePro);
@@ -605,7 +680,7 @@ namespace AutoDischange.ViewModel.Helpers
                 ActivityComponentPreProList.Add(ActivityComponentPrePro);
 
                 ActivityComponentPrePro = new ActivityComponentPrePro();
-                ActivityComponentPrePro.PendindActivity = (_pendingActivity + ActivityComponentPreProList.Count() + 1).ToString();
+                ActivityComponentPrePro.PendindActivity = (_pendingActivity + ActivityComponentPreProList.Count()).ToString();
                 ActivityComponentPrePro.TypeActivity = "Despliegue";
                 ActivityComponentPrePro.Activity = $"<b>Solicitar logs</b>{ System.Environment.NewLine}";
                 ActivityComponentPreProList.Add(ActivityComponentPrePro);

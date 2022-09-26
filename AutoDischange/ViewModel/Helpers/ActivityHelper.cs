@@ -14,10 +14,10 @@ namespace AutoDischange.ViewModel.Helpers
 
         public static async Task ExportActivity(ActivityComponent activityComponent, string pathUser,string envExcel)
         {
-            char backSlash = Path.DirectorySeparatorChar;
-            string pathAlojables = $"{@activityComponent.PathStart}{backSlash}Alojables";
+            char backSlash           = Path.DirectorySeparatorChar;
+            string pathAlojables     = $"{@activityComponent.PathStart}{backSlash}Alojables";
             string pathConfigurables = $"{@activityComponent.PathStart}{backSlash}Configurables";
-            string pathScript = $"{@activityComponent.PathStart}{backSlash}Scripts";
+            string pathScript        = $"{@activityComponent.PathStart}{backSlash}Scripts";
 
             System.IO.DirectoryInfo dirAlojables;
             System.IO.DirectoryInfo dirConfigurables ;
@@ -29,21 +29,20 @@ namespace AutoDischange.ViewModel.Helpers
 
             
 
-            List<ActivityComponentListAlojables> ActivityComponentListAlojablesList;
+            List<ActivityComponentListAlojables> ActivityComponentListAlojablesList         = new List<ActivityComponentListAlojables>();
             List<ActivityComponentListConfigurables> ActivityComponentListConfigurablesList = new List<ActivityComponentListConfigurables>();
-            List<ActivityComponentListScript> ActivityComponentListScriptList = new List<ActivityComponentListScript>();
-
-
+            List<ActivityComponentListScript> ActivityComponentListScriptList               = new List<ActivityComponentListScript>();
             
+
 
             if (!Directory.Exists(pathAlojables) && !Directory.Exists(pathConfigurables) && !Directory.Exists(pathScript))
             {
                 throw new DirectoryNotFoundException("Debe seleccionar carpeta de componentes");
             }
-
-            //MemoryStream msPass = ExcelHelper.ReadExcelEntrega();
+            
             MemoryStream msPass = new MemoryStream();
             ExcelHelper.ReadExcelEntrega().WriteTo(msPass);
+
             //Listado de Alojables
             if (Directory.Exists(pathAlojables))
             {
@@ -53,8 +52,6 @@ namespace AutoDischange.ViewModel.Helpers
                 ActivityComponentListAlojablesList = await ListAlojables(DischangePathList);        
                 if (ActivityComponentListAlojablesList.Any())
                 {
-
-                    //MemoryStream msPassTemp = new MemoryStream();
                     MemoryStream msPassTemp = ExcelHelper.ListadoAlojables(msPass, ActivityComponentListAlojablesList) ;
                     msPass = new MemoryStream();
                     //msPassTemp.Position = 0;
@@ -62,6 +59,7 @@ namespace AutoDischange.ViewModel.Helpers
                    
                 }
             }
+
             //Listado de Configurables
             if (Directory.Exists(pathConfigurables))
             {
@@ -71,12 +69,10 @@ namespace AutoDischange.ViewModel.Helpers
                 ActivityComponentListConfigurablesList = await ListConfigurables(DischangePathList, envExcel);
                 if (ActivityComponentListConfigurablesList.Any())
                 {
-
                     MemoryStream msPassTemp = new MemoryStream();
                     ExcelHelper.ListadoConfigurables(msPass, ActivityComponentListConfigurablesList).WriteTo(msPassTemp);
                     msPass = new MemoryStream();
                     msPassTemp.WriteTo(msPass);
-
                 }
             }
 
@@ -89,18 +85,75 @@ namespace AutoDischange.ViewModel.Helpers
                 ActivityComponentListScriptList = await ListScript(DischangePathList);
                 if (ActivityComponentListScriptList.Any())
                 {
-
                     MemoryStream msPassTemp = new MemoryStream();
                     ExcelHelper.ListadoScript(msPass, ActivityComponentListScriptList).WriteTo(msPassTemp);
                     msPass = new MemoryStream();
                     msPassTemp.WriteTo(msPass);
-
                 }
             }
 
+            //Listado de Actividades para despliegue ActividadesParaDesplegarPre  ActividadesParaDesplegarPro
+            //Script TODO
+            //Si traigo xml en ProcesosFull entonces debo ejecutar actividades de importación de procesos 
+            //(importación de procesos)
+            if (ActivityComponentListAlojablesList.Any())
+            {
+
+                List<ActivityComponentListAlojables> ProcesosFull = ActivityComponentListAlojablesList.FindAll(i => i.DischangeComponentName.FindAll(item => item.Contains($@"ProcesosFull")).Any());
+                if (ProcesosFull.Any())
+                {
+                    List<ActivityComponentListAlojables> ProcesosFullXml = ProcesosFull.FindAll(i => i.DischangeComponentName.FindAll(item => item.Contains($@"xml")).Any());
+                    if (ProcesosFullXml.Any())
+                    {
+                        List<ActivityComponentPrePro> ActivityProcessImportListPre = new List<ActivityComponentPrePro>(); //Listado PRE
+                        ActivityProcessImportListPre = await ListProcessImport(0,false,0);
+
+                        List<ActivityComponentPrePro> ActivityProcessImportListPro= new List<ActivityComponentPrePro>(); //Listado PRO
+                        ActivityProcessImportListPro = await ListProcessImport(1, false, 0);
+                        if (ActivityProcessImportListPre.Any() )
+                        {
+                            MemoryStream msPassTemp = new MemoryStream();
+                            ExcelHelper.DeployActivity(msPass, ActivityProcessImportListPre, "ActividadesParaDesplegarPre").WriteTo(msPassTemp);
+                            msPass = new MemoryStream();
+                            msPassTemp.WriteTo(msPass);
+                        }
+                        if (ActivityProcessImportListPro.Any())
+                        {
+                            MemoryStream msPassTemp = new MemoryStream();
+                            ExcelHelper.DeployActivity(msPass, ActivityProcessImportListPro, "ActividadesParaDesplegarPro").WriteTo(msPassTemp);
+                            msPass = new MemoryStream();
+                            msPassTemp.WriteTo(msPass);
+                        }
+                    }
+
+                }
+
+            }
+
+            //Si traigo otros alojables y/o configurables entonces debo ejecutar actividades de despligue y de manejo de pools (prender y apagar)
+            //manejo de pools
+            if (ActivityComponentListAlojablesList.Any() && ActivityComponentListConfigurablesList.Any())
+            {
+
+                
+
+            }
+            //Si traigo el componente customer-resources.csv en Resources entonces ejecutar importación de recursos
+            //importación de recursos
+            if (ActivityComponentListAlojablesList.Any())
+            {
+
+                List<ActivityComponentListAlojables> CustomerResources = ActivityComponentListAlojablesList.FindAll(i => i.DischangeComponentName.Contains($@"customer-resources.csv"));
+                if (CustomerResources.Any())
+                {
+                    
+
+                }
+
+            }
             ExcelHelper.SaveExcelEntrega(msPass, pathUser);
         }
-
+        //Read  ListPathDischange (Guia de ubicaciones)
         public static async Task<List<string>> ListPathDischange(IEnumerable<System.IO.FileInfo> listInput)
         {
             List<string> DischangePathList = new List<string>();
@@ -256,5 +309,334 @@ namespace AutoDischange.ViewModel.Helpers
 
             return await task0;
         }
+
+        //TODO Script ActivityComponentPrePro
+
+        //(importación de procesos)
+        public static async Task<List<ActivityComponentPrePro>> ListProcessImport(int _env, bool _poolManager, int? _pendingActivity)
+        {
+
+            Task<List<ActivityComponentPrePro>> task0 = new Task<List<ActivityComponentPrePro>>(() =>
+            {
+                List<ActivityComponentPrePro> ActivityComponentPreProList = new List<ActivityComponentPrePro>();
+                ActivityComponentPrePro ActivityComponentPrePro = new ActivityComponentPrePro();
+                //int _contador = 1;
+                if (!_poolManager)
+                {
+                    if (_env == 0)
+                    {   //PRE
+                        ActivityComponentPrePro.PendindActivity = "Ninguna";
+                        ActivityComponentPrePro.TypeActivity = "Despliegue";
+                        ActivityComponentPrePro.Activity = $"Entrar al servidor <b>SRNEUIWM1MXR309 180.228.64.204 Batch</b> y hacer las siguientes acciones:{ System.Environment.NewLine}";
+                        ActivityComponentPrePro.Activity += @"1.- <b>Eliminar el contenido de la carpeta</b> D:\MPM\DIS\InstallBSM\Resources\ProcesosFull";
+                        ActivityComponentPreProList.Add(ActivityComponentPrePro);
+                    }
+                    else
+                    {   //PRO
+                        ActivityComponentPrePro.PendindActivity = "Ninguna";
+                        ActivityComponentPrePro.TypeActivity = "Despliegue";
+                        ActivityComponentPrePro.Activity = $"Entrar al servidor <b>SRVNEUPVWMX09 180.181.167.59 Batch</b> y hacer las siguientes acciones:{ System.Environment.NewLine}";
+                        ActivityComponentPrePro.Activity += @"1.- <b>Eliminar el contenido de la carpeta</b> D:\MPM\DIS\InstallBSM\Resources\ProcesosFull";
+                        ActivityComponentPreProList.Add(ActivityComponentPrePro);
+                    }
+                }
+                else
+                {
+                    if (_env == 0)
+                    {   //PRE
+                        ActivityComponentPrePro.PendindActivity = _pendingActivity.ToString();
+                        ActivityComponentPrePro.TypeActivity = "Despliegue";
+                        ActivityComponentPrePro.Activity = $"En el servidor <b>SRNEUIWM1MXR309 180.228.64.204 Batch</b>:{ System.Environment.NewLine}";
+                        ActivityComponentPrePro.Activity += $@"Abrir como Administrador la línea de comandos{ System.Environment.NewLine}";
+                        ActivityComponentPrePro.Activity += $@"Ir a la carpeta D:\MPM\DIS\InstallBSM\{ System.Environment.NewLine}";
+                        ActivityComponentPrePro.Activity += $@"Ejecutar el archivo <b>Install-DIS-Procesos.cmd</b>{ System.Environment.NewLine}";
+                        ActivityComponentPrePro.Activity += $@"Al finalizar la ejecución compartir el archivo log-import-file.log que se encuentra en D:\MPM\DIS\MPM.FullProcessImport\Logs\Import{ System.Environment.NewLine}";
+                        ActivityComponentPrePro.Activity += $@"Esperar validación de los logs para continuar con la siguiente actividad.{ System.Environment.NewLine}";
+                        ActivityComponentPreProList.Add(ActivityComponentPrePro);
+
+                        ActivityComponentPrePro = new ActivityComponentPrePro();
+                        ActivityComponentPrePro.PendindActivity = ActivityComponentPreProList.Count().ToString();
+                        ActivityComponentPrePro.TypeActivity = "Despliegue";
+                        ActivityComponentPrePro.Activity = $"<b>Reinicio de Pools.</b>:{ System.Environment.NewLine}";
+                        ActivityComponentPrePro.Activity += $@"• WEBNEUIVWMX03 180.181.105.137 Web{ System.Environment.NewLine}";
+                        ActivityComponentPrePro.Activity += $@"• WEBNEUIVWMX04 180.181.105.136 Web{ System.Environment.NewLine}";
+                        ActivityComponentPrePro.Activity += $@"{ System.Environment.NewLine}";
+                        ActivityComponentPrePro.Activity += $@"Reiniciar los siguientes pools:{ System.Environment.NewLine}";
+                        ActivityComponentPrePro.Activity += $@"• DIS_ecDataProvider{ System.Environment.NewLine}";
+                        ActivityComponentPrePro.Activity += $@"• DIS_eClient { System.Environment.NewLine}";
+                        ActivityComponentPrePro.Activity += $@"• DIS_LoginManagerService{ System.Environment.NewLine}";
+                        ActivityComponentPreProList.Add(ActivityComponentPrePro);
+                    }
+                    else
+                    {   //PRO
+                        ActivityComponentPrePro.PendindActivity = _pendingActivity.ToString();
+                        ActivityComponentPrePro.TypeActivity = "Despliegue";
+                        ActivityComponentPrePro.Activity = $"En el servidor <b>SRVNEUPVWMX09 180.181.167.59 Batch</b>:{ System.Environment.NewLine}";
+                        ActivityComponentPrePro.Activity += $@"Abrir como Administrador la línea de comandos{ System.Environment.NewLine}";
+                        ActivityComponentPrePro.Activity += $@"Ir a la carpeta D:\MPM\DIS\InstallBSM\{ System.Environment.NewLine}";
+                        ActivityComponentPrePro.Activity += $@"Ejecutar el archivo <b>Install-DIS-Procesos.cmd</b>{ System.Environment.NewLine}";
+                        ActivityComponentPrePro.Activity += $@"Al finalizar la ejecución compartir el archivo log-import-file.log que se encuentra en D:\MPM\DIS\MPM.FullProcessImport\Logs\Import{ System.Environment.NewLine}";
+                        ActivityComponentPrePro.Activity += $@"Esperar validación de los logs para continuar con la siguiente actividad.{ System.Environment.NewLine}";
+                        ActivityComponentPreProList.Add(ActivityComponentPrePro);
+
+                        ActivityComponentPrePro = new ActivityComponentPrePro();
+                        ActivityComponentPrePro.PendindActivity = ActivityComponentPreProList.Count().ToString();
+                        ActivityComponentPrePro.TypeActivity = "Despliegue";
+                        ActivityComponentPrePro.Activity = $"<b>Reinicio de Pools.</b>:{ System.Environment.NewLine}";
+                        ActivityComponentPrePro.Activity += $@"• WEBNEUPVWMX03 180.181.165.93 Web{ System.Environment.NewLine}";
+                        ActivityComponentPrePro.Activity += $@"• WEBNEUPVWMX04 180.181.165.97 Web{ System.Environment.NewLine}";
+                        ActivityComponentPrePro.Activity += $@"{ System.Environment.NewLine}";
+                        ActivityComponentPrePro.Activity += $@"Reiniciar los siguientes pools:{ System.Environment.NewLine}";
+                        ActivityComponentPrePro.Activity += $@"• DIS_ecDataProvider{ System.Environment.NewLine}";
+                        ActivityComponentPrePro.Activity += $@"• DIS_eClient { System.Environment.NewLine}";
+                        ActivityComponentPrePro.Activity += $@"• DIS_LoginManagerService{ System.Environment.NewLine}";
+                        ActivityComponentPreProList.Add(ActivityComponentPrePro);
+                    }
+                }
+                
+                
+                return ActivityComponentPreProList;
+            });
+            task0.Start();
+
+
+            return await task0;
+        }
+
+        //manejo de pools (prender y apagar)
+        public static async Task<List<ActivityComponentPrePro>> ListPoolManager(int _env,int _pendingActivity)
+        {
+
+            Task<List<ActivityComponentPrePro>> task0 = new Task<List<ActivityComponentPrePro>>(() =>
+            {
+                List<ActivityComponentPrePro> ActivityComponentPreProList = new List<ActivityComponentPrePro>();
+                ActivityComponentPrePro ActivityComponentPrePro = new ActivityComponentPrePro();
+                //int _contador = 1;
+                if (_env == 0) //0 Pre 1 Pro
+                {   //PRE
+                    ActivityComponentPrePro.Id = _pendingActivity + 1;
+                    ActivityComponentPrePro.PendindActivity = "Ninguna";
+                    ActivityComponentPrePro.TypeActivity = "Despliegue";
+                    ActivityComponentPrePro.Activity = $@"<b>Bajar pools</b> de todos los servidores.";
+                    ActivityComponentPreProList.Add(ActivityComponentPrePro);
+
+                    ActivityComponentPrePro = new ActivityComponentPrePro();
+                    ActivityComponentPrePro.PendindActivity = $"${_pendingActivity} y {ActivityComponentPrePro.Id }";
+                    ActivityComponentPrePro.TypeActivity = "Despliegue";
+                    ActivityComponentPrePro.Activity = $@"Desplegar las siguientes CRs:{ System.Environment.NewLine}";
+                    ActivityComponentPrePro.Activity += $@"<b>Alojables/b>{ System.Environment.NewLine}";
+                    ActivityComponentPrePro.Activity += $@"<b>Configurables/b>{ System.Environment.NewLine}";
+                    ActivityComponentPreProList.Add(ActivityComponentPrePro);
+
+                    int _actividadPending = _pendingActivity + ActivityComponentPreProList.Count() + 1;
+                    ActivityComponentPrePro = new ActivityComponentPrePro();
+                    ActivityComponentPrePro.PendindActivity = $"${_actividadPending}";
+                    ActivityComponentPrePro.TypeActivity = "Despliegue";
+                    ActivityComponentPrePro.Activity = $@"En el servidor WEBNEUIVWMX03 con dirección ip 180.181.105.137, abrir la línea de comandos y dirigirse a D:\MPM\DIS para ejecutar el comando:{ System.Environment.NewLine}";
+                    ActivityComponentPrePro.Activity += $@"<b>dir /s *.* /o:-d > webn03_caida.txt/b>{ System.Environment.NewLine}";
+                    ActivityComponentPrePro.Activity += $@"Entregar al Gestor del cambio el archivo webn03_caida.txt.{ System.Environment.NewLine}";
+                    ActivityComponentPrePro.Activity += $@"Esperar validación para continuar con la siguiente actividad.{ System.Environment.NewLine}";
+                    ActivityComponentPreProList.Add(ActivityComponentPrePro);
+
+                    ActivityComponentPrePro = new ActivityComponentPrePro();
+                    ActivityComponentPrePro.PendindActivity = $"${_actividadPending}";
+                    ActivityComponentPrePro.TypeActivity = "Despliegue";
+                    ActivityComponentPrePro.Activity = $@"En el servidor SRNEUIWM1MXR309 con dirección ip 180.228.64.204, abrir la línea de comandos y dirigirse a D:\MPM\DIS para ejecutar el comando:{ System.Environment.NewLine}";
+                    ActivityComponentPrePro.Activity += $@"<b>dir /s *.* /o:-d > srvn09_caida.txt/b>{ System.Environment.NewLine}";
+                    ActivityComponentPrePro.Activity += $@"Entregar al Gestor del cambio el archivo srvn09_caida.txt.{ System.Environment.NewLine}";
+                    ActivityComponentPrePro.Activity += $@"Esperar validación para continuar con la siguiente actividad.{ System.Environment.NewLine}";
+                    ActivityComponentPreProList.Add(ActivityComponentPrePro);
+
+                    ActivityComponentPrePro = new ActivityComponentPrePro();
+                    ActivityComponentPrePro.PendindActivity = $"${_actividadPending}";
+                    ActivityComponentPrePro.TypeActivity = "Despliegue";
+                    ActivityComponentPrePro.Activity = $@"En el servidor SRVNEUIVWMX01  con dirección ip 180.181.105.139, abrir la línea de comandos y dirigirse a D:\MPM\DIS para ejecutar el comando:{ System.Environment.NewLine}";
+                    ActivityComponentPrePro.Activity += $@"<b>dir /s *.* /o:-d > srvn01_caida.txt/b>{ System.Environment.NewLine}";
+                    ActivityComponentPrePro.Activity += $@"Entregar al Gestor del cambio el archivo srvn01_caida.txt.{ System.Environment.NewLine}";
+                    ActivityComponentPrePro.Activity += $@"Esperar validación para continuar con la siguiente actividad.{ System.Environment.NewLine}";
+                    ActivityComponentPreProList.Add(ActivityComponentPrePro);
+
+                    ActivityComponentPrePro = new ActivityComponentPrePro();
+                    ActivityComponentPrePro.PendindActivity = $"${_actividadPending}";
+                    ActivityComponentPrePro.TypeActivity = "Despliegue";
+                    ActivityComponentPrePro.Activity = $@"En el servidor SRNEUIWM1MXR307  con dirección ip 180.228.64.206, abrir la línea de comandos y dirigirse a D:\MPM\DIS para ejecutar el comando:{ System.Environment.NewLine}";
+                    ActivityComponentPrePro.Activity += $@"<b>dir /s *.* /o:-d > srvn07_caida.txt/b>{ System.Environment.NewLine}";
+                    ActivityComponentPrePro.Activity += $@"Entregar al Gestor del cambio el archivo srvn07_caida.txt.{ System.Environment.NewLine}";
+                    ActivityComponentPrePro.Activity += $@"Esperar validación para continuar con la siguiente actividad.{ System.Environment.NewLine}";
+                    ActivityComponentPreProList.Add(ActivityComponentPrePro);
+
+                    ActivityComponentPrePro = new ActivityComponentPrePro();
+                    
+                    ActivityComponentPrePro.PendindActivity = (_pendingActivity+ActivityComponentPreProList.Count() + 1).ToString();
+                    ActivityComponentPrePro.TypeActivity = "Despliegue";
+                    ActivityComponentPrePro.Activity = $@"<b>Prender pools</b> de todos los servidores.";
+                    ActivityComponentPreProList.Add(ActivityComponentPrePro);
+                }
+                else
+                {   //PRO
+                    ActivityComponentPrePro.Id = _pendingActivity + 1;
+                    ActivityComponentPrePro.PendindActivity = "Ninguna";
+                    ActivityComponentPrePro.TypeActivity = "Despliegue";
+                    ActivityComponentPrePro.Activity = $@"<b>Bajar pools</b> de todos los servidores.";
+                    ActivityComponentPreProList.Add(ActivityComponentPrePro);
+
+                    ActivityComponentPrePro = new ActivityComponentPrePro();
+                    ActivityComponentPrePro.PendindActivity = $"${_pendingActivity} y {ActivityComponentPrePro.Id }";
+                    ActivityComponentPrePro.TypeActivity = "Despliegue";
+                    ActivityComponentPrePro.Activity = $@"Desplegar las siguientes CRs:{ System.Environment.NewLine}";
+                    ActivityComponentPrePro.Activity += $@"<b>Alojables/b>{ System.Environment.NewLine}";
+                    ActivityComponentPrePro.Activity += $@"<b>Configurables/b>{ System.Environment.NewLine}";
+                    ActivityComponentPreProList.Add(ActivityComponentPrePro);
+
+                    int _actividadPending = _pendingActivity + ActivityComponentPreProList.Count() + 1;
+                    ActivityComponentPrePro = new ActivityComponentPrePro();
+                    ActivityComponentPrePro.PendindActivity = $"${_actividadPending}";
+                    ActivityComponentPrePro.TypeActivity = "Despliegue";
+                    ActivityComponentPrePro.Activity = $@"En el servidor WEBNEUPVWMX03 con dirección ip 180.181.165.93, abrir la línea de comandos y dirigirse a D:\MPM\DIS para ejecutar el comando:{ System.Environment.NewLine}";
+                    ActivityComponentPrePro.Activity += $@"<b>dir /s *.* /o:-d > webn03_caida.txt/b>{ System.Environment.NewLine}";
+                    ActivityComponentPrePro.Activity += $@"Entregar al Gestor del cambio el archivo webn03_caida.txt.{ System.Environment.NewLine}";
+                    ActivityComponentPrePro.Activity += $@"Esperar validación para continuar con la siguiente actividad.{ System.Environment.NewLine}";
+                    ActivityComponentPreProList.Add(ActivityComponentPrePro);
+
+                    ActivityComponentPrePro = new ActivityComponentPrePro();
+                    ActivityComponentPrePro.PendindActivity = $"${_actividadPending}";
+                    ActivityComponentPrePro.TypeActivity = "Despliegue";
+                    ActivityComponentPrePro.Activity = $@"En el servidor SRVNEUPVWMX09 con dirección ip 180.181.167.59, abrir la línea de comandos y dirigirse a D:\MPM\DIS para ejecutar el comando:{ System.Environment.NewLine}";
+                    ActivityComponentPrePro.Activity += $@"<b>dir /s *.* /o:-d > srvn09_caida.txt/b>{ System.Environment.NewLine}";
+                    ActivityComponentPrePro.Activity += $@"Entregar al Gestor del cambio el archivo srvn09_caida.txt.{ System.Environment.NewLine}";
+                    ActivityComponentPrePro.Activity += $@"Esperar validación para continuar con la siguiente actividad.{ System.Environment.NewLine}";
+                    ActivityComponentPreProList.Add(ActivityComponentPrePro);
+
+                    ActivityComponentPrePro = new ActivityComponentPrePro();
+                    ActivityComponentPrePro.PendindActivity = $"${_actividadPending}";
+                    ActivityComponentPrePro.TypeActivity = "Despliegue";
+                    ActivityComponentPrePro.Activity = $@"En el servidor SRVNEUPVWMX01  con dirección ip 180.181.167.51, abrir la línea de comandos y dirigirse a D:\MPM\DIS para ejecutar el comando:{ System.Environment.NewLine}";
+                    ActivityComponentPrePro.Activity += $@"<b>dir /s *.* /o:-d > srvn01_caida.txt/b>{ System.Environment.NewLine}";
+                    ActivityComponentPrePro.Activity += $@"Entregar al Gestor del cambio el archivo srvn01_caida.txt.{ System.Environment.NewLine}";
+                    ActivityComponentPrePro.Activity += $@"Esperar validación para continuar con la siguiente actividad.{ System.Environment.NewLine}";
+                    ActivityComponentPreProList.Add(ActivityComponentPrePro);
+
+                    ActivityComponentPrePro = new ActivityComponentPrePro();
+                    ActivityComponentPrePro.PendindActivity = $"${_actividadPending}";
+                    ActivityComponentPrePro.TypeActivity = "Despliegue";
+                    ActivityComponentPrePro.Activity = $@"En el servidor SRVNEUPVWMX07  con dirección ip 180.181.167.57, abrir la línea de comandos y dirigirse a D:\MPM\DIS para ejecutar el comando:{ System.Environment.NewLine}";
+                    ActivityComponentPrePro.Activity += $@"<b>dir /s *.* /o:-d > srvn07_caida.txt/b>{ System.Environment.NewLine}";
+                    ActivityComponentPrePro.Activity += $@"Entregar al Gestor del cambio el archivo srvn07_caida.txt.{ System.Environment.NewLine}";
+                    ActivityComponentPrePro.Activity += $@"Esperar validación para continuar con la siguiente actividad.{ System.Environment.NewLine}";
+                    ActivityComponentPreProList.Add(ActivityComponentPrePro);
+
+                    ActivityComponentPrePro = new ActivityComponentPrePro();
+
+                    ActivityComponentPrePro.PendindActivity = (_pendingActivity+ActivityComponentPreProList.Count() + 1).ToString();
+                    ActivityComponentPrePro.TypeActivity = "Despliegue";
+                    ActivityComponentPrePro.Activity = $@"<b>Prender pools</b> de todos los servidores.";
+                    ActivityComponentPreProList.Add(ActivityComponentPrePro);
+                }
+
+                return ActivityComponentPreProList;
+            });
+            task0.Start();
+
+
+            return await task0;
+        }
+
+        //(importación de recursos)
+        public static async Task<List<ActivityComponentPrePro>> ListResoruceImport(int _env, int _pendingActivity)
+        {
+
+            Task<List<ActivityComponentPrePro>> task0 = new Task<List<ActivityComponentPrePro>>(() =>
+            {
+                List<ActivityComponentPrePro> ActivityComponentPreProList = new List<ActivityComponentPrePro>();
+                ActivityComponentPrePro ActivityComponentPrePro = new ActivityComponentPrePro();
+                //int _contador = 1;
+
+                if (_env == 0)
+                {   //PRE
+                    ActivityComponentPrePro.PendindActivity = _pendingActivity.ToString();
+                    ActivityComponentPrePro.TypeActivity = "Despliegue";
+                    ActivityComponentPrePro.Activity = $"En el servidor <b>SRNEUIWM1MXR309 180.228.64.204 Batch</b>:{ System.Environment.NewLine}";
+                    ActivityComponentPrePro.Activity += $@"Abrir como Administrador la línea de comandos{ System.Environment.NewLine}";
+                    ActivityComponentPrePro.Activity += $@"Ir a la carpeta D:\MPM\DIS\InstallBSM\Resources\ImportarRecursos{ System.Environment.NewLine}";
+                    ActivityComponentPrePro.Activity += $@"Ejecutar el archivo <b>ImportarRecursos_1.cmd</b> y al finalizar devolver:{ System.Environment.NewLine}";
+                    ActivityComponentPrePro.Activity += $@"-El archivo cookies.txt ubicado en D:\MPM\DIS\InstallBSM\Resources\ImportarRecursos{ System.Environment.NewLine}";
+                    ActivityComponentPrePro.Activity += $@"-El archivo salida1_DDMMAAAA.html{ System.Environment.NewLine}";
+                    ActivityComponentPrePro.Activity += $@"-El archivo salida1_errores_DDMMAAAA.log{ System.Environment.NewLine}";
+                    ActivityComponentPrePro.Activity += $@"Esperar revisión de los logs de esta tarea para continuar con la siguiente actividad.{ System.Environment.NewLine}";
+                    ActivityComponentPreProList.Add(ActivityComponentPrePro);
+                }
+                else
+                {   //PRO
+                    ActivityComponentPrePro.PendindActivity = _pendingActivity.ToString();
+                    ActivityComponentPrePro.TypeActivity = "Despliegue";
+                    ActivityComponentPrePro.Activity = $"En el servidor <b>SRVNEUPVWMX09 180.181.167.59 Batch</b>:{ System.Environment.NewLine}";
+                    ActivityComponentPrePro.Activity += $@"Abrir como Administrador la línea de comandos{ System.Environment.NewLine}";
+                    ActivityComponentPrePro.Activity += $@"Ir a la carpeta D:\MPM\DIS\InstallBSM\Resources\ImportarRecursos{ System.Environment.NewLine}";
+                    ActivityComponentPrePro.Activity += $@"Ejecutar el archivo <b>ImportarRecursos_1.cmd</b> y al finalizar devolver:{ System.Environment.NewLine}";
+                    ActivityComponentPrePro.Activity += $@"-El archivo cookies.txt ubicado en D:\MPM\DIS\InstallBSM\Resources\ImportarRecursos{ System.Environment.NewLine}";
+                    ActivityComponentPrePro.Activity += $@"-El archivo salida1_DDMMAAAA.html{ System.Environment.NewLine}";
+                    ActivityComponentPrePro.Activity += $@"-El archivo salida1_errores_DDMMAAAA.log{ System.Environment.NewLine}";
+                    ActivityComponentPrePro.Activity += $@"Esperar revisión de los logs de esta tarea para continuar con la siguiente actividad.{ System.Environment.NewLine}";
+                    ActivityComponentPreProList.Add(ActivityComponentPrePro);
+                }
+                
+
+
+                return ActivityComponentPreProList;
+            });
+            task0.Start();
+
+
+            return await task0;
+        }
+
+        //EndExcel
+        public static async Task<List<ActivityComponentPrePro>> ListEndActivity(int _env, int _pendingActivity)
+        {
+
+            Task<List<ActivityComponentPrePro>> task0 = new Task<List<ActivityComponentPrePro>>(() =>
+            {
+                List<ActivityComponentPrePro> ActivityComponentPreProList = new List<ActivityComponentPrePro>();
+                ActivityComponentPrePro ActivityComponentPrePro = new ActivityComponentPrePro();
+                //int _contador = 1;
+                ActivityComponentPrePro.PendindActivity = _pendingActivity.ToString();
+                ActivityComponentPrePro.TypeActivity = "Despliegue";
+                ActivityComponentPrePro.Activity = $"<b>Generar fingerprint</b>{ System.Environment.NewLine}";
+                ActivityComponentPreProList.Add(ActivityComponentPrePro);
+
+                ActivityComponentPrePro = new ActivityComponentPrePro();
+                ActivityComponentPrePro.PendindActivity = (_pendingActivity + ActivityComponentPreProList.Count() + 1).ToString();
+                ActivityComponentPrePro.TypeActivity = "Despliegue";
+                ActivityComponentPrePro.Activity = $"<b>Solicitar logs</b>{ System.Environment.NewLine}";
+                ActivityComponentPreProList.Add(ActivityComponentPrePro);
+
+                if (_env == 0)
+                {   //PRE
+                    
+
+                    ActivityComponentPrePro = new ActivityComponentPrePro();
+                    ActivityComponentPrePro.PendindActivity = "";
+                    ActivityComponentPrePro.TypeActivity = "";
+                    ActivityComponentPrePro.Activity = $"<b>Post despliegue.</b>{ System.Environment.NewLine}";
+                    ActivityComponentPreProList.Add(ActivityComponentPrePro);
+                }
+                else
+                {   //PRO
+                    ActivityComponentPrePro = new ActivityComponentPrePro();
+                    ActivityComponentPrePro.PendindActivity = "";
+                    ActivityComponentPrePro.TypeActivity = "";
+                    ActivityComponentPrePro.Activity = $"<b>Creación del producto y expedientes de hogar.</b>{ System.Environment.NewLine}";
+                    ActivityComponentPreProList.Add(ActivityComponentPrePro);
+                }
+
+                return ActivityComponentPreProList;
+            });
+            task0.Start();
+
+
+            return await task0;
+        }
     }
+    
 }
+

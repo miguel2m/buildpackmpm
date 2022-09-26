@@ -447,7 +447,35 @@ namespace AutoDischange.ViewModel.Helpers
 
         }
 
-        //READ Local DIS_Changes
+        //Set Actividad Para Desplegar
+        public static MemoryStream DeployActivity(MemoryStream msPass, List<ActivityComponentPrePro> listData,string _workbook)
+        {
+            msPass.Position = 0;
+            MemoryStream msPassTemp = new MemoryStream();
+            SLDocument sl = new SLDocument(msPass);
+            sl.SelectWorksheet(_workbook);
+            int _index = 2;
+            int _contador = 1;
+            foreach (ActivityComponentPrePro item in listData)
+            {
+
+                sl.SetCellValue(_index, 1, _contador);
+                sl.SetCellValue(_index, 2, item.PendindActivity);
+                sl.SetCellValue(_index, 3, item.TypeActivity);
+                sl.SetCellValue(_index, 4, item.Activity);
+                _index++;
+                _contador++;
+
+
+            }
+            //char backSlash = Path.DirectorySeparatorChar;
+            sl.SaveAs(msPassTemp);
+
+            return msPassTemp;
+
+        }
+
+        //SAVE EXCEL ACTIVITY
         public static void SaveExcelEntrega (MemoryStream msPass, string filePath)
         {
             msPass.Position = 0;

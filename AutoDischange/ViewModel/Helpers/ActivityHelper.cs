@@ -210,7 +210,7 @@ namespace AutoDischange.ViewModel.Helpers
                     if (ActivityResoruceImportListPre.Any()) //PRE
                     {
                         ActivityResultListPre.AddRange(ActivityResoruceImportListPre);
-                        ActivityResultListPre.AddRange(await ListEndActivity(0, ActivityResultListPre.Count)); //END EXCEL PRE
+                        //ActivityResultListPre.AddRange(await ListEndActivity(0, ActivityResultListPre.Count)); //END EXCEL PRE
                         MemoryStream msPassTemp = new MemoryStream();
                         ExcelHelper.DeployActivity(msPass, ActivityResultListPre, "ActividadesParaDesplegarPre").WriteTo(msPassTemp);
                         msPass = new MemoryStream();
@@ -219,7 +219,7 @@ namespace AutoDischange.ViewModel.Helpers
                     if (ActivityResoruceImportListPro.Any()) //PRO
                     {
                         ActivityResultListPro.AddRange(ActivityResoruceImportListPro);
-                        ActivityResultListPro.AddRange(await ListEndActivity(1, ActivityResultListPro.Count)); //END EXCEL PRO
+                        //ActivityResultListPro.AddRange(await ListEndActivity(1, ActivityResultListPro.Count)); //END EXCEL PRO
                         MemoryStream msPassTemp = new MemoryStream();
                         ExcelHelper.DeployActivity(msPass, ActivityResultListPro, "ActividadesParaDesplegarPro").WriteTo(msPassTemp);
                         msPass = new MemoryStream();
@@ -230,7 +230,26 @@ namespace AutoDischange.ViewModel.Helpers
 
 
             }
-            if(msPass.CanRead)
+
+            //End Excel
+            if (ActivityResoruceImportListPre.Any())
+            {
+                ActivityResultListPre.AddRange(await ListEndActivity(0, ActivityResultListPre.Count)); //END EXCEL PRE
+                MemoryStream msPassTemp = new MemoryStream();
+                ExcelHelper.DeployActivity(msPass, ActivityResultListPre, "ActividadesParaDesplegarPre").WriteTo(msPassTemp);
+                msPass = new MemoryStream();
+                msPassTemp.WriteTo(msPass);
+
+            }
+            if (ActivityResoruceImportListPre.Any())
+            {
+                ActivityResultListPro.AddRange(await ListEndActivity(1, ActivityResultListPro.Count)); //END EXCEL PRO
+                MemoryStream msPassTemp = new MemoryStream();
+                ExcelHelper.DeployActivity(msPass, ActivityResultListPro, "ActividadesParaDesplegarPro").WriteTo(msPassTemp);
+                msPass = new MemoryStream();
+                msPassTemp.WriteTo(msPass);
+            }
+            if (msPass.CanRead)
                 ExcelHelper.SaveExcelEntrega(msPass, pathUser);
         }
         //Read  ListPathDischange (Guia de ubicaciones)

@@ -629,29 +629,26 @@ namespace AutoDischange.ViewModel.Helpers
                         ActivityComponentPrePro.rst.AppendText($"Ejecutar los siguientes ");
                         ActivityComponentPrePro.rst.AppendText($"scripts {lstExcelGroup.First().TipoScrpt} ", ActivityComponentPrePro.font);
                         ActivityComponentPrePro.rst.AppendText($"en el ordern indicado: { System.Environment.NewLine}");
+                        ActivityComponentPrePro.rst.AppendText($"{ System.Environment.NewLine}");
+                        string _servidor ="";
+                        string _instancia = "";
+                        string _esquema = "";
+                        string _puerto = "";
                         foreach (ActividadDespliegue item in lstExcelGroup)
                         {
                             ActivityComponentPrePro.rst.AppendText($"{item.NombArchv} { System.Environment.NewLine}");
+                            _servidor = (_env == 0) ? item.ServerPre : item.ServerPro;
+                            _instancia = (_env == 0) ? item.InstanciaPre : item.InstanciaPro;
+                            _esquema = (_env == 0) ? item.EsquemaPre : item.EsquemaPro;
+                            _puerto = item.Puerto;
                         }
-                        ActivityComponentPrePro.rst.AppendText($"{ System.Environment.NewLine}");
-                        if (_env == 0)
-                        {   //PRE                       
+                        ActivityComponentPrePro.rst.AppendText($"{ System.Environment.NewLine}");                       
+                        ActivityComponentPrePro.rst.AppendText($"Servidor:  {_servidor} { System.Environment.NewLine}");
+                        ActivityComponentPrePro.rst.AppendText($"Instancia:  {_instancia} { System.Environment.NewLine}");
+                        ActivityComponentPrePro.rst.AppendText($"Esquema:  {_esquema} { System.Environment.NewLine}", ActivityComponentPrePro.font);
+                        ActivityComponentPrePro.rst.AppendText($"Puerto:  {_puerto} { System.Environment.NewLine}");
 
-                            ActivityComponentPrePro.rst.AppendText($"Servidor:  {lastGroup.ServerPre} { System.Environment.NewLine}");
-                            ActivityComponentPrePro.rst.AppendText($"Instancia:  {lastGroup.InstanciaPre} { System.Environment.NewLine}");
-                            ActivityComponentPrePro.rst.AppendText($"Esquema:  {lastGroup.EsquemaPre} { System.Environment.NewLine}", ActivityComponentPrePro.font);
-                            ActivityComponentPrePro.rst.AppendText($"Puerto:  {lastGroup.Puerto} { System.Environment.NewLine}");
-
-                        }
-                        else
-                        {   //PRO
-
-                            ActivityComponentPrePro.rst.AppendText($"Servidor:  {lastGroup.ServerPro} { System.Environment.NewLine}");
-                            ActivityComponentPrePro.rst.AppendText($"Instancia:  {lastGroup.InstanciaPro} { System.Environment.NewLine}");
-                            ActivityComponentPrePro.rst.AppendText($"Esquema:  {lastGroup.EsquemaPro} { System.Environment.NewLine}", ActivityComponentPrePro.font);
-                            ActivityComponentPrePro.rst.AppendText($"Puerto:  {lastGroup.Puerto} { System.Environment.NewLine}");
-
-                        }
+                        
 
                         ActivityComponentPreProList.Add(ActivityComponentPrePro);
                         _actividadPending++;

@@ -741,7 +741,7 @@ namespace AutoDischange.ViewModel.Helpers
                         ActivityComponentPrePro.font = new SLFont();
                         ActivityComponentPrePro.font.Bold = true;
 
-                        ActivityComponentPrePro.PendindActivity = (_pendingActivity+ActivityComponentPreProList.Count()).ToString();
+                        ActivityComponentPrePro.PendindActivity = (int.Parse(_pendingActivity)+ActivityComponentPreProList.Count()).ToString();
                         ActivityComponentPrePro.TypeActivity = "Despliegue";
 
                         ActivityComponentPrePro.rst.AppendText($"Reinicio de Pools.{ System.Environment.NewLine}", ActivityComponentPrePro.font);
@@ -791,7 +791,7 @@ namespace AutoDischange.ViewModel.Helpers
                         ActivityComponentPrePro.font = new SLFont();
                         ActivityComponentPrePro.font.Bold = true;
 
-                        ActivityComponentPrePro.PendindActivity = (_pendingActivity + ActivityComponentPreProList.Count()).ToString();
+                        ActivityComponentPrePro.PendindActivity = (int.Parse(_pendingActivity) + ActivityComponentPreProList.Count()).ToString();
                         ActivityComponentPrePro.TypeActivity = "Despliegue";
 
                         ActivityComponentPrePro.rst.AppendText($"Reinicio de Pools.{ System.Environment.NewLine}", ActivityComponentPrePro.font);

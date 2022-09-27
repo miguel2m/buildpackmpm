@@ -190,7 +190,7 @@ namespace AutoDischange.ViewModel.Helpers
                 //PRE
                 if (ActivityProcessImportListPre.Any())
                 {
-                    ActivityPoolListPre = await ListPoolManager(0, $"{ActivityProcessImportListPre.Count()}");
+                    ActivityPoolListPre = await ListPoolManager(0, $"{ActivityResultListPre.Count()}");
                 }
                 else
                 {
@@ -203,7 +203,7 @@ namespace AutoDischange.ViewModel.Helpers
                     if (ActivityProcessImportListPre.Any())
                     {
 
-                        ActivityResultListPre.AddRange(await ListProcessImport(0, true, $"{ActivityProcessImportListPre.Count()}"));
+                        ActivityResultListPre.AddRange(await ListProcessImport(0, true, $"{ActivityResultListPre.Count()}"));
                     }
                     MemoryStream msPassTemp = new MemoryStream();
                     ExcelHelper.DeployActivity(msPass, ActivityResultListPre, "ActividadesParaDesplegarPre").WriteTo(msPassTemp);
@@ -213,7 +213,7 @@ namespace AutoDischange.ViewModel.Helpers
                 //PRO
                 if (ActivityProcessImportListPro.Any())
                 {
-                    ActivityPoolListPro = await ListPoolManager(1, $"{ActivityProcessImportListPro.Count()}");
+                    ActivityPoolListPro = await ListPoolManager(1, $"{ActivityResultListPro.Count()}");
                 }
                 else
                 {
@@ -244,9 +244,9 @@ namespace AutoDischange.ViewModel.Helpers
                 List<ActivityComponentListAlojables> RecursosCsv = ActivityComponentListAlojablesList.FindAll(i => i.DischangeComponentName.FindAll(item => item.Contains($@"customer-resources.csv")).Any());
                 if (RecursosCsv.Any())
                 {
-                    ActivityResoruceImportListPre = await ListResoruceImport(0, $"{ActivityProcessImportListPre.Count()}");//Listado PRE
+                    ActivityResoruceImportListPre = await ListResoruceImport(0, $"{ActivityResultListPre.Count()}");//Listado PRE
 
-                    ActivityResoruceImportListPro = await ListResoruceImport(1, $"{ActivityProcessImportListPro.Count()}");//Listado PRO
+                    ActivityResoruceImportListPro = await ListResoruceImport(1, $"{ActivityResultListPro.Count()}");//Listado PRO
 
                     if (ActivityResoruceImportListPre.Any()) //PRE
                     {
@@ -850,7 +850,7 @@ namespace AutoDischange.ViewModel.Helpers
                     ActivityComponentPrePro.font = new SLFont();
                     ActivityComponentPrePro.font.Bold = true;
 
-                    ActivityComponentPrePro.PendindActivity = $"{_pendingActivity} y {_pendingActivity + _pendingActivity + 1 }";
+                    ActivityComponentPrePro.PendindActivity = $"{_pendingActivity} y {int.Parse(_pendingActivity) + 1 }";
                     ActivityComponentPrePro.TypeActivity = "Despliegue";
                     ActivityComponentPrePro.rst.AppendText($@"Desplegar las siguientes CRs:{ System.Environment.NewLine}");
                     ActivityComponentPrePro.rst.AppendText($"Alojables", ActivityComponentPrePro.font);
@@ -874,7 +874,7 @@ namespace AutoDischange.ViewModel.Helpers
                     ActivityComponentPrePro.font = new SLFont();
                     ActivityComponentPrePro.font.Bold = true;
 
-                    ActivityComponentPrePro.PendindActivity = $"{_actividadPending}";
+                    ActivityComponentPrePro.PendindActivity = $"{_actividadPending.ToString()}";
                     ActivityComponentPrePro.TypeActivity = "Despliegue";
                     ActivityComponentPrePro.rst.AppendText($@"En el servidor WEBNEUIVWMX03 con dirección ip 180.181.105.137, abrir la línea de comandos y dirigirse a D:\MPM\DIS para ejecutar el comando:{ System.Environment.NewLine}");
                     ActivityComponentPrePro.rst.AppendText($"dir /s *.* /o:-d > webn03_caida.txt", ActivityComponentPrePro.font);
@@ -891,7 +891,7 @@ namespace AutoDischange.ViewModel.Helpers
                     ActivityComponentPrePro.font = new SLFont();
                     ActivityComponentPrePro.font.Bold = true;
 
-                    ActivityComponentPrePro.PendindActivity = $"{_actividadPending}";
+                    ActivityComponentPrePro.PendindActivity = $"{_actividadPending.ToString()}";
                     ActivityComponentPrePro.TypeActivity = "Despliegue";
                     ActivityComponentPrePro.rst.AppendText($@"En el servidor SRNEUIWM1MXR309 con dirección ip 180.228.64.204, abrir la línea de comandos y dirigirse a D:\MPM\DIS para ejecutar el comando:{ System.Environment.NewLine}");
                     ActivityComponentPrePro.rst.AppendText($"dir /s *.* /o:-d > srvn09_caida.txt", ActivityComponentPrePro.font);
@@ -908,7 +908,7 @@ namespace AutoDischange.ViewModel.Helpers
                     ActivityComponentPrePro.font = new SLFont();
                     ActivityComponentPrePro.font.Bold = true;
 
-                    ActivityComponentPrePro.PendindActivity = $"{_actividadPending}";
+                    ActivityComponentPrePro.PendindActivity = $"{_actividadPending.ToString()}";
                     ActivityComponentPrePro.TypeActivity = "Despliegue";
                     ActivityComponentPrePro.rst.AppendText($@"En el servidor SRVNEUIVWMX01  con dirección ip 180.181.105.139, abrir la línea de comandos y dirigirse a D:\MPM\DIS para ejecutar el comando:{ System.Environment.NewLine}");
                     ActivityComponentPrePro.rst.AppendText($"dir /s *.* /o:-d > srvn01_caida.txt", ActivityComponentPrePro.font);
@@ -925,7 +925,7 @@ namespace AutoDischange.ViewModel.Helpers
                     ActivityComponentPrePro.font = new SLFont();
                     ActivityComponentPrePro.font.Bold = true;
 
-                    ActivityComponentPrePro.PendindActivity = $"{_actividadPending}";
+                    ActivityComponentPrePro.PendindActivity = $"{_actividadPending.ToString()}";
                     ActivityComponentPrePro.TypeActivity = "Despliegue";
                     ActivityComponentPrePro.rst.AppendText($@"En el servidor SRNEUIWM1MXR307  con dirección ip 180.228.64.206, abrir la línea de comandos y dirigirse a D:\MPM\DIS para ejecutar el comando:{ System.Environment.NewLine}");
                     ActivityComponentPrePro.rst.AppendText($"dir /s *.* /o:-d > srvn07_caida.txt", ActivityComponentPrePro.font);
@@ -942,7 +942,7 @@ namespace AutoDischange.ViewModel.Helpers
                     ActivityComponentPrePro.font = new SLFont();
                     ActivityComponentPrePro.font.Bold = true;
 
-                    ActivityComponentPrePro.PendindActivity = (_pendingActivity+ActivityComponentPreProList.Count()).ToString();
+                    ActivityComponentPrePro.PendindActivity = (_actividadPending.ToString() ).ToString();
                     ActivityComponentPrePro.TypeActivity = "Despliegue";
                     ActivityComponentPrePro.rst.AppendText($"Prender pools ", ActivityComponentPrePro.font);
                     ActivityComponentPrePro.rst.AppendText($@"de todos los servidores.{ System.Environment.NewLine}");
@@ -963,7 +963,7 @@ namespace AutoDischange.ViewModel.Helpers
                     ActivityComponentPrePro.font = new SLFont();
                     ActivityComponentPrePro.font.Bold = true;
 
-                    ActivityComponentPrePro.PendindActivity = $"{_pendingActivity} y {_pendingActivity + 1 }";
+                    ActivityComponentPrePro.PendindActivity = $"{_pendingActivity} y {int.Parse(_pendingActivity) + 1 }";
                     ActivityComponentPrePro.TypeActivity = "Despliegue";
                     ActivityComponentPrePro.rst.AppendText($@"Desplegar las siguientes CRs:{ System.Environment.NewLine}");
                     ActivityComponentPrePro.rst.AppendText($"Alojables", ActivityComponentPrePro.font);
@@ -986,7 +986,7 @@ namespace AutoDischange.ViewModel.Helpers
                     ActivityComponentPrePro.font = new SLFont();
                     ActivityComponentPrePro.font.Bold = true;
 
-                    ActivityComponentPrePro.PendindActivity = $"{_actividadPending}";
+                    ActivityComponentPrePro.PendindActivity = $"{_actividadPending.ToString()}";
                     ActivityComponentPrePro.TypeActivity = "Despliegue";
                     ActivityComponentPrePro.rst.AppendText($@"En el servidor WEBNEUPVWMX03 con dirección ip 180.181.165.93, abrir la línea de comandos y dirigirse a D:\MPM\DIS para ejecutar el comando:{ System.Environment.NewLine}");
                     ActivityComponentPrePro.rst.AppendText($"dir /s *.* /o:-d > webn03_caida.txt", ActivityComponentPrePro.font);
@@ -1003,7 +1003,7 @@ namespace AutoDischange.ViewModel.Helpers
                     ActivityComponentPrePro.font = new SLFont();
                     ActivityComponentPrePro.font.Bold = true;
 
-                    ActivityComponentPrePro.PendindActivity = $"{_actividadPending}";
+                    ActivityComponentPrePro.PendindActivity = $"{_actividadPending.ToString()}";
                     ActivityComponentPrePro.TypeActivity = "Despliegue";
                     ActivityComponentPrePro.rst.AppendText($@"En el servidor SRVNEUPVWMX09 con dirección ip 180.181.167.59, abrir la línea de comandos y dirigirse a D:\MPM\DIS para ejecutar el comando:{ System.Environment.NewLine}");
                     ActivityComponentPrePro.rst.AppendText($"dir /s *.* /o:-d > srvn09_caida.txt", ActivityComponentPrePro.font);
@@ -1020,7 +1020,7 @@ namespace AutoDischange.ViewModel.Helpers
                     ActivityComponentPrePro.font = new SLFont();
                     ActivityComponentPrePro.font.Bold = true;
 
-                    ActivityComponentPrePro.PendindActivity = $"{_actividadPending}";
+                    ActivityComponentPrePro.PendindActivity = $"{_actividadPending.ToString()}";
                     ActivityComponentPrePro.TypeActivity = "Despliegue";
 
                     ActivityComponentPrePro.rst.AppendText($@"En el servidor SRVNEUPVWMX01  con dirección ip 180.181.167.51, abrir la línea de comandos y dirigirse a D:\MPM\DIS para ejecutar el comando:{ System.Environment.NewLine}");
@@ -1039,7 +1039,7 @@ namespace AutoDischange.ViewModel.Helpers
                     ActivityComponentPrePro.font = new SLFont();
                     ActivityComponentPrePro.font.Bold = true;
 
-                    ActivityComponentPrePro.PendindActivity = $"{_actividadPending}";
+                    ActivityComponentPrePro.PendindActivity = $"{_actividadPending.ToString()}";
                     ActivityComponentPrePro.TypeActivity = "Despliegue";
 
                     ActivityComponentPrePro.rst.AppendText($@"En el servidor SRVNEUPVWMX07  con dirección ip 180.181.167.57, abrir la línea de comandos y dirigirse a D:\MPM\DIS para ejecutar el comando:{ System.Environment.NewLine}");
@@ -1057,7 +1057,7 @@ namespace AutoDischange.ViewModel.Helpers
                     ActivityComponentPrePro.font = new SLFont();
                     ActivityComponentPrePro.font.Bold = true;
 
-                    ActivityComponentPrePro.PendindActivity = (_pendingActivity+ActivityComponentPreProList.Count()).ToString();
+                    ActivityComponentPrePro.PendindActivity = (int.Parse(_pendingActivity)+ActivityComponentPreProList.Count()).ToString();
                     ActivityComponentPrePro.TypeActivity = "Despliegue";
                     ActivityComponentPrePro.rst.AppendText($"Prender pools ", ActivityComponentPrePro.font);
                     ActivityComponentPrePro.rst.AppendText($@"de todos los servidores.{ System.Environment.NewLine}");

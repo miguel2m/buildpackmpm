@@ -16,7 +16,7 @@ namespace AutoDischange.ViewModel.Helpers
     public class ExcelHelper
     {
 
-        //READ EXCEL
+        //READ EXCEL Para la lista De Dischange y lo guarda en BD
         public static async Task<List<DischangeChangeset>> ReadExcel (string path) 
         {
             List<DischangeChangeset> DischangeChangesets = new List<DischangeChangeset>();
@@ -46,17 +46,12 @@ namespace AutoDischange.ViewModel.Helpers
             return DischangeChangesets;
         }
 
-        //READ Local DIS_Changes
+        //READ Local DIS_Changes (Lee archivo la Guia de ubicaciones del DIS-Change.xls Excel)
         public static async Task<bool> ReadExcelDIS_Changes(string filePath)
         {
-            //string rtfFile = System.IO.Path.Combine(Environment.CurrentDirectory, "DIS_Changes.xlsx");
-
             bool result = false;
-            //List<DischangePath> DischangeChangesets = new List<DischangePath>();
-
 
             SLDocument sl = new SLDocument(filePath, "GuíaDeUbicaciones");
-
 
             int iRow = 1;
             while (!string.IsNullOrEmpty(sl.GetCellValueAsString(iRow, 1)))
@@ -79,21 +74,14 @@ namespace AutoDischange.ViewModel.Helpers
                     DischangeChangeset.Id = notebooks[0].Id;
                     result = await DatabaseHelper.InsertReplaceDischange(DischangeChangeset);
                 }
-                
-                
-               
+
                 iRow++;
-
             }
-            //resultado.Add("OK", "true");
-            //resultado.Add("msg", DischangeChangesets);
-            //return DischangeChangesets;
-
             return result;
-
 
         }
 
+        //Inicio Comparacion de componeentes
         //Create excel aand insert worksheet for Comparacion de componeentes
         public static void CreateExcelDiffComapre(List<DiffCompareModel> diffCompareModelList,string pathUser, DiffComponent diffComponent)
         {
@@ -329,26 +317,7 @@ namespace AutoDischange.ViewModel.Helpers
             MemoryStream msPass = new MemoryStream();
             SLDocument slOriginal = new SLDocument(fs);
             slOriginal.SaveAs(msPass);
-
-            //SLDocument sl = new SLDocument(msPass);
-            //foreach (ActivityModel item in ActivityModelList)
-            //{
-            //    sl.SelectWorksheet(item.Workbook);
-
-            //    int _index = 2;
-            //    int contador = 1;
-            //    foreach (string fileType in item.ListFile)
-            //    {
-            //        sl.SetCellValue(_index, 1, contador);
-            //        sl.SetCellValue(_index, 2, fileType);
-            //        _index++;
-            //        contador++;
-            //    }
-            //}          
             fs.Close();
-            //char backSlash = Path.DirectorySeparatorChar;
-            //sl.SaveAs($"{@filePath}{backSlash}ExcelEntrega_{DateTime.Now.ToString("yyyyMMddHHmmss")}.xlsx");
-            //msPass.Position = 0;
             return msPass;
 
         }
@@ -493,5 +462,7 @@ namespace AutoDischange.ViewModel.Helpers
             sl.SaveAs($"{@filePath}{backSlash}ExcelEntrega_{DateTime.Now.ToString("yyyyMMddHHmmss")}.xlsx");
 
         }
+
+        //FIN para las actividades de despliegue (Excel de entrega)
     }
 }

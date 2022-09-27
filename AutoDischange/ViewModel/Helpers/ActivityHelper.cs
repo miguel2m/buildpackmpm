@@ -11,7 +11,7 @@ namespace AutoDischange.ViewModel.Helpers
 {
     public class ActivityHelper
     {
-
+        //Metodo para Realizar Excel de entrega
         public static async Task ExportActivity(ActivityComponent activityComponent, string pathUser,string envExcel)
         {
             char backSlash           = Path.DirectorySeparatorChar;
@@ -28,9 +28,11 @@ namespace AutoDischange.ViewModel.Helpers
             IEnumerable<System.IO.FileInfo> listScript;
 
             
-
+            //Listado de Alojables
             List<ActivityComponentListAlojables> ActivityComponentListAlojablesList         = new List<ActivityComponentListAlojables>();
+            //Listado de Configurables
             List<ActivityComponentListConfigurables> ActivityComponentListConfigurablesList = new List<ActivityComponentListConfigurables>();
+            //Listado de Script
             List<ActivityComponentListScript> ActivityComponentListScriptList               = new List<ActivityComponentListScript>();
 
             //Actividades para despliegue
@@ -109,7 +111,7 @@ namespace AutoDischange.ViewModel.Helpers
             }
 
             //Listado de Actividades para despliegue ActividadesParaDesplegarPre  ActividadesParaDesplegarPro
-
+            //Script con Nomeclatura
             if (ActivityComponentListScriptList.Any())
             {
                 
@@ -144,8 +146,6 @@ namespace AutoDischange.ViewModel.Helpers
                    
                 
             }
-
-
 
             //Si traigo xml en ProcesosFull entonces debo ejecutar actividades de importación de procesos 
             //(importación de procesos)
@@ -237,6 +237,7 @@ namespace AutoDischange.ViewModel.Helpers
 
 
             }
+
             //Si traigo el componente customer-resources.csv en Resources entonces ejecutar importación de recursos
             //importación de recursos
             if (ActivityComponentListAlojablesList.Any())
@@ -282,6 +283,7 @@ namespace AutoDischange.ViewModel.Helpers
                 msPassTemp.WriteTo(msPass);
 
             }
+            
             //End Excel PRO
             if (ActivityResultListPro.Any())
             {
@@ -291,6 +293,7 @@ namespace AutoDischange.ViewModel.Helpers
                 msPass = new MemoryStream();
                 msPassTemp.WriteTo(msPass);
             }
+            
             //Guardar Excel
             if (msPass.CanRead)
                 ExcelHelper.SaveExcelEntrega(msPass, pathUser);
@@ -441,7 +444,7 @@ namespace AutoDischange.ViewModel.Helpers
             
         }
         //Read  ListPathDischange (Guia de ubicaciones)
-        public static async Task<List<string>> ListPathDischange(IEnumerable<System.IO.FileInfo> listInput)
+        private static async Task<List<string>> ListPathDischange(IEnumerable<System.IO.FileInfo> listInput)
         {
             List<string> DischangePathList = new List<string>();
 
@@ -460,7 +463,7 @@ namespace AutoDischange.ViewModel.Helpers
         }
 
         //ListadoAlojables Sheet
-        public static async Task<List<ActivityComponentListAlojables>> ListAlojables(List<string> listInput)
+        private static async Task<List<ActivityComponentListAlojables>> ListAlojables(List<string> listInput)
         {
             
            
@@ -500,7 +503,7 @@ namespace AutoDischange.ViewModel.Helpers
         }
 
         //ListadoConfigurables Sheet
-        public static async Task<List<ActivityComponentListConfigurables>> ListConfigurables(List<string> listInput,string envExcel)
+        private static async Task<List<ActivityComponentListConfigurables>> ListConfigurables(List<string> listInput,string envExcel)
         {
             
            
@@ -553,7 +556,7 @@ namespace AutoDischange.ViewModel.Helpers
         }
 
         //ListadoScript Sheet
-        public static async Task<List<ActivityComponentListScript>> ListScript(List<string> listInput)
+        private static async Task<List<ActivityComponentListScript>> ListScript(List<string> listInput)
         {
             
             Task<List<ActivityComponentListScript>> task0 = new Task<List<ActivityComponentListScript>>( () =>
@@ -596,10 +599,10 @@ namespace AutoDischange.ViewModel.Helpers
 
             return await task0;
         }
-        
+
         //Actividades de despliegue
         //Script ActivityComponentPrePro
-        public static async Task<List<ActivityComponentPrePro>> ListActivityScript(int _env, string _pendingActivity, List<ActividadDespliegue> lstExcel)
+        private static async Task<List<ActivityComponentPrePro>> ListActivityScript(int _env, string _pendingActivity, List<ActividadDespliegue> lstExcel)
         {
 
             Task<List<ActivityComponentPrePro>> task0 = new Task<List<ActivityComponentPrePro>>(() =>
@@ -671,9 +674,9 @@ namespace AutoDischange.ViewModel.Helpers
 
             return await task0;
         }
-        
+
         //(importación de procesos)
-        public static async Task<List<ActivityComponentPrePro>> ListProcessImport(int _env, bool _poolManager, string _pendingActivity)
+        private static async Task<List<ActivityComponentPrePro>> ListProcessImport(int _env, bool _poolManager, string _pendingActivity)
         {
 
             Task<List<ActivityComponentPrePro>> task0 = new Task<List<ActivityComponentPrePro>>(() =>
@@ -830,7 +833,7 @@ namespace AutoDischange.ViewModel.Helpers
         }
 
         //manejo de pools (prender y apagar)
-        public static async Task<List<ActivityComponentPrePro>> ListPoolManager(int _env,string _pendingActivity)
+        private static async Task<List<ActivityComponentPrePro>> ListPoolManager(int _env,string _pendingActivity)
         {
 
             Task<List<ActivityComponentPrePro>> task0 = new Task<List<ActivityComponentPrePro>>(() =>
@@ -1078,7 +1081,7 @@ namespace AutoDischange.ViewModel.Helpers
         }
 
         //(importación de recursos)
-        public static async Task<List<ActivityComponentPrePro>> ListResoruceImport(int _env, string _pendingActivity)
+        private static async Task<List<ActivityComponentPrePro>> ListResoruceImport(int _env, string _pendingActivity)
         {
 
             Task<List<ActivityComponentPrePro>> task0 = new Task<List<ActivityComponentPrePro>>(() =>
@@ -1153,7 +1156,7 @@ namespace AutoDischange.ViewModel.Helpers
         }
 
         //EndExcel
-        public static async Task<List<ActivityComponentPrePro>> ListEndActivity(int _env, string _pendingActivity)
+        private static async Task<List<ActivityComponentPrePro>> ListEndActivity(int _env, string _pendingActivity)
         {
 
             Task<List<ActivityComponentPrePro>> task0 = new Task<List<ActivityComponentPrePro>>(() =>

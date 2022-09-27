@@ -117,10 +117,7 @@ namespace AutoDischange.ViewModel.Helpers
                 
                 if (lstExcel.Any())
                 {
-                    List<ActividadDespliegue> lstExcelPre = await ActividadDespliegueOrderBy(ActivityComponentListScriptList);
-                    List<ActividadDespliegue> lstExcelPro = await ActividadDespliegueOrderBy(ActivityComponentListScriptList);
-                    if (lstExcelPre.Any())
-                    {
+                   
 
                         List<ActivityComponentPrePro> lstExcelActivityPre = await ListActivityScript(0, ActivityResultListPre.Count().ToString(), lstExcel);
                         if (lstExcelActivityPre.Any())
@@ -131,23 +128,21 @@ namespace AutoDischange.ViewModel.Helpers
                             msPass = new MemoryStream();
                             msPassTemp.WriteTo(msPass);
                         }
-                        
-                    }
-                    if (lstExcelPro.Any())
-                    {
-                        List<ActivityComponentPrePro> lstExcelActivityPre = await ListActivityScript(1, ActivityResultListPro.Count().ToString(), lstExcel);
-                        if (lstExcelActivityPre.Any())
+
+                        List<ActivityComponentPrePro> lstExcelActivityPro = await ListActivityScript(1, ActivityResultListPro.Count().ToString(), lstExcel);
+                        if (lstExcelActivityPro.Any())
                         {
-                            ActivityResultListPro.AddRange(lstExcelActivityPre);//Lista de Script PRO
+                            ActivityResultListPro.AddRange(lstExcelActivityPro);//Lista de Script PRO
                             MemoryStream msPassTemp = new MemoryStream();
                             ExcelHelper.DeployActivity(msPass, ActivityResultListPro, "ActividadesParaDesplegarPro").WriteTo(msPassTemp);
                             msPass = new MemoryStream();
                             msPassTemp.WriteTo(msPass);
                         }
+
                     }
 
                    
-                }
+                
             }
 
 
@@ -163,9 +158,9 @@ namespace AutoDischange.ViewModel.Helpers
                     List<ActivityComponentListAlojables> ProcesosFullXml = ProcesosFull.FindAll(i => i.DischangeComponentName.FindAll(item => item.Contains($@"xml")).Any());
                     if (ProcesosFullXml.Any())
                     {
-                        ActivityProcessImportListPre = await ListProcessImport(0,false, $"{ActivityProcessImportListPre.Count()}");//Listado PRE
+                        ActivityProcessImportListPre = await ListProcessImport(0,false, $"{ActivityResultListPre.Count()}");//Listado PRE
                         
-                        ActivityProcessImportListPro = await ListProcessImport(1, false, $"{ActivityProcessImportListPro.Count()}");//Listado PRO
+                        ActivityProcessImportListPro = await ListProcessImport(1, false, $"{ActivityResultListPro.Count()}");//Listado PRO
                         if (ActivityProcessImportListPre.Any() ) //PRE
                         {
                             ActivityResultListPre.AddRange(ActivityProcessImportListPre);
@@ -176,7 +171,7 @@ namespace AutoDischange.ViewModel.Helpers
                         }
                         if (ActivityProcessImportListPro.Any()) //PRO
                         { 
-                            ActivityResultListPro.AddRange(ActivityProcessImportListPre);
+                            ActivityResultListPro.AddRange(ActivityResultListPro);
                             MemoryStream msPassTemp = new MemoryStream();
                             ExcelHelper.DeployActivity(msPass, ActivityResultListPro, "ActividadesParaDesplegarPro").WriteTo(msPassTemp);
                             msPass = new MemoryStream();
@@ -287,7 +282,7 @@ namespace AutoDischange.ViewModel.Helpers
                 msPassTemp.WriteTo(msPass);
 
             }
-            if (ActivityResoruceImportListPre.Any())
+            if (ActivityResoruceImportListPro.Any())
             {
                 ActivityResultListPro.AddRange(await ListEndActivity(1, $"{ActivityResultListPro.Count}")); //END EXCEL PRO
                 MemoryStream msPassTemp = new MemoryStream();
@@ -618,45 +613,53 @@ namespace AutoDischange.ViewModel.Helpers
                 {
                     _actividadPending = ActivityComponentPreProList.Count();
                 }
-                foreach (ActividadDespliegue item in lstExcel)
-                {
-                    ActivityComponentPrePro ActivityComponentPrePro = new ActivityComponentPrePro();
-                    ActivityComponentPrePro.font = new SLFont();
-                    ActivityComponentPrePro.font.Bold = true;
-                    if (_env == 0)
-                    {   //PRE                       
-                        ActivityComponentPrePro.PendindActivity = _actividadPending==0?"Ninguna": _actividadPending.ToString();
-                        ActivityComponentPrePro.TypeActivity = "Despliegue";
-                        ActivityComponentPrePro.rst.AppendText($"Ejecutar los siguientes ");
-                        ActivityComponentPrePro.rst.AppendText($"scripts {item.TipoScrpt} ", ActivityComponentPrePro.font);
-                        ActivityComponentPrePro.rst.AppendText($"en el ordern indicado: { System.Environment.NewLine}");
-                        ActivityComponentPrePro.rst.AppendText($"{item.NombArchv} { System.Environment.NewLine}");
-                        ActivityComponentPrePro.rst.AppendText($"{ System.Environment.NewLine}");
-                        ActivityComponentPrePro.rst.AppendText($"Servidor:  {item.ServerPre} { System.Environment.NewLine}");
-                        ActivityComponentPrePro.rst.AppendText($"Instancia:  {item.InstanciaPre} { System.Environment.NewLine}");
-                        ActivityComponentPrePro.rst.AppendText($"Esquema:  {item.EsquemaPre} { System.Environment.NewLine}", ActivityComponentPrePro.font);
-                        ActivityComponentPrePro.rst.AppendText($"Puerto:  {item.Puerto} { System.Environment.NewLine}");
 
-                        ActivityComponentPreProList.Add(ActivityComponentPrePro);
-                    }
-                    else
-                    {   //PRO
+                ActividadDespliegue lastGroup = lstExcel.Last();
+
+                for (int i =0; i <= lastGroup.IdGroup; i++)
+                {
+                    List<ActividadDespliegue> lstExcelGroup = lstExcel.Where(itemLocal => itemLocal.IdGroup == i).ToList();
+                    if (lstExcelGroup.Any())
+                    {
+                        ActivityComponentPrePro ActivityComponentPrePro = new ActivityComponentPrePro();
+                        ActivityComponentPrePro.font = new SLFont();
+                        ActivityComponentPrePro.font.Bold = true;
                         ActivityComponentPrePro.PendindActivity = _actividadPending == 0 ? "Ninguna" : _actividadPending.ToString();
                         ActivityComponentPrePro.TypeActivity = "Despliegue";
                         ActivityComponentPrePro.rst.AppendText($"Ejecutar los siguientes ");
-                        ActivityComponentPrePro.rst.AppendText($"scripts ${item.TipoScrpt} ", ActivityComponentPrePro.font);
+                        ActivityComponentPrePro.rst.AppendText($"scripts {lstExcelGroup.First().TipoScrpt} ", ActivityComponentPrePro.font);
                         ActivityComponentPrePro.rst.AppendText($"en el ordern indicado: { System.Environment.NewLine}");
-                        ActivityComponentPrePro.rst.AppendText($"{item.NombArchv} { System.Environment.NewLine}");
+                        foreach (ActividadDespliegue item in lstExcelGroup)
+                        {
+                            ActivityComponentPrePro.rst.AppendText($"{item.NombArchv} { System.Environment.NewLine}");
+                        }
                         ActivityComponentPrePro.rst.AppendText($"{ System.Environment.NewLine}");
-                        ActivityComponentPrePro.rst.AppendText($"Servidor:  {item.ServerPro} { System.Environment.NewLine}");
-                        ActivityComponentPrePro.rst.AppendText($"Instancia:  {item.InstanciaPro} { System.Environment.NewLine}");
-                        ActivityComponentPrePro.rst.AppendText($"Esquema:  {item.EsquemaPro} { System.Environment.NewLine}", ActivityComponentPrePro.font);
-                        ActivityComponentPrePro.rst.AppendText($"Puerto:  {item.Puerto} { System.Environment.NewLine}");
+                        if (_env == 0)
+                        {   //PRE                       
+
+                            ActivityComponentPrePro.rst.AppendText($"Servidor:  {lastGroup.ServerPre} { System.Environment.NewLine}");
+                            ActivityComponentPrePro.rst.AppendText($"Instancia:  {lastGroup.InstanciaPre} { System.Environment.NewLine}");
+                            ActivityComponentPrePro.rst.AppendText($"Esquema:  {lastGroup.EsquemaPre} { System.Environment.NewLine}", ActivityComponentPrePro.font);
+                            ActivityComponentPrePro.rst.AppendText($"Puerto:  {lastGroup.Puerto} { System.Environment.NewLine}");
+
+                        }
+                        else
+                        {   //PRO
+
+                            ActivityComponentPrePro.rst.AppendText($"Servidor:  {lastGroup.ServerPro} { System.Environment.NewLine}");
+                            ActivityComponentPrePro.rst.AppendText($"Instancia:  {lastGroup.InstanciaPro} { System.Environment.NewLine}");
+                            ActivityComponentPrePro.rst.AppendText($"Esquema:  {lastGroup.EsquemaPro} { System.Environment.NewLine}", ActivityComponentPrePro.font);
+                            ActivityComponentPrePro.rst.AppendText($"Puerto:  {lastGroup.Puerto} { System.Environment.NewLine}");
+
+                        }
 
                         ActivityComponentPreProList.Add(ActivityComponentPrePro);
+                        _actividadPending++;
                     }
-                    _actividadPending++;
+                    
                 }
+
+                
                 
                 
                 

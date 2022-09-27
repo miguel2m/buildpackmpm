@@ -171,7 +171,7 @@ namespace AutoDischange.ViewModel.Helpers
                         }
                         if (ActivityProcessImportListPro.Any()) //PRO
                         { 
-                            ActivityResultListPro.AddRange(ActivityResultListPro);
+                            ActivityResultListPro.AddRange(ActivityProcessImportListPro);
                             MemoryStream msPassTemp = new MemoryStream();
                             ExcelHelper.DeployActivity(msPass, ActivityResultListPro, "ActividadesParaDesplegarPro").WriteTo(msPassTemp);
                             msPass = new MemoryStream();

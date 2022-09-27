@@ -686,7 +686,7 @@ namespace AutoDischange.ViewModel.Helpers
                 {
                     if (_env == 0)
                     {   //PRE                       
-                        ActivityComponentPrePro.PendindActivity = !string.IsNullOrEmpty(_pendingActivity) ? _pendingActivity: "Ninguna" ;
+                        ActivityComponentPrePro.PendindActivity = int.Parse(_pendingActivity)==0 ? _pendingActivity: "Ninguna" ;
                         ActivityComponentPrePro.TypeActivity = "Despliegue";
                         //ActivityComponentPrePro.Activity = $"Entrar al servidor <b>SRNEUIWM1MXR309 180.228.64.204 Batch</b> y hacer las siguientes acciones:{ System.Environment.NewLine}";
                         ActivityComponentPrePro.rst.AppendText($"Entrar al servidor ");
@@ -699,7 +699,7 @@ namespace AutoDischange.ViewModel.Helpers
                     }
                     else
                     {   //PRO
-                        ActivityComponentPrePro.PendindActivity = !string.IsNullOrEmpty(_pendingActivity) ? _pendingActivity : "Ninguna";
+                        ActivityComponentPrePro.PendindActivity = int.Parse(_pendingActivity) == 0 ? _pendingActivity : "Ninguna";
                         ActivityComponentPrePro.TypeActivity = "Despliegue";
                         ActivityComponentPrePro.rst.AppendText($"Entrar al servidor ");
                         ActivityComponentPrePro.rst.AppendText($"SRVNEUPVWMX09 180.181.167.59 Batch", ActivityComponentPrePro.font);

@@ -158,9 +158,9 @@ namespace AutoDischange.ViewModel.Helpers
                     List<ActivityComponentListAlojables> ProcesosFullXml = ProcesosFull.FindAll(i => i.DischangeComponentName.FindAll(item => item.Contains($@"xml")).Any());
                     if (ProcesosFullXml.Any())
                     {
-                        ActivityProcessImportListPre = await ListProcessImport(0,false, $"{ActivityResultListPre.Count()}");//Listado PRE
+                        ActivityProcessImportListPre = await ListProcessImport(0,false, $"0");//Listado PRE
                         
-                        ActivityProcessImportListPro = await ListProcessImport(1, false, $"{ActivityResultListPro.Count()}");//Listado PRO
+                        ActivityProcessImportListPro = await ListProcessImport(1, false, $"0");//Listado PRO
                         if (ActivityProcessImportListPre.Any() ) //PRE
                         {
                             ActivityResultListPre.AddRange(ActivityProcessImportListPre);
@@ -272,8 +272,8 @@ namespace AutoDischange.ViewModel.Helpers
 
             }
 
-            //End Excel
-            if (ActivityResoruceImportListPre.Any())
+            //End Excel PRE
+            if (ActivityResultListPre.Any())
             {
                 ActivityResultListPre.AddRange(await ListEndActivity(0, $"{ActivityResultListPre.Count}")); //END EXCEL PRE
                 MemoryStream msPassTemp = new MemoryStream();
@@ -282,7 +282,8 @@ namespace AutoDischange.ViewModel.Helpers
                 msPassTemp.WriteTo(msPass);
 
             }
-            if (ActivityResoruceImportListPro.Any())
+            //End Excel PRO
+            if (ActivityResultListPro.Any())
             {
                 ActivityResultListPro.AddRange(await ListEndActivity(1, $"{ActivityResultListPro.Count}")); //END EXCEL PRO
                 MemoryStream msPassTemp = new MemoryStream();
@@ -594,8 +595,9 @@ namespace AutoDischange.ViewModel.Helpers
 
             return await task0;
         }
-
-        //TODO Script ActivityComponentPrePro
+        
+        //Actividades de despliegue
+        //Script ActivityComponentPrePro
         public static async Task<List<ActivityComponentPrePro>> ListActivityScript(int _env, string _pendingActivity, List<ActividadDespliegue> lstExcel)
         {
 
@@ -668,6 +670,7 @@ namespace AutoDischange.ViewModel.Helpers
 
             return await task0;
         }
+        
         //(importación de procesos)
         public static async Task<List<ActivityComponentPrePro>> ListProcessImport(int _env, bool _poolManager, string _pendingActivity)
         {

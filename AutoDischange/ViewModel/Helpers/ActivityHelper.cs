@@ -291,6 +291,7 @@ namespace AutoDischange.ViewModel.Helpers
                 msPass = new MemoryStream();
                 msPassTemp.WriteTo(msPass);
             }
+            //Guardar Excel
             if (msPass.CanRead)
                 ExcelHelper.SaveExcelEntrega(msPass, pathUser);
         }

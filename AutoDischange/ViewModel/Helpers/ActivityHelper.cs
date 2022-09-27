@@ -112,64 +112,41 @@ namespace AutoDischange.ViewModel.Helpers
 
             if (ActivityComponentListScriptList.Any())
             {
-                List<ActividadDespliegue> lstActDesp = new List<ActividadDespliegue>();
-                List<ActividadDespliegue> lstExcel = new List<ActividadDespliegue>();
-                string cadNomEsq = string.Empty;
-                //CONOCER LAS ESTRUCTURA DEL NOMBRE DEL ARCHIVO
-                foreach (ActivityComponentListScript item in ActivityComponentListScriptList)
-                {
-                    ActividadDespliegue actividadDespliegues = new ActividadDespliegue();
-                    if ((item.DischangeComponentName[0].Contains("DML") || item.DischangeComponentName[0].Contains("DDL") || item.DischangeComponentName[0].Contains("SIN")) && 
-                        (item.DischangeComponentName[0].Contains("DOC") || item.DischangeComponentName[0].Contains("SEG") || item.DischangeComponentName[0].Contains("ECL") || item.DischangeComponentName[0].Contains("APR") || item.DischangeComponentName[0].Contains("HST")) &&
-                        (item.DischangeComponentName[0].Contains("ESQ") || item.DischangeComponentName[0].Contains("CON")) &&
-                        item.DischangeComponentName[0].Contains(".sql"))
-                    {
-                        actividadDespliegues.OrdenEjec = item.DischangeComponentName[0].Substring(0, 2);
-                        actividadDespliegues.TipoScrpt = GetAttrbScript(1, item.DischangeComponentName[0]);
-                        actividadDespliegues.NombArchv = item.DischangeComponentName[0];
-                        actividadDespliegues.NombEsqum = GetAttrbScript(2, item.DischangeComponentName[0]);
-                        actividadDespliegues.TipoUsr = GetAttrbScript(3, item.DischangeComponentName[0]);
-                        actividadDespliegues.ServerPre = "DBNEUIVLMX01";
-                        actividadDespliegues.ServerPro = "DBNEUPVLMX01 y DBNEUPVLMX02";
-                        actividadDespliegues.InstanciaPre = "otmxdisp";
-                        actividadDespliegues.InstanciaPro = "oemxdisp";
-                        actividadDespliegues.EsquemaPre = "gchtm" + GetAttrbScript(2, item.DischangeComponentName[0]).ToLower();
-                        actividadDespliegues.EsquemaPro = "prhtm" + GetAttrbScript(2, item.DischangeComponentName[0]).ToLower();
-                        actividadDespliegues.Puerto = "1660";
-                        lstActDesp.Add(actividadDespliegues);
-                    }
-                }
-
-                //ALGORITMO QUE EVALUA LISTA CONTRA SI MISMA Y ORDENARLA
-                //AGRUPE LOS ARCHIVOS SQL POR EL ATRIBUTO IdGroup PARA QUE SE TE HAGA SENCILLO AGREGARLOS AL EXCEL
                 
-                int i = 0, grupo = 1;
-                foreach (var item in lstActDesp)
+                List<ActividadDespliegue> lstExcel = await ActividadDespliegueOrderBy(ActivityComponentListScriptList);
+                
+                if (lstExcel.Any())
                 {
-                    if (!lstExcel.Contains(item))
+                    List<ActividadDespliegue> lstExcelPre = await ActividadDespliegueOrderBy(ActivityComponentListScriptList);
+                    List<ActividadDespliegue> lstExcelPro = await ActividadDespliegueOrderBy(ActivityComponentListScriptList);
+                    if (lstExcelPre.Any())
                     {
-                        foreach (var item0 in lstActDesp)
+
+                        List<ActivityComponentPrePro> lstExcelActivityPre = await ListActivityScript(0, ActivityResultListPre.Count().ToString(), lstExcel);
+                        if (lstExcelActivityPre.Any())
                         {
-                            if (item.OrdenEjec == item0.OrdenEjec)
-                            {
-                                lstExcel.Add(item0);
-                                lstExcel[i].IdGroup = grupo;
-                                i++;
-                            }
-                            else
-                            {
-                                if (item.TipoScrpt == item0.TipoScrpt &&
-                                    item.NombEsqum == item0.NombEsqum &&
-                                    item.TipoUsr == item0.TipoUsr)
-                                {
-                                    lstExcel.Add(item0);
-                                    lstExcel[i].IdGroup = grupo;
-                                    i++;
-                                }
-                            }
+                            ActivityResultListPre.AddRange(lstExcelActivityPre);//Lista de Script PRE
+                            MemoryStream msPassTemp = new MemoryStream();
+                            ExcelHelper.DeployActivity(msPass, ActivityResultListPre, "ActividadesParaDesplegarPre").WriteTo(msPassTemp);
+                            msPass = new MemoryStream();
+                            msPassTemp.WriteTo(msPass);
+                        }
+                        
+                    }
+                    if (lstExcelPro.Any())
+                    {
+                        List<ActivityComponentPrePro> lstExcelActivityPre = await ListActivityScript(1, ActivityResultListPro.Count().ToString(), lstExcel);
+                        if (lstExcelActivityPre.Any())
+                        {
+                            ActivityResultListPro.AddRange(lstExcelActivityPre);//Lista de Script PRO
+                            MemoryStream msPassTemp = new MemoryStream();
+                            ExcelHelper.DeployActivity(msPass, ActivityResultListPro, "ActividadesParaDesplegarPro").WriteTo(msPassTemp);
+                            msPass = new MemoryStream();
+                            msPassTemp.WriteTo(msPass);
                         }
                     }
-                    grupo++;
+
+                   
                 }
             }
 
@@ -186,9 +163,9 @@ namespace AutoDischange.ViewModel.Helpers
                     List<ActivityComponentListAlojables> ProcesosFullXml = ProcesosFull.FindAll(i => i.DischangeComponentName.FindAll(item => item.Contains($@"xml")).Any());
                     if (ProcesosFullXml.Any())
                     {
-                        ActivityProcessImportListPre = await ListProcessImport(0,false,0);//Listado PRE
+                        ActivityProcessImportListPre = await ListProcessImport(0,false, $"{ActivityProcessImportListPre.Count()}");//Listado PRE
                         
-                        ActivityProcessImportListPro = await ListProcessImport(1, false, 0);//Listado PRO
+                        ActivityProcessImportListPro = await ListProcessImport(1, false, $"{ActivityProcessImportListPro.Count()}");//Listado PRO
                         if (ActivityProcessImportListPre.Any() ) //PRE
                         {
                             ActivityResultListPre.AddRange(ActivityProcessImportListPre);
@@ -218,11 +195,11 @@ namespace AutoDischange.ViewModel.Helpers
                 //PRE
                 if (ActivityProcessImportListPre.Any())
                 {
-                    ActivityPoolListPre = await ListPoolManager(0, ActivityProcessImportListPre.Count());
+                    ActivityPoolListPre = await ListPoolManager(0, $"{ActivityProcessImportListPre.Count()}");
                 }
                 else
                 {
-                    ActivityPoolListPre = await ListPoolManager(0, 0);
+                    ActivityPoolListPre = await ListPoolManager(0, "0");
                 }
 
                 if (ActivityPoolListPre.Any())
@@ -231,7 +208,7 @@ namespace AutoDischange.ViewModel.Helpers
                     if (ActivityProcessImportListPre.Any())
                     {
 
-                        ActivityResultListPre.AddRange(await ListProcessImport(0, true, ActivityResultListPre.Count()));
+                        ActivityResultListPre.AddRange(await ListProcessImport(0, true, $"{ActivityProcessImportListPre.Count()}"));
                     }
                     MemoryStream msPassTemp = new MemoryStream();
                     ExcelHelper.DeployActivity(msPass, ActivityResultListPre, "ActividadesParaDesplegarPre").WriteTo(msPassTemp);
@@ -241,11 +218,11 @@ namespace AutoDischange.ViewModel.Helpers
                 //PRO
                 if (ActivityProcessImportListPro.Any())
                 {
-                    ActivityPoolListPro = await ListPoolManager(1, ActivityProcessImportListPro.Count());
+                    ActivityPoolListPro = await ListPoolManager(1, $"{ActivityProcessImportListPro.Count()}");
                 }
                 else
                 {
-                    ActivityPoolListPro = await ListPoolManager(1, 0);
+                    ActivityPoolListPro = await ListPoolManager(1, "0");
                 }
 
                 if (ActivityPoolListPro.Any())
@@ -254,7 +231,7 @@ namespace AutoDischange.ViewModel.Helpers
                     if (ActivityProcessImportListPro.Any())
                     {
 
-                        ActivityResultListPro.AddRange(await ListProcessImport(1, true, ActivityResultListPro.Count()));
+                        ActivityResultListPro.AddRange(await ListProcessImport(1, true, $"{ActivityResultListPro.Count()}"));
                     }
                     
                     MemoryStream msPassTemp = new MemoryStream();
@@ -272,9 +249,9 @@ namespace AutoDischange.ViewModel.Helpers
                 List<ActivityComponentListAlojables> RecursosCsv = ActivityComponentListAlojablesList.FindAll(i => i.DischangeComponentName.FindAll(item => item.Contains($@"customer-resources.csv")).Any());
                 if (RecursosCsv.Any())
                 {
-                    ActivityResoruceImportListPre = await ListResoruceImport(0, ActivityProcessImportListPre.Count());//Listado PRE
+                    ActivityResoruceImportListPre = await ListResoruceImport(0, $"{ActivityProcessImportListPre.Count()}");//Listado PRE
 
-                    ActivityResoruceImportListPro = await ListResoruceImport(1, ActivityProcessImportListPro.Count());//Listado PRO
+                    ActivityResoruceImportListPro = await ListResoruceImport(1, $"{ActivityProcessImportListPro.Count()}");//Listado PRO
 
                     if (ActivityResoruceImportListPre.Any()) //PRE
                     {
@@ -303,7 +280,7 @@ namespace AutoDischange.ViewModel.Helpers
             //End Excel
             if (ActivityResoruceImportListPre.Any())
             {
-                ActivityResultListPre.AddRange(await ListEndActivity(0, ActivityResultListPre.Count)); //END EXCEL PRE
+                ActivityResultListPre.AddRange(await ListEndActivity(0, $"{ActivityResultListPre.Count}")); //END EXCEL PRE
                 MemoryStream msPassTemp = new MemoryStream();
                 ExcelHelper.DeployActivity(msPass, ActivityResultListPre, "ActividadesParaDesplegarPre").WriteTo(msPassTemp);
                 msPass = new MemoryStream();
@@ -312,7 +289,7 @@ namespace AutoDischange.ViewModel.Helpers
             }
             if (ActivityResoruceImportListPre.Any())
             {
-                ActivityResultListPro.AddRange(await ListEndActivity(1, ActivityResultListPro.Count)); //END EXCEL PRO
+                ActivityResultListPro.AddRange(await ListEndActivity(1, $"{ActivityResultListPro.Count}")); //END EXCEL PRO
                 MemoryStream msPassTemp = new MemoryStream();
                 ExcelHelper.DeployActivity(msPass, ActivityResultListPro, "ActividadesParaDesplegarPro").WriteTo(msPassTemp);
                 msPass = new MemoryStream();
@@ -391,7 +368,81 @@ namespace AutoDischange.ViewModel.Helpers
             }
             return fileFullName;
         }
+        //Ordenar listado de actividades para los script
+        private static async Task<List<ActividadDespliegue>> ActividadDespliegueOrderBy(List<ActivityComponentListScript> ActivityComponentListScriptList)
+        {
+            Task<List<ActividadDespliegue>> task0 = new Task<List<ActividadDespliegue>>(() =>
+            {
+                
+                List<ActividadDespliegue> lstActDesp = new List<ActividadDespliegue>();
+                List<ActividadDespliegue> lstExcel = new List<ActividadDespliegue>();
+                string cadNomEsq = string.Empty;
+                //CONOCER LAS ESTRUCTURA DEL NOMBRE DEL ARCHIVO
+                foreach (ActivityComponentListScript item in ActivityComponentListScriptList)
+                {
+                    ActividadDespliegue actividadDespliegues = new ActividadDespliegue();
+                    if ((item.DischangeComponentName[0].Contains("DML") || item.DischangeComponentName[0].Contains("DDL") || item.DischangeComponentName[0].Contains("SIN")) &&
+                        (item.DischangeComponentName[0].Contains("DOC") || item.DischangeComponentName[0].Contains("SEG") || item.DischangeComponentName[0].Contains("ECL") || item.DischangeComponentName[0].Contains("APR") || item.DischangeComponentName[0].Contains("HST")) &&
+                        (item.DischangeComponentName[0].Contains("ESQ") || item.DischangeComponentName[0].Contains("CON")) &&
+                        item.DischangeComponentName[0].Contains(".sql"))
+                    {
+                        actividadDespliegues.OrdenEjec = item.DischangeComponentName[0].Substring(0, 2);
+                        actividadDespliegues.TipoScrpt = GetAttrbScript(1, item.DischangeComponentName[0]);
+                        actividadDespliegues.NombArchv = item.DischangeComponentName[0];
+                        actividadDespliegues.NombEsqum = GetAttrbScript(2, item.DischangeComponentName[0]);
+                        actividadDespliegues.TipoUsr = GetAttrbScript(3, item.DischangeComponentName[0]);
+                        actividadDespliegues.ServerPre = "DBNEUIVLMX01";
+                        actividadDespliegues.ServerPro = "DBNEUPVLMX01 y DBNEUPVLMX02";
+                        actividadDespliegues.InstanciaPre = "otmxdisp";
+                        actividadDespliegues.InstanciaPro = "oemxdisp";
+                        actividadDespliegues.EsquemaPre = "gchtm" + GetAttrbScript(2, item.DischangeComponentName[0]).ToLower();
+                        actividadDespliegues.EsquemaPro = "prhtm" + GetAttrbScript(2, item.DischangeComponentName[0]).ToLower();
+                        actividadDespliegues.Puerto = "1660";
+                        lstActDesp.Add(actividadDespliegues);
+                    }
+                }
 
+                //ALGORITMO QUE EVALUA LISTA CONTRA SI MISMA Y ORDENARLA
+                //AGRUPE LOS ARCHIVOS SQL POR EL ATRIBUTO IdGroup PARA QUE SE TE HAGA SENCILLO AGREGARLOS AL EXCEL
+
+                int i = 0, grupo = 1;
+                foreach (var item in lstActDesp)
+                {
+                    if (!lstExcel.Contains(item))
+                    {
+                        foreach (var item0 in lstActDesp)
+                        {
+                            if (item.OrdenEjec == item0.OrdenEjec)
+                            {
+                                lstExcel.Add(item0);
+                                lstExcel[i].IdGroup = grupo;
+                                i++;
+                            }
+                            else
+                            {
+                                if (item.TipoScrpt == item0.TipoScrpt &&
+                                    item.NombEsqum == item0.NombEsqum &&
+                                    item.TipoUsr == item0.TipoUsr)
+                                {
+                                    lstExcel.Add(item0);
+                                    lstExcel[i].IdGroup = grupo;
+                                    i++;
+                                }
+                            }
+                        }
+                    }
+                    grupo++;
+                }
+                return lstExcel;
+
+            });
+            task0.Start();
+
+
+            return await task0;
+            
+            
+        }
         //Read  ListPathDischange (Guia de ubicaciones)
         public static async Task<List<string>> ListPathDischange(IEnumerable<System.IO.FileInfo> listInput)
         {
@@ -550,9 +601,75 @@ namespace AutoDischange.ViewModel.Helpers
         }
 
         //TODO Script ActivityComponentPrePro
+        public static async Task<List<ActivityComponentPrePro>> ListActivityScript(int _env, string _pendingActivity, List<ActividadDespliegue> lstExcel)
+        {
 
+            Task<List<ActivityComponentPrePro>> task0 = new Task<List<ActivityComponentPrePro>>(() =>
+            {
+                List<ActivityComponentPrePro> ActivityComponentPreProList = new List<ActivityComponentPrePro>();
+                
+                //int _contador = 1;
+                int _actividadPending;
+                if (!string.IsNullOrEmpty(_pendingActivity))
+                {
+                    _actividadPending = int.Parse(_pendingActivity) + ActivityComponentPreProList.Count();
+                }
+                else
+                {
+                    _actividadPending = ActivityComponentPreProList.Count();
+                }
+                foreach (ActividadDespliegue item in lstExcel)
+                {
+                    ActivityComponentPrePro ActivityComponentPrePro = new ActivityComponentPrePro();
+                    ActivityComponentPrePro.font = new SLFont();
+                    ActivityComponentPrePro.font.Bold = true;
+                    if (_env == 0)
+                    {   //PRE                       
+                        ActivityComponentPrePro.PendindActivity = _actividadPending==0?"Ninguna": _actividadPending.ToString();
+                        ActivityComponentPrePro.TypeActivity = "Despliegue";
+                        ActivityComponentPrePro.rst.AppendText($"Ejecutar los siguientes ");
+                        ActivityComponentPrePro.rst.AppendText($"scripts {item.TipoScrpt} ", ActivityComponentPrePro.font);
+                        ActivityComponentPrePro.rst.AppendText($"en el ordern indicado: { System.Environment.NewLine}");
+                        ActivityComponentPrePro.rst.AppendText($"{item.NombArchv} { System.Environment.NewLine}");
+                        ActivityComponentPrePro.rst.AppendText($"{ System.Environment.NewLine}");
+                        ActivityComponentPrePro.rst.AppendText($"Servidor:  {item.ServerPre} { System.Environment.NewLine}");
+                        ActivityComponentPrePro.rst.AppendText($"Instancia:  {item.InstanciaPre} { System.Environment.NewLine}");
+                        ActivityComponentPrePro.rst.AppendText($"Esquema:  {item.EsquemaPre} { System.Environment.NewLine}", ActivityComponentPrePro.font);
+                        ActivityComponentPrePro.rst.AppendText($"Puerto:  {item.Puerto} { System.Environment.NewLine}");
+
+                        ActivityComponentPreProList.Add(ActivityComponentPrePro);
+                    }
+                    else
+                    {   //PRO
+                        ActivityComponentPrePro.PendindActivity = _actividadPending == 0 ? "Ninguna" : _actividadPending.ToString();
+                        ActivityComponentPrePro.TypeActivity = "Despliegue";
+                        ActivityComponentPrePro.rst.AppendText($"Ejecutar los siguientes ");
+                        ActivityComponentPrePro.rst.AppendText($"scripts ${item.TipoScrpt} ", ActivityComponentPrePro.font);
+                        ActivityComponentPrePro.rst.AppendText($"en el ordern indicado: { System.Environment.NewLine}");
+                        ActivityComponentPrePro.rst.AppendText($"{item.NombArchv} { System.Environment.NewLine}");
+                        ActivityComponentPrePro.rst.AppendText($"{ System.Environment.NewLine}");
+                        ActivityComponentPrePro.rst.AppendText($"Servidor:  {item.ServerPro} { System.Environment.NewLine}");
+                        ActivityComponentPrePro.rst.AppendText($"Instancia:  {item.InstanciaPro} { System.Environment.NewLine}");
+                        ActivityComponentPrePro.rst.AppendText($"Esquema:  {item.EsquemaPro} { System.Environment.NewLine}", ActivityComponentPrePro.font);
+                        ActivityComponentPrePro.rst.AppendText($"Puerto:  {item.Puerto} { System.Environment.NewLine}");
+
+                        ActivityComponentPreProList.Add(ActivityComponentPrePro);
+                    }
+                    _actividadPending++;
+                }
+                
+                
+                
+
+                return ActivityComponentPreProList;
+            });
+            task0.Start();
+
+
+            return await task0;
+        }
         //(importación de procesos)
-        public static async Task<List<ActivityComponentPrePro>> ListProcessImport(int _env, bool _poolManager, int? _pendingActivity)
+        public static async Task<List<ActivityComponentPrePro>> ListProcessImport(int _env, bool _poolManager, string _pendingActivity)
         {
 
             Task<List<ActivityComponentPrePro>> task0 = new Task<List<ActivityComponentPrePro>>(() =>
@@ -565,8 +682,8 @@ namespace AutoDischange.ViewModel.Helpers
                 if (!_poolManager)
                 {
                     if (_env == 0)
-                    {   //PRE
-                        ActivityComponentPrePro.PendindActivity = "Ninguna";
+                    {   //PRE                       
+                        ActivityComponentPrePro.PendindActivity = !string.IsNullOrEmpty(_pendingActivity) ? _pendingActivity: "Ninguna" ;
                         ActivityComponentPrePro.TypeActivity = "Despliegue";
                         //ActivityComponentPrePro.Activity = $"Entrar al servidor <b>SRNEUIWM1MXR309 180.228.64.204 Batch</b> y hacer las siguientes acciones:{ System.Environment.NewLine}";
                         ActivityComponentPrePro.rst.AppendText($"Entrar al servidor ");
@@ -579,7 +696,7 @@ namespace AutoDischange.ViewModel.Helpers
                     }
                     else
                     {   //PRO
-                        ActivityComponentPrePro.PendindActivity = "Ninguna";
+                        ActivityComponentPrePro.PendindActivity = !string.IsNullOrEmpty(_pendingActivity) ? _pendingActivity : "Ninguna";
                         ActivityComponentPrePro.TypeActivity = "Despliegue";
                         ActivityComponentPrePro.rst.AppendText($"Entrar al servidor ");
                         ActivityComponentPrePro.rst.AppendText($"SRVNEUPVWMX09 180.181.167.59 Batch", ActivityComponentPrePro.font);
@@ -709,7 +826,7 @@ namespace AutoDischange.ViewModel.Helpers
         }
 
         //manejo de pools (prender y apagar)
-        public static async Task<List<ActivityComponentPrePro>> ListPoolManager(int _env,int _pendingActivity)
+        public static async Task<List<ActivityComponentPrePro>> ListPoolManager(int _env,string _pendingActivity)
         {
 
             Task<List<ActivityComponentPrePro>> task0 = new Task<List<ActivityComponentPrePro>>(() =>
@@ -722,7 +839,7 @@ namespace AutoDischange.ViewModel.Helpers
                 if (_env == 0) //0 Pre 1 Pro
                 {   //PRE
                     
-                    ActivityComponentPrePro.PendindActivity = "Ninguna";
+                    ActivityComponentPrePro.PendindActivity = !string.IsNullOrEmpty(_pendingActivity) ? _pendingActivity : "Ninguna"; ;
                     ActivityComponentPrePro.TypeActivity = "Despliegue";
                     ActivityComponentPrePro.rst.AppendText($"Bajar pools ", ActivityComponentPrePro.font);
                     ActivityComponentPrePro.rst.AppendText($"de todos los servidores.");
@@ -743,8 +860,16 @@ namespace AutoDischange.ViewModel.Helpers
                     //ActivityComponentPrePro.Activity += $@"<b>Alojables</b>{ System.Environment.NewLine}";
                     //ActivityComponentPrePro.Activity += $@"<b>Configurables</b>{ System.Environment.NewLine}";
                     ActivityComponentPreProList.Add(ActivityComponentPrePro);
-
-                    int _actividadPending = _pendingActivity + ActivityComponentPreProList.Count();
+                    int _actividadPending;
+                    if (!string.IsNullOrEmpty(_pendingActivity))
+                    {
+                         _actividadPending = int.Parse(_pendingActivity) + ActivityComponentPreProList.Count();
+                    }
+                    else
+                    {
+                        _actividadPending =  ActivityComponentPreProList.Count();
+                    }
+                    
                     ActivityComponentPrePro = new ActivityComponentPrePro();
                     ActivityComponentPrePro.font = new SLFont();
                     ActivityComponentPrePro.font.Bold = true;
@@ -848,8 +973,15 @@ namespace AutoDischange.ViewModel.Helpers
                     //ActivityComponentPrePro.Activity += $@"<b>Alojables</b>{ System.Environment.NewLine}";
                     //ActivityComponentPrePro.Activity += $@"<b>Configurables</b>{ System.Environment.NewLine}";
                     ActivityComponentPreProList.Add(ActivityComponentPrePro);
-
-                    int _actividadPending = _pendingActivity + ActivityComponentPreProList.Count();
+                    int _actividadPending;
+                    if (!string.IsNullOrEmpty(_pendingActivity))
+                    {
+                        _actividadPending = int.Parse(_pendingActivity) + ActivityComponentPreProList.Count();
+                    }
+                    else
+                    {
+                        _actividadPending = ActivityComponentPreProList.Count();
+                    }
                     ActivityComponentPrePro = new ActivityComponentPrePro();
                     ActivityComponentPrePro.font = new SLFont();
                     ActivityComponentPrePro.font.Bold = true;
@@ -942,7 +1074,7 @@ namespace AutoDischange.ViewModel.Helpers
         }
 
         //(importación de recursos)
-        public static async Task<List<ActivityComponentPrePro>> ListResoruceImport(int _env, int _pendingActivity)
+        public static async Task<List<ActivityComponentPrePro>> ListResoruceImport(int _env, string _pendingActivity)
         {
 
             Task<List<ActivityComponentPrePro>> task0 = new Task<List<ActivityComponentPrePro>>(() =>
@@ -955,7 +1087,7 @@ namespace AutoDischange.ViewModel.Helpers
 
                 if (_env == 0)
                 {   //PRE
-                    ActivityComponentPrePro.PendindActivity = _pendingActivity.ToString();
+                    ActivityComponentPrePro.PendindActivity = !string.IsNullOrEmpty(_pendingActivity) ? _pendingActivity : "Ninguna";
                     ActivityComponentPrePro.TypeActivity = "Despliegue";
                     ActivityComponentPrePro.rst.AppendText($@"En el servidor.{ System.Environment.NewLine}");
                     ActivityComponentPrePro.rst.AppendText($"SRNEUIWM1MXR309 180.228.64.204 Batch:", ActivityComponentPrePro.font);
@@ -981,7 +1113,7 @@ namespace AutoDischange.ViewModel.Helpers
                 }
                 else
                 {   //PRO
-                    ActivityComponentPrePro.PendindActivity = _pendingActivity.ToString();
+                    ActivityComponentPrePro.PendindActivity = !string.IsNullOrEmpty(_pendingActivity) ? _pendingActivity : "Ninguna";
                     ActivityComponentPrePro.TypeActivity = "Despliegue";
                     ActivityComponentPrePro.rst.AppendText($@"En el servidor.{ System.Environment.NewLine}");
                     ActivityComponentPrePro.rst.AppendText($"SRVNEUPVWMX09 180.181.167.59 Batch:", ActivityComponentPrePro.font);
@@ -1017,7 +1149,7 @@ namespace AutoDischange.ViewModel.Helpers
         }
 
         //EndExcel
-        public static async Task<List<ActivityComponentPrePro>> ListEndActivity(int _env, int _pendingActivity)
+        public static async Task<List<ActivityComponentPrePro>> ListEndActivity(int _env, string _pendingActivity)
         {
 
             Task<List<ActivityComponentPrePro>> task0 = new Task<List<ActivityComponentPrePro>>(() =>
@@ -1027,7 +1159,7 @@ namespace AutoDischange.ViewModel.Helpers
                 ActivityComponentPrePro.font = new SLFont();
                 ActivityComponentPrePro.font.Bold = true;
                 //int _contador = 1;
-                ActivityComponentPrePro.PendindActivity = _pendingActivity.ToString();
+                ActivityComponentPrePro.PendindActivity = ActivityComponentPrePro.PendindActivity = !string.IsNullOrEmpty(_pendingActivity) ? _pendingActivity : "Ninguna";
                 ActivityComponentPrePro.TypeActivity = "Despliegue";
                 ActivityComponentPrePro.rst.AppendText($"Generar fingerprint { System.Environment.NewLine}", ActivityComponentPrePro.font);
                 //ActivityComponentPrePro.Activity = $"<b>Generar fingerprint</b>{ System.Environment.NewLine}";
@@ -1036,8 +1168,16 @@ namespace AutoDischange.ViewModel.Helpers
                 ActivityComponentPrePro = new ActivityComponentPrePro();
                 ActivityComponentPrePro.font = new SLFont();
                 ActivityComponentPrePro.font.Bold = true;
-
-                ActivityComponentPrePro.PendindActivity = (_pendingActivity + ActivityComponentPreProList.Count()).ToString();
+                int _actividadPending;
+                if (!string.IsNullOrEmpty(_pendingActivity))
+                {
+                    _actividadPending = int.Parse(_pendingActivity) + ActivityComponentPreProList.Count();
+                }
+                else
+                {
+                    _actividadPending = ActivityComponentPreProList.Count();
+                }
+                ActivityComponentPrePro.PendindActivity = (_actividadPending).ToString();
                 ActivityComponentPrePro.TypeActivity = "Despliegue";
                 ActivityComponentPrePro.rst.AppendText($"Solicitar logs { System.Environment.NewLine}", ActivityComponentPrePro.font);
                 //ActivityComponentPrePro.Activity = $"<b>Solicitar logs</b>{ System.Environment.NewLine}";

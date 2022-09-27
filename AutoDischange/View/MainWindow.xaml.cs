@@ -30,6 +30,18 @@ namespace AutoDischange.View
         public MainWindow()
         {
             InitializeComponent();
+
+            //SOLO CON PROPOSITOS DEL EXCEL DE ENTREGA
+            //CargaDatosExcel();
+        }
+
+        public void CargaDatosExcel()
+        {
+            //necesito acceder a la carpeta del paquete y usare esta ruta de ejemplo
+            //string rutaPrueba = "C:\\Users\\edgar.linarez\\OneDrive - MPM SOFTWARE SLU\\Escritorio\\pruebasAuth\\PrimerEntrega\\Componentes\\Scripts\\DIS\\";
+
+            //vamos a verificar si el directorio existe
+            //ExcelHelper.ObtenerDatosScriptSql(rutaPrueba);
         }
 
 

@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Configuration;
 using System.IO;
 using System.Linq;
+using System.Security;
+using System.Security.Permissions;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -58,21 +60,24 @@ namespace AutoDischange.ViewModel.Helpers
                     Directory.CreateDirectory(rutaF);
                 }
 
+                string rutaFileFinal = rutaF + fileExamp;
                 //Verifico que el archivo en directorio destino exista o no
-                if (File.Exists(Path.Combine(rutaI, fileExamp)))
+                if (File.Exists(rutaFileFinal))
                 {
                     //SI SE TRATA DE UN CSV POR UNA EXTRANA RAZON ME DA UN ERROR DE EXCEPCION CUANDO ES ESTE TIPO DE ARCHIVO LUEGO LO VEO
-                    if (fileExamp.Contains(".csv"))
+                    if (fileExamp.Contains(".csv") || fileExamp.Contains(".sql"))
                     {
-                        File.SetAttributes(rutaF, FileAttributes.Normal);
-                        File.Delete(Path.Combine(rutaF, fileExamp));
+                        File.SetAttributes(rutaFileFinal, FileAttributes.Normal);
+                        File.Delete(rutaFileFinal);
                     }
-                    //Copiar archivo
-                    File.Copy(rutaI + fileExamp, rutaF + fileExamp, true);
                 }
+
+                //Copiar archivo
+                File.Copy(rutaI + fileExamp, rutaFileFinal, true);
             }
-            catch (Exception)
+            catch (Exception e)
             {
+                string aa = e.Message;
                 throw;
             }
             return "El conjunto de directorios fue copiado correctamente.";

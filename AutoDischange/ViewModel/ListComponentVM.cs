@@ -107,118 +107,139 @@ namespace AutoDischange.ViewModel
         }
 
         public async void copyToJenkins()
-        {            
+        {
+            ListComponentStatus = $"Leyendo paquetes";
             var changesetList = (DatabaseHelper.Read<DischangeChangeset>()).ToList();
             List<TfsItem> TodosItemTfs = new List<TfsItem>();
             List<DischangePath> DischangePathList = new List<DischangePath>();
             List<string> PathGU = new List<string>();
+            
             if (changesetList.Count > 0)
             {
-                foreach (DischangeChangeset item in changesetList)
+                try
                 {
-                    //TODOS LOS COMPONENTES DEL CHANGESET
-                    List<TfsItem> TodosItmTfs2 = await TFSRequest.GetChangeset(item.Changeset);
-                    if (!string.IsNullOrEmpty(item.Branch))
+                    ListComponentStatus = $"Leyendo Changeset";
+                    foreach (DischangeChangeset item in changesetList)
                     {
-                        TodosItmTfs2 = TodosItmTfs2.FindAll((item2) => item2.path.Contains(item.Branch));
-                    }
-
-                    if (TodosItmTfs2.FirstOrDefault() != null)
-                    {
-                        foreach (TfsItem itemLocal in TodosItmTfs2)
+                        //TODOS LOS COMPONENTES DEL CHANGESET
+                        List<TfsItem> TodosItmTfs2 = await TFSRequest.GetChangeset(item.Changeset);
+                        if (!string.IsNullOrEmpty(item.Branch))
                         {
-                            if (!string.IsNullOrEmpty(item.Branch))
+                            TodosItmTfs2 = TodosItmTfs2.FindAll((item2) => item2.path.Contains(item.Branch));
+                        }
+
+                        if (TodosItmTfs2.FirstOrDefault() != null)
+                        {
+                            foreach (TfsItem itemLocal in TodosItmTfs2)
                             {
-                                if (itemLocal.path.Contains(item.Branch))
+                                if (!string.IsNullOrEmpty(item.Branch))
                                 {
-                                    TodosItemTfs.Add(itemLocal);
+                                    if (itemLocal.path.Contains(item.Branch))
+                                    {
+                                        TodosItemTfs.Add(itemLocal);
+                                    }
                                 }
                             }
                         }
                     }
+                }
+                catch (Exception e)
+                {
+                    string exc = e.Message;
+                    ListComponentStatus = $"Exception:{exc}";
                 }
 
                 //obtener lista guia de ubicaciones 
-
-                if (TodosItemTfs.Count > 0)
+                try
                 {
-                    List<string> list = new List<string>();
-                    string valueString = String.Empty, ext = string.Empty;
-                    foreach (TfsItem item in TodosItemTfs)
+                    if (TodosItemTfs.Count > 0)
                     {
-                        ext = Path.GetExtension(item.path);
-
-                        list = item.path.Split('.').ToList();
-                        if (ext != ".csproj")
+                        ListComponentStatus = $"Cargando datos de TFS.";
+                        List<string> list = new List<string>();
+                        string valueString = String.Empty, ext = string.Empty;
+                        foreach (TfsItem item in TodosItemTfs)
                         {
-                            if (ext == ".cs")
-                            {
-                                List<string> listValue = UtilHelper.fileList(item.path, '/');
-                                valueString = listValue.FirstOrDefault(i => i.Contains("mpm.seg"));
-                            }
-                            else
-                            {
-                                if (ext == ".sql")
-                                {
-                                    bool flag = false;
-                                    valueString = UtilHelper.extraerBranchTfs(item.path, '/');
-                                    string[] info = item.path.Split('/');
+                            ext = Path.GetExtension(item.path);
 
-                                    foreach (string s in info)
-                                    {
-                                        if (s == "BD")
-                                        {
-                                            flag = true;
-                                        }
-                                        if (flag && s != "BD")
-                                        {
-                                            valueString += $"\\{s}";
-                                        }
-                                    }
+                            list = item.path.Split('.').ToList();
+                            if (ext != ".csproj")
+                            {
+                                if (ext == ".cs")
+                                {
+                                    List<string> listValue = UtilHelper.fileList(item.path, '/');
+                                    valueString = listValue.FirstOrDefault(i => i.Contains("mpm.seg"));
                                 }
                                 else
                                 {
-                                    valueString = UtilHelper.nameFile(item.path, '/');
-                                }
-                            }
-
-                            if (valueString != null)
-                            {
-                                if (ext == ".sql")
-                                {
-                                    //JenkinsItem jenkinsItem = new JenkinsItem() { JkPath = valueString };
-                                    PathGU.Add(valueString);
-                                }
-                                else
-                                {
-                                    //guia de ubicaciones
-                                    DischangePathList = (DatabaseHelper.Read<DischangePath>()).Where(n => n.Path.Contains(valueString)).ToList();
-
-                                    for (int i = 0; i < DischangePathList.Count; i++)
+                                    if (ext == ".sql")
                                     {
-                                        PathGU.Add(DischangePathList[i].Path);
+                                        bool flag = false;
+                                        valueString = UtilHelper.extraerBranchTfs(item.path, '/');
+                                        string[] info = item.path.Split('/');
+
+                                        foreach (string s in info)
+                                        {
+                                            if (s == "BD")
+                                            {
+                                                flag = true;
+                                            }
+                                            if (flag && s != "BD")
+                                            {
+                                                valueString += $"\\{s}";
+                                            }
+                                        }
+                                    }
+                                    else
+                                    {
+                                        valueString = UtilHelper.nameFile(item.path, '/');
+                                    }
+                                }
+
+                                if (valueString != null)
+                                {
+                                    if (ext == ".sql")
+                                    {
+                                        PathGU.Add(valueString);
+                                    }
+                                    else
+                                    {
+                                        //guia de ubicaciones
+                                        DischangePathList = (DatabaseHelper.Read<DischangePath>()).Where(n => n.Path.Contains(valueString)).ToList();
+
+                                        for (int i = 0; i < DischangePathList.Count; i++)
+                                        {
+                                            PathGU.Add(DischangePathList[i].Path);
+                                        }
+
                                     }
 
                                 }
-
                             }
-
-
                         }
-
                     }
                 }
+                catch (Exception ex)
+                {
+                    string exc = ex.Message;
+                    ListComponentStatus = $"Exception:{exc}";
+                }
+                
             }
             string result = string.Empty;
             string branch = ListComponent.Branch;
-            //string rutaCont = @"C:\Users\edgar.linarez\OneDrive - MPM SOFTWARE SLU\Documentos\Edgar\pruebas\";
             string rutaCont = ListComponent.Path + "\\";
             if (PathGU.Count > 0)
             {
+                ListComponentStatus = $"Transfiriendo archivos de Jenkins.";
                 foreach (string itemPathGU in PathGU)
                 {
                     result = TransferFileJenkinsHelper.JenkinsTransferFile(itemPathGU, rutaCont, branch);
                 }
+                ListComponentStatus = $"Transferencia de archivos culminado.";
+            }
+            else
+            {
+                ListComponentStatus = $"No hay archivos para transferir.";
             }
         }
 

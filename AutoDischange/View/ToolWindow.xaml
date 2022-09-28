@@ -31,7 +31,7 @@
                     CommandParameter="{Binding SyncStatus}"
                     Margin="0,5"
                     Width="100"
-                    Content="Sicronizar">
+                    Content="Sincronizar">
 
             </Button>
 

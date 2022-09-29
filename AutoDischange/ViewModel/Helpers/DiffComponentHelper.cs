@@ -196,32 +196,36 @@ namespace AutoDischange.ViewModel.Helpers
                             diffCompareModel.FechaA = v.LastWriteTime;
                             diffCompareModel.LenghtA = sizeAll;
                             //PathB
-                            var queryList2IntersectTemp = (from file in list2
-                                                           select file).Intersect(queryList1Only, myFileNameCompare).Where(i => i.Name == v.Name).First();
+                            List<System.IO.FileInfo> queryList2IntersectTempList = (from file in list2
+                                                           select file).Intersect(queryList1Only, myFileNameCompare).Where(i => i.Name == v.Name).ToList();
+                            if (queryList2IntersectTempList.Any())
+                            {
+                                var queryList2IntersectTemp = queryList2IntersectTempList.First();
+                                s = $"{queryList2IntersectTemp.Name}{queryList2IntersectTemp.Length}{queryList2IntersectTemp.LastWriteTime.ToString()}";
+                                sHash = queryList2IntersectTemp.GetHashCode().ToString();
+                                sizeAll = CompareFile.GetSizeByte(queryList2IntersectTemp);
 
-                            s = $"{queryList2IntersectTemp.Name}{queryList2IntersectTemp.Length}{queryList2IntersectTemp.LastWriteTime.ToString()}";
-                            sHash = queryList2IntersectTemp.GetHashCode().ToString();
-                            sizeAll = CompareFile.GetSizeByte(queryList2IntersectTemp);
+                                diffCompareModel.UbicacionB = queryList2IntersectTemp.FullName;
+                                diffCompareModel.PathB = queryList2IntersectTemp.Name;
+                                diffCompareModel.HashB = sHash;
+                                diffCompareModel.FechaB = queryList2IntersectTemp.LastWriteTime;
+                                diffCompareModel.LenghtB = sizeAll;
+                                //Result
+                                diffCompareModel.HashResult = diffCompareModel.HashA.CompareTo(diffCompareModel.HashB) > 0 ?
+                                    diffCompareModel.HashA.CompareTo(diffCompareModel.HashB) == 0 ? 2 : 3
+                                    : 4; // 2= Iguales , 3= A es mayor B y 4= B es mayor A
+                                diffCompareModel.FechaResult = DateTime.Compare(diffCompareModel.FechaA, diffCompareModel.FechaB) > 0 ?
+                                    DateTime.Compare(diffCompareModel.FechaA, diffCompareModel.FechaB) == 0 ? 2 : 3
+                                    : 4; // 2= Iguales , 3= A es mayor B y 4= B es mayor A
+                                diffCompareModel.LenghtResult = diffCompareModel.HashA.CompareTo(diffCompareModel.LenghtA) > 0 ?
+                                    diffCompareModel.HashA.CompareTo(diffCompareModel.LenghtB) == 0 ? 2 : 3
+                                    : 4; // 2= Iguales , 3= A es mayor B y 4= B es mayor A
 
-                            diffCompareModel.UbicacionB = queryList2IntersectTemp.FullName;
-                            diffCompareModel.PathB = queryList2IntersectTemp.Name;
-                            diffCompareModel.HashB = sHash;
-                            diffCompareModel.FechaB = queryList2IntersectTemp.LastWriteTime;
-                            diffCompareModel.LenghtB = sizeAll;
-                            //Result
-                            diffCompareModel.HashResult = diffCompareModel.HashA.CompareTo(diffCompareModel.HashB) > 0 ?
-                                diffCompareModel.HashA.CompareTo(diffCompareModel.HashB) == 0 ? 2 : 3
-                                : 4; // 2= Iguales , 3= A es mayor B y 4= B es mayor A
-                            diffCompareModel.FechaResult = DateTime.Compare(diffCompareModel.FechaA, diffCompareModel.FechaB) > 0 ?
-                                DateTime.Compare(diffCompareModel.FechaA, diffCompareModel.FechaB) == 0 ? 2 : 3
-                                : 4; // 2= Iguales , 3= A es mayor B y 4= B es mayor A
-                            diffCompareModel.LenghtResult = diffCompareModel.HashA.CompareTo(diffCompareModel.LenghtA) > 0 ?
-                                diffCompareModel.HashA.CompareTo(diffCompareModel.LenghtB) == 0 ? 2 : 3
-                                : 4; // 2= Iguales , 3= A es mayor B y 4= B es mayor A
+                                diffCompareModelList.Add(diffCompareModel);
 
-                            diffCompareModelList.Add(diffCompareModel);
+                                count++;
 
-                            count++;
+                            }
                         }
                     });
                     task5.Start();

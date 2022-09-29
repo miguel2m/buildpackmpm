@@ -95,7 +95,7 @@ namespace AutoDischange.ViewModel.Helpers
             }
 
             //Listado de Script para la hoja de lista
-            if (Directory.Exists(pathConfigurables))
+            if (Directory.Exists(pathScript))
             {
                 dirScript = new System.IO.DirectoryInfo(pathScript);
                 listScript = dirScript.GetFiles("*.*", System.IO.SearchOption.AllDirectories);

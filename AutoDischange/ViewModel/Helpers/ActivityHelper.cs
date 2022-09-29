@@ -53,7 +53,7 @@ namespace AutoDischange.ViewModel.Helpers
             List<ActivityComponentPrePro> ActivityResoruceImportListPro = new List<ActivityComponentPrePro>(); //Importancion de recursos
 
 
-            if (!Directory.Exists(pathAlojables) || !Directory.Exists(pathConfigurables) || !Directory.Exists(pathScript))
+            if (!Directory.Exists(pathAlojables) && !Directory.Exists(pathConfigurables) && !Directory.Exists(pathScript))
             {
                 throw new DirectoryNotFoundException("Debe seleccionar carpeta de componentes");
             }

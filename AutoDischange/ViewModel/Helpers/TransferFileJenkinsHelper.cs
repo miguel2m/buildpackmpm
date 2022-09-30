@@ -44,7 +44,7 @@ namespace AutoDischange.ViewModel.Helpers
                 rutaI = rutaServer + rutaPack;
             }
 
-            string rutaF = rutaUsr + $@"{branch}\" + rutaPack;
+            string rutaF = rutaUsr + $@"{rutaPack}";
             try
             {
                 //verifico que el directorio de busqueda exista
@@ -65,11 +65,13 @@ namespace AutoDischange.ViewModel.Helpers
                 if (File.Exists(rutaFileFinal))
                 {
                     //SI SE TRATA DE UN CSV POR UNA EXTRANA RAZON ME DA UN ERROR DE EXCEPCION CUANDO ES ESTE TIPO DE ARCHIVO LUEGO LO VEO
-                    if (fileExamp.Contains(".csv") || fileExamp.Contains(".sql"))
-                    {
-                        File.SetAttributes(rutaFileFinal, FileAttributes.Normal);
-                        File.Delete(rutaFileFinal);
-                    }
+                    //if (fileExamp.Contains(".csv") || fileExamp.Contains(".sql") || fileExamp.Contains(".sql"))
+                    //{
+                    //    File.SetAttributes(rutaFileFinal, FileAttributes.Normal);
+                    //    File.Delete(rutaFileFinal);
+                    //}
+                    File.SetAttributes(rutaFileFinal, FileAttributes.Normal);
+                    File.Delete(rutaFileFinal);
                 }
 
                 //Copiar archivo

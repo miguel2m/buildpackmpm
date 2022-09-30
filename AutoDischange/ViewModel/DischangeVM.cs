@@ -81,12 +81,28 @@ namespace AutoDischange.ViewModel
         {
             try
             {
+                string noData = string.Empty;
                 DischangeChangesets.Clear();
                 foreach (var changeset in await ExcelHelper.ReadExcel(fileName))
                 {
-                    DischangeChangesets.Add(changeset);
+                    if (changeset.Branch != "" && changeset.Changeset != "")
+                    {
+                        DischangeChangesets.Add(changeset);
+                    }
+                    else
+                    {
+                        noData += changeset.Changeset + " | ";
+                    }
                 }
-                DischangeStatus = "Lista de changesets cargada.";
+                if (noData != "")
+                {
+                    DischangeStatus = $"Indicar Branch en los siguientes changeset: {noData}";
+                    DischangeStatus += "| Lista de changesets cargada.";
+                }
+                else
+                {
+                    DischangeStatus = "Lista de changesets cargada.";
+                }
             }
             catch (Exception ex)
             {

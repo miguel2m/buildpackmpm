@@ -6,7 +6,7 @@
         xmlns:local="clr-namespace:AutoDischange.View"
         mc:Ignorable="d"
         Title="Exportar Componentes Jenkins"
-        Height="300" Width="300"
+        Height="249.533" Width="469.827"
         xmlns:vm="clr-namespace:AutoDischange.ViewModel"
         WindowStartupLocation="CenterScreen">
     <Window.Resources>

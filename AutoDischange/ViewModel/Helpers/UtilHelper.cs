@@ -24,17 +24,17 @@ namespace AutoDischange.ViewModel.Helpers
 
 
         //Deveulve la ruta sin el archivo
-        public static string rutaNoFile(string url, char separator)
-        {
-            string result = string.Empty;
-            List<string> list = new List<string>();
-            list = url.Split(separator).ToList();
-            for (int i = 0; i < list.Count - 1; i++)
-            {
-                result += list[i] + separator;
-            }
-            return result;
-        }
+        //public static string rutaNoFile(string url, char separator)
+        //{
+        //    string result = string.Empty;
+        //    List<string> list = new List<string>();
+        //    list = url.Split(separator).ToList();
+        //    for (int i = 0; i < list.Count - 1; i++)
+        //    {
+        //        result += list[i] + separator;
+        //    }
+        //    return result;
+        //}
 
         public static string nameDir(string url)
         {
@@ -94,6 +94,29 @@ namespace AutoDischange.ViewModel.Helpers
                 lstNombDir.Add(new BranchJenkins { CodBranch = index, NameBranch = value });
             }
             return lstNombDir;
+        }
+
+        public static string rutaNoFile(string url, string ext = "")
+        {
+            string result = string.Empty;
+            List<string> list = new List<string>();
+            list = url.Split('\\').ToList();
+            int a = list.IndexOf("Scripts");
+            if (ext == ".sql")
+            {
+                for (int i = a; i < list.Count - 1; i++)
+                {
+                    result += list[i] + "\\";
+                }
+            }
+            else
+            {
+                for (int i = 0; i < list.Count - 1; i++)
+                {
+                    result += list[i] + "\\";
+                }
+            }
+            return result;
         }
     }
 }

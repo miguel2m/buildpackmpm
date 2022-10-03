@@ -8,6 +8,7 @@ using System.Windows.Input;
 using AutoDischange.Model;
 using System.IO;
 using System.Windows.Forms;
+using AutoDischange.ViewModel.Helpers;
 
 namespace AutoDischange.ViewModel.Commands
 {
@@ -45,7 +46,7 @@ namespace AutoDischange.ViewModel.Commands
             if (data.PathStart == data.PathEnd) //la ruta no debe ser igual
                 return false;
 
-            string dbFile = Path.Combine(Environment.CurrentDirectory, "dischangesPath.db3");
+            string dbFile = DatabaseHelper.dbFile;
             if (File.Exists(dbFile) != true)
                 return false;
 

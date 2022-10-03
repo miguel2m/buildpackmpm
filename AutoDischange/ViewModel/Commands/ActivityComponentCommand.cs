@@ -1,4 +1,5 @@
 ﻿using AutoDischange.Model;
+using AutoDischange.ViewModel.Helpers;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -37,7 +38,7 @@ namespace AutoDischange.ViewModel.Commands
             if (!Path.IsPathRooted(data.PathStart)) //La ruta debe ser valida
                 return false;
 
-            string dbFile = Path.Combine(Environment.CurrentDirectory, "dischangesPath.db3");
+            string dbFile = DatabaseHelper.dbFile; ;
             if (File.Exists(dbFile) != true)
                 return false;
 

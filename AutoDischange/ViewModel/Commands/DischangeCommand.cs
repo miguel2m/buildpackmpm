@@ -1,4 +1,5 @@
-﻿using Microsoft.Win32;
+﻿using AutoDischange.ViewModel.Helpers;
+using Microsoft.Win32;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -24,7 +25,7 @@ namespace AutoDischange.ViewModel.Commands
 
         public bool CanExecute(object parameter)
         {
-            string dbFile = Path.Combine(Environment.CurrentDirectory, "dischangesPath.db3");
+            string dbFile = DatabaseHelper.dbFile;
             return (File.Exists(dbFile) == true)?true:false;
         }
 

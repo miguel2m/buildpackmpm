@@ -312,7 +312,7 @@ namespace AutoDischange.ViewModel.Helpers
         public static MemoryStream ReadExcelEntrega()
         {
 
-            string rtfFile = System.IO.Path.Combine(Environment.CurrentDirectory, "ExcelEntrega.xlsx");
+            string rtfFile = System.IO.Path.Combine(DatabaseHelper.dbFile, "ExcelEntrega.xlsx");
             FileStream fs = new FileStream(rtfFile, FileMode.Open);
             MemoryStream msPass = new MemoryStream();
             SLDocument slOriginal = new SLDocument(fs);

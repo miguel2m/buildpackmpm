@@ -46,7 +46,8 @@ namespace AutoDischange.ViewModel.Commands
             if (data.PathStart == data.PathEnd) //la ruta no debe ser igual
                 return false;
 
-            string dbFile = DatabaseHelper.dbFile;
+            //string dbFile = DatabaseHelper.dbFile;
+            string dbFile = Path.Combine(Environment.CurrentDirectory, "dischangesPath.db3");
             if (File.Exists(dbFile) != true)
                 return false;
 

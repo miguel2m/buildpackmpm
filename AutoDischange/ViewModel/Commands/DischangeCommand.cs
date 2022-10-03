@@ -25,7 +25,8 @@ namespace AutoDischange.ViewModel.Commands
 
         public bool CanExecute(object parameter)
         {
-            string dbFile = DatabaseHelper.dbFile;
+            //string dbFile = DatabaseHelper.dbFile;
+            string dbFile = Path.Combine(Environment.CurrentDirectory, "dischangesPath.db3");
             return (File.Exists(dbFile) == true)?true:false;
         }
 

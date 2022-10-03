@@ -11,23 +11,23 @@ namespace AutoDischange.ViewModel.Helpers
     public class DatabaseHelper
     {
         //Path DB
-        private static string dbDirectory = $"{Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments)}{Path.DirectorySeparatorChar}Auto_pack";
-        public static string dbFile = Path.Combine(dbDirectory, "dischangesPath.db3");
+        //private static string dbDirectory = $"{Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments)}{Path.DirectorySeparatorChar}Auto_pack";
+        //public static string dbFile = Path.Combine(dbDirectory, "dischangesPath.db3");
         private static SQLiteOpenFlags dbFlag = SQLiteOpenFlags.Create | SQLiteOpenFlags.FullMutex | SQLiteOpenFlags.ReadWrite;
-
-        private static void CreateDBFolder  (){
-            if (!Directory.Exists(dbDirectory))
-            {
-                //Crear el directorio
-                Directory.CreateDirectory(dbDirectory);
-            }
-        }
+        private static string dbFile = Path.Combine(Environment.CurrentDirectory, "dischangesPath.db3");
+        //private static void CreateDBFolder  (){
+        //    if (!Directory.Exists(dbDirectory))
+        //    {
+        //        //Crear el directorio
+        //        Directory.CreateDirectory(dbDirectory);
+        //    }
+        //}
         //INSERT INTO InsertDischange (Carga Masiva)
         public static async Task<bool> InsertDischange(DischangePath item)
         {
             
             bool result = false;
-            CreateDBFolder();
+            ////CreateDBFolder();
             var db = new SQLiteAsyncConnection(dbFile, dbFlag, true);
 
             await db.CreateTableAsync<DischangePath>();
@@ -39,7 +39,7 @@ namespace AutoDischange.ViewModel.Helpers
 
         public static async Task Delete()
         {
-            CreateDBFolder();
+            //CreateDBFolder();
             var db = new SQLiteAsyncConnection(dbFile, dbFlag, true);
             var ExistTable = await db.GetTableInfoAsync("DischangeChangeset");
             if (ExistTable.Count > 0)
@@ -53,7 +53,7 @@ namespace AutoDischange.ViewModel.Helpers
         {
 
             bool result = false;
-            CreateDBFolder();
+            //CreateDBFolder();
             var db = new SQLiteAsyncConnection(dbFile, dbFlag, true);
 
             await db.CreateTableAsync<DischangePath>();
@@ -67,7 +67,7 @@ namespace AutoDischange.ViewModel.Helpers
         public static async Task<bool> InsertReplaceChangeset(DischangeChangeset item)
         {
             bool result = false;
-            CreateDBFolder();
+            //CreateDBFolder();
             var db = new SQLiteAsyncConnection(dbFile, dbFlag, true);
 
             await db.CreateTableAsync<DischangeChangeset>();
@@ -81,7 +81,7 @@ namespace AutoDischange.ViewModel.Helpers
         public static  bool Insert<T>(T item)
         {
             bool result = false;
-            CreateDBFolder();
+            //CreateDBFolder();
             using (SQLiteConnection conn = new SQLiteConnection(dbFile, dbFlag, true))
             {
                 conn.CreateTable<T>();
@@ -97,7 +97,7 @@ namespace AutoDischange.ViewModel.Helpers
         public static bool Update<T>(T item)
         {
             bool result = false;
-            CreateDBFolder();
+            //CreateDBFolder();
             using (SQLiteConnection conn = new SQLiteConnection(dbFile, dbFlag, true))
             {
                 conn.CreateTable<T>();
@@ -113,7 +113,7 @@ namespace AutoDischange.ViewModel.Helpers
         public static bool Delete<T>(T item)
         {
             bool result = false;
-            CreateDBFolder();
+            //CreateDBFolder();
             using (SQLiteConnection conn = new SQLiteConnection(dbFile, dbFlag, true))
             {
                 conn.CreateTable<T>();
@@ -129,7 +129,7 @@ namespace AutoDischange.ViewModel.Helpers
         public static List<T> Read<T>() where T : new()
         {
             List<T> items;
-            CreateDBFolder();
+            //CreateDBFolder();
             using (SQLiteConnection conn = new SQLiteConnection(dbFile, dbFlag, true))
             {
                 conn.CreateTable<T>();

@@ -7590,17 +7590,6 @@
             "Property" = "8:ProgramMenuFolder"
                 "Folders"
                 {
-                    "{9EF0B969-E518-4E46-987F-47570745A589}:_20729148E4BF4C24A683214A1ED1DDC5"
-                    {
-                    "Name" = "8:AutoPack"
-                    "AlwaysCreate" = "11:FALSE"
-                    "Condition" = "8:"
-                    "Transitive" = "11:FALSE"
-                    "Property" = "8:_856931B1BB0B4714B40819BCCFCF8787"
-                        "Folders"
-                        {
-                        }
-                    }
                 }
             }
             "{1525181F-901A-416C-8A58-119130FE478E}:_E2DF10167F70472D9E103BC5655B06F4"
@@ -7631,7 +7620,7 @@
         "Name" = "8:Microsoft Visual Studio"
         "ProductName" = "8:AutoPackInstaller"
         "ProductCode" = "8:{0594E8F2-24F2-4B17-AA3C-60D826E639A1}"
-        "PackageCode" = "8:{B45BF00A-B711-441C-8B1E-CACBB53CC1BE}"
+        "PackageCode" = "8:{5637D78E-1D92-47C0-AD4D-F0FE731629C0}"
         "UpgradeCode" = "8:{F672D158-0A78-4C49-880F-029ABC36CF75}"
         "AspNetVersion" = "8:4.0.30319.0"
         "RestartWWWService" = "11:FALSE"
@@ -7751,34 +7740,6 @@
         }
         "Shortcut"
         {
-            "{970C0BB2-C7D0-45D7-ABFA-7EC378858BC0}:_787D084092F145DE8BCDA4C42BE2EEA3"
-            {
-            "Name" = "8:AutoPack"
-            "Arguments" = "8:"
-            "Description" = "8:"
-            "ShowCmd" = "3:1"
-            "IconIndex" = "3:0"
-            "Transitive" = "11:FALSE"
-            "Target" = "8:_3EB60DA0C1BD489198C245118C50518C"
-            "Folder" = "8:_E2DF10167F70472D9E103BC5655B06F4"
-            "WorkingFolder" = "8:_6D70B325BE8B422EAA2D481072B1F0E5"
-            "Icon" = "8:_F42D472B1ADE4517B1A688A798E3A466"
-            "Feature" = "8:"
-            }
-            "{970C0BB2-C7D0-45D7-ABFA-7EC378858BC0}:_FBA434329B0F455B9EC9BA39068623F7"
-            {
-            "Name" = "8:AutoPack"
-            "Arguments" = "8:"
-            "Description" = "8:"
-            "ShowCmd" = "3:1"
-            "IconIndex" = "3:0"
-            "Transitive" = "11:FALSE"
-            "Target" = "8:_3EB60DA0C1BD489198C245118C50518C"
-            "Folder" = "8:_20729148E4BF4C24A683214A1ED1DDC5"
-            "WorkingFolder" = "8:_6D70B325BE8B422EAA2D481072B1F0E5"
-            "Icon" = "8:_F42D472B1ADE4517B1A688A798E3A466"
-            "Feature" = "8:"
-            }
         }
         "UserInterface"
         {
@@ -8180,7 +8141,7 @@
         {
             "{5259A561-127C-4D43-A0A1-72F10C7B3BF8}:_3EB60DA0C1BD489198C245118C50518C"
             {
-            "SourcePath" = "8:"
+            "SourcePath" = "8:..\\AutoDischange\\obj\\Debug\\AutoDischange.exe"
             "TargetName" = "8:"
             "Tag" = "8:"
             "Folder" = "8:_6D70B325BE8B422EAA2D481072B1F0E5"

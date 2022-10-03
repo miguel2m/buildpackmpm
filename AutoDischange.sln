@@ -1,9 +1,11 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 15
-VisualStudioVersion = 15.0.28307.2092
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.32802.440
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AutoDischange", "AutoDischange\AutoDischange.csproj", "{27243368-952E-49E6-870B-3CB982364C93}"
+EndProject
+Project("{54435603-DBB4-11D2-8724-00A0C9A8B90C}") = "AutoPackInstaller", "AutoPackInstaller\AutoPackInstaller.vdproj", "{21DF03DD-11FE-4A3E-A23F-FF2E8D8F22E8}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,6 +17,8 @@ Global
 		{27243368-952E-49E6-870B-3CB982364C93}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{27243368-952E-49E6-870B-3CB982364C93}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{27243368-952E-49E6-870B-3CB982364C93}.Release|Any CPU.Build.0 = Release|Any CPU
+		{21DF03DD-11FE-4A3E-A23F-FF2E8D8F22E8}.Debug|Any CPU.ActiveCfg = Debug
+		{21DF03DD-11FE-4A3E-A23F-FF2E8D8F22E8}.Release|Any CPU.ActiveCfg = Release
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

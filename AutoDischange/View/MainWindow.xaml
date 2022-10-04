@@ -8,7 +8,7 @@
         xmlns:cc="clr-namespace:AutoDischange.View.CustomControl"
         mc:Ignorable="d"
         WindowStartupLocation="CenterScreen"
-        Title="MainWindow" Height="482" Width="897.333">
+        Title="Automatización de Paquetes" Height="482" Width="897" Icon="/AutoDischange;component/img/protoIco.ico">
     <Window.Resources>
         <vm:DischangeVM x:Key="vm" />
     </Window.Resources>

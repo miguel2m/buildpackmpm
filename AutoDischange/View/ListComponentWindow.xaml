@@ -8,7 +8,7 @@
         Title="Exportar Componentes Jenkins"
         Height="249.533" Width="469.827"
         xmlns:vm="clr-namespace:AutoDischange.ViewModel"
-        WindowStartupLocation="CenterScreen">
+        WindowStartupLocation="CenterScreen" Icon="/AutoDischange;component/img/export.ico">
     <Window.Resources>
         <ResourceDictionary>
             <vm:ListComponentVM x:Key="vm"/>

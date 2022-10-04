@@ -5,10 +5,10 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:AutoDischange.View"
         mc:Ignorable="d"
-        Title="DiffComponentWindow" 
-        Height="300" Width="300"
+        Title="Comparación de Componentes" 
+        Height="300" Width="394"
         xmlns:vm="clr-namespace:AutoDischange.ViewModel"
-        WindowStartupLocation="CenterScreen">
+        WindowStartupLocation="CenterScreen" Icon="/AutoDischange;component/img/compare.ico">
     <Window.Resources>
         <ResourceDictionary>
             <vm:DiffComponentVM x:Key="vm"/>

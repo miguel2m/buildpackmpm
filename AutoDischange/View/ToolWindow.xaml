@@ -6,8 +6,8 @@
         xmlns:local="clr-namespace:AutoDischange.View"
         mc:Ignorable="d"
         xmlns:vm="clr-namespace:AutoDischange.ViewModel"
-        Title="ToolWindow" Height="300" Width="300"
-         WindowStartupLocation="CenterScreen">
+        Title="Sincronizar BD" Height="300" Width="300"
+         WindowStartupLocation="CenterScreen" Icon="/AutoDischange;component/img/sincronizar.ico">
     <Window.Resources>
         <ResourceDictionary>
             <vm:SettingVM x:Key="vm"/>

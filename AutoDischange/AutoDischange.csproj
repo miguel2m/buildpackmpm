@@ -239,6 +239,7 @@
     <Compile Include="ViewModel\Helpers\DISChangeRequest.cs" />
     <Compile Include="ViewModel\Helpers\ExcelHelper.cs" />
     <Compile Include="ViewModel\Helpers\Log4net.cs" />
+    <Compile Include="ViewModel\Helpers\SortPackDischange.cs" />
     <Compile Include="ViewModel\Helpers\TFSRequest.cs" />
     <Compile Include="ViewModel\Helpers\TransferFileJenkinsHelper.cs" />
     <Compile Include="ViewModel\Helpers\UtilHelper.cs" />

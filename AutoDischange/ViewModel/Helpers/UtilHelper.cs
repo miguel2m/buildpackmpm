@@ -22,20 +22,6 @@ namespace AutoDischange.ViewModel.Helpers
             return result;
         }
 
-
-        //Deveulve la ruta sin el archivo
-        //public static string rutaNoFile(string url, char separator)
-        //{
-        //    string result = string.Empty;
-        //    List<string> list = new List<string>();
-        //    list = url.Split(separator).ToList();
-        //    for (int i = 0; i < list.Count - 1; i++)
-        //    {
-        //        result += list[i] + separator;
-        //    }
-        //    return result;
-        //}
-
         public static string nameDir(string url)
         {
             List<string> list = new List<string>();
@@ -117,6 +103,27 @@ namespace AutoDischange.ViewModel.Helpers
                 }
             }
             return result;
+        }
+
+        public static void buildStructure(string url)
+        {
+            if (!Directory.Exists(url))
+            {
+                //Crear el directorio
+                Directory.CreateDirectory(url);
+                //Alojables
+                Directory.CreateDirectory($@"{url}\\Alojables\\DIS\\");
+                //CONFIGURABLES PARA CERT
+                Directory.CreateDirectory($@"{url}\\Configurables\\Cert\\DIS\\");
+                //CONFIGURABLES PARA DESA
+                Directory.CreateDirectory($@"{url}\\Configurables\\Desa\\DIS\\");
+                //CONFIGURABLES PARA Pre
+                Directory.CreateDirectory($@"{url}\\Configurables\\Pre\\DIS\\");
+                //CONFIGURABLES PARA Pro
+                Directory.CreateDirectory($@"{url}\\Configurables\\Pro\\DIS\\");
+                //SCRIPTS
+                Directory.CreateDirectory($@"{url}\\Scripts\\DIS\\");
+            }
         }
     }
 }

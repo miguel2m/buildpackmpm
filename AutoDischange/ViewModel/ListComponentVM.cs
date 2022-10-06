@@ -244,12 +244,8 @@ namespace AutoDischange.ViewModel
                     //voy agregar el directorio donde se va a agregar el paquete del Jenkins
                     rutaF = rutaCont + $@"{branch}_{DateTime.Now.ToString("yyyyMMddHHmmss")}\";
 
-                    if (!Directory.Exists(rutaF))
-                    {
-                        //Crear el directorio
-                        Directory.CreateDirectory(rutaF);
-                    }
-
+                    //CREAR ESTRUCTURA DE ARCHIVOS
+                    UtilHelper.buildStructure(rutaF);
 
                     foreach (string itemPathGU in PathGU)
                     {

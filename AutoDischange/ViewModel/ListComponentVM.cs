@@ -251,6 +251,7 @@ namespace AutoDischange.ViewModel
                     {
                         result = TransferFileJenkinsHelper.JenkinsTransferFile(itemPathGU, rutaF, branch);
                     }
+                    SortPackDischange.SortPack(@rutaF);
                     ListComponentStatus = $"Transferencia de archivos culminado.";
                 }
                 else

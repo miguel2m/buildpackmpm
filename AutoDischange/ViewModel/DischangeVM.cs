@@ -74,6 +74,7 @@ namespace AutoDischange.ViewModel
             JenkinsListPath = new ObservableCollection<JenkinsItem>();
             DischangeStatus = "Nada que hacer.";
             PackageCommand = new PackageCommand(this);
+            
 
         }
 

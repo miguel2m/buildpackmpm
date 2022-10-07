@@ -7,6 +7,7 @@ using System.Security;
 using System.Security.Permissions;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
 
 namespace AutoDischange.ViewModel.Helpers
 {
@@ -77,10 +78,9 @@ namespace AutoDischange.ViewModel.Helpers
                 //Copiar archivo
                 File.Copy(rutaI + fileExamp, rutaFileFinal, true);
             }
-            catch (Exception e)
+            catch (Exception ex)
             {
-                string aa = e.Message;
-                throw;
+                MessageBox.Show("Error al ejecutar transferencia de paquetes Jenkins: " + ex.Message, "Error al ejecutar transferencia de paquetes Jenkins", MessageBoxButton.OK, MessageBoxImage.Error);
             }
             return "El conjunto de directorios fue copiado correctamente.";
         }

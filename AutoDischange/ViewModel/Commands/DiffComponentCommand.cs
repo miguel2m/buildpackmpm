@@ -41,7 +41,7 @@ namespace AutoDischange.ViewModel.Commands
 
             if (!Path.IsPathRooted(data.PathStart)) //La ruta debe ser valida
                 return false;
-            if (Path.IsPathRooted(data.PathEnd)) //la ruta debe ser un directorio
+            if (!Path.IsPathRooted(data.PathEnd)) //la ruta debe ser un directorio
                 return false;
             if (data.PathStart == data.PathEnd) //la ruta no debe ser igual
                 return false;

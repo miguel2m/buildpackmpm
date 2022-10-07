@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
 
 namespace AutoDischange.ViewModel.Helpers
 {
@@ -11,48 +12,55 @@ namespace AutoDischange.ViewModel.Helpers
     {
         public static void SortPack(string path)
         {
-
-            string pathRoot = path;
-
-            char backSlash = Path.DirectorySeparatorChar;
-            string pathAlojables = $"{@pathRoot}Alojables{backSlash}DIS{backSlash}";
-            string pathConfigurables = $"{@pathRoot}Configurables{backSlash}Cert{backSlash}";
-            string pathScript = $"{@pathRoot}Scripts{backSlash}DIS{backSlash}";
-
-            System.IO.DirectoryInfo dirRoot = new System.IO.DirectoryInfo(pathRoot); 
-
-            //IEnumerable<System.IO.FileInfo> listPathRoot = dirRoot.GetFiles("*.*", System.IO.SearchOption.AllDirectories).Where(s => !(s.Name.EndsWith(".config") || s.Name.EndsWith(".sql"))); ;
-            IEnumerable<System.IO.FileInfo> listPathAlojables = dirRoot.GetFiles("*.*", System.IO.SearchOption.AllDirectories).Where(s => !(s.Name.EndsWith(".config") || s.Name.EndsWith(".sql")));
-            IEnumerable<System.IO.FileInfo> listPathConfigurables = dirRoot.GetFiles("*.*", System.IO.SearchOption.AllDirectories).Where(s => (s.Name.EndsWith(".config")));
-            IEnumerable<System.IO.FileInfo> listPathScript = dirRoot.GetFiles("*.*", System.IO.SearchOption.AllDirectories).Where(s => (s.Name.EndsWith(".sql"))); ;
-
-            //List<string> alojables = listPathRoot      
-            foreach (System.IO.FileInfo item in listPathAlojables)
+            try
             {
 
-               
-                string outputFolder = NormalizePath(item.DirectoryName, pathRoot, pathAlojables);
-                string outputFile = outputFolder + backSlash + item.Name;
-                CreateFolderOutput(item.FullName, outputFolder, outputFile);
+                string pathRoot = path;
+
+                char backSlash = Path.DirectorySeparatorChar;
+                string pathAlojables = $"{@pathRoot}Alojables{backSlash}DIS{backSlash}";
+                string pathConfigurables = $"{@pathRoot}Configurables{backSlash}Cert{backSlash}";
+                string pathScript = $"{@pathRoot}Scripts{backSlash}DIS{backSlash}";
+
+                System.IO.DirectoryInfo dirRoot = new System.IO.DirectoryInfo(pathRoot);
+
+                //IEnumerable<System.IO.FileInfo> listPathRoot = dirRoot.GetFiles("*.*", System.IO.SearchOption.AllDirectories).Where(s => !(s.Name.EndsWith(".config") || s.Name.EndsWith(".sql"))); ;
+                IEnumerable<System.IO.FileInfo> listPathAlojables = dirRoot.GetFiles("*.*", System.IO.SearchOption.AllDirectories).Where(s => !(s.Name.EndsWith(".config") || s.Name.EndsWith(".sql")));
+                IEnumerable<System.IO.FileInfo> listPathConfigurables = dirRoot.GetFiles("*.*", System.IO.SearchOption.AllDirectories).Where(s => (s.Name.EndsWith(".config")));
+                IEnumerable<System.IO.FileInfo> listPathScript = dirRoot.GetFiles("*.*", System.IO.SearchOption.AllDirectories).Where(s => (s.Name.EndsWith(".sql"))); ;
+
+                //List<string> alojables = listPathRoot      
+                foreach (System.IO.FileInfo item in listPathAlojables)
+                {
+
+
+                    string outputFolder = NormalizePath(item.DirectoryName, pathRoot, pathAlojables);
+                    string outputFile = outputFolder + backSlash + item.Name;
+                    CreateFolderOutput(item.FullName, outputFolder, outputFile);
 
 
 
+                }
+                foreach (System.IO.FileInfo item in listPathConfigurables)
+                {
+                    string outputFolder = NormalizePath(item.DirectoryName, pathRoot, pathConfigurables);
+                    string outputFile = outputFolder + backSlash + item.Name;
+                    CreateFolderOutput(item.FullName, outputFolder, outputFile);
+                }
+
+                foreach (System.IO.FileInfo item in listPathScript)
+                {
+                    string outputFolder = NormalizePath(item.DirectoryName, pathRoot, pathScript);
+                    string outputFile = outputFolder + backSlash + item.Name;
+                    CreateFolderOutput(item.FullName, outputFolder, outputFile);
+                }
+
+                processDirectory(pathRoot);
             }
-            foreach (System.IO.FileInfo item in listPathConfigurables)
+            catch (Exception ex)
             {
-                string outputFolder = NormalizePath(item.DirectoryName, pathRoot, pathConfigurables);
-                string outputFile = outputFolder + backSlash + item.Name;
-                CreateFolderOutput(item.FullName, outputFolder, outputFile);
+                MessageBox.Show("Error en Excel: " + ex.Message, "Error en Excel", MessageBoxButton.OK, MessageBoxImage.Error);
             }
-           
-            foreach (System.IO.FileInfo item in listPathScript)
-            {
-                string outputFolder = NormalizePath(item.DirectoryName, pathRoot, pathScript);
-                string outputFile = outputFolder + backSlash + item.Name;
-                CreateFolderOutput(item.FullName, outputFolder, outputFile);
-            }
-
-            processDirectory(pathRoot);
         }
 
         private static string NormalizePath(string pathInput,string pathRoot,string pathEnv) { 

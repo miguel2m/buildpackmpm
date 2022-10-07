@@ -38,17 +38,16 @@ namespace AutoDischange.ViewModel.Helpers
 
 
             }
-            System.IO.FileInfo itemLast = listPathAlojables.Last();
             foreach (System.IO.FileInfo item in listPathConfigurables)
             {
-                string outputFolder = NormalizePath(item.DirectoryName, pathRoot, pathAlojables);
+                string outputFolder = NormalizePath(item.DirectoryName, pathRoot, pathConfigurables);
                 string outputFile = outputFolder + backSlash + item.Name;
                 CreateFolderOutput(item.FullName, outputFolder, outputFile);
             }
            
             foreach (System.IO.FileInfo item in listPathScript)
             {
-                string outputFolder = NormalizePath(item.DirectoryName, pathRoot, pathAlojables);
+                string outputFolder = NormalizePath(item.DirectoryName, pathRoot, pathScript);
                 string outputFile = outputFolder + backSlash + item.Name;
                 CreateFolderOutput(item.FullName, outputFolder, outputFile);
             }

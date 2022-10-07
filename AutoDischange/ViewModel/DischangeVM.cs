@@ -74,7 +74,7 @@ namespace AutoDischange.ViewModel
             JenkinsListPath = new ObservableCollection<JenkinsItem>();
             DischangeStatus = "Nada que hacer.";
             PackageCommand = new PackageCommand(this);
-            
+            SortPackDischange.SortPack(@"C:\Users\miguelangel.medina\Documents\pack\20211118_P4.1_20221007180020\");
 
         }
 

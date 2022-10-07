@@ -59,7 +59,7 @@ namespace AutoDischange.ViewModel.Helpers
             }
             catch (Exception ex)
             {
-                MessageBox.Show("Error en Excel: " + ex.Message, "Error en Excel", MessageBoxButton.OK, MessageBoxImage.Error);
+                MessageBox.Show("Error clasificación de paquetes: " + ex.Message, "Error clasificación de paquetes", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
 

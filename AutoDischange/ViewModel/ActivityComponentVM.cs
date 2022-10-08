@@ -116,6 +116,7 @@ namespace AutoDischange.ViewModel
             }
             catch (Exception ex)
             {
+                Log4net.log.Error(ex.Message);
                 ActivityVisible = true;
                 ActivityStatus = $"Error al ejecutar Excel de entrega: { ex.Message}.";
                 MessageBox.Show("Error al ejecutar Excel de entrega: " + ex.Message, "Error al ejecutar Excel de entrega", MessageBoxButton.OK, MessageBoxImage.Error);

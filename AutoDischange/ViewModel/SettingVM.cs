@@ -71,6 +71,7 @@ namespace AutoDischange.ViewModel
             }
             catch (Exception ex)
             {
+                Log4net.log.Error(ex.Message);
                 SyncStatus = true;
                 StatusExcel = $"Error en Excel: { ex.Message}.";
                 MessageBox.Show("Error en Excel: " + ex.Message, "Error en Excel", MessageBoxButton.OK, MessageBoxImage.Error);

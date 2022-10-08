@@ -97,7 +97,8 @@ namespace AutoDischange.ViewModel.Helpers
                 //}
 
             } catch (Exception ex) {
-                Console.WriteLine(ex);
+                //Console.WriteLine(ex);
+                Log4net.log.Error(ex.Message);
                 //throw new Exception(ex.Message);
                 MessageBox.Show("Error al intentar conectar con el OneDrive: " + ex.Message, "Error al intentar conectar con One drive", MessageBoxButton.OK, MessageBoxImage.Error);
             };

@@ -153,6 +153,7 @@ namespace AutoDischange.ViewModel
                 }
                 catch (Exception e)
                 {
+                    Log4net.log.Error(e.Message);
                     string exc = e.Message;
                     ListComponentStatus = $"Exception:{exc}";
                 }
@@ -230,6 +231,7 @@ namespace AutoDischange.ViewModel
                     }
                     catch (Exception ex)
                     {
+                        Log4net.log.Error(ex.Message);
                         string exc = ex.Message;
                         ListComponentStatus = $"Exception:{exc}";
                     }
@@ -257,6 +259,7 @@ namespace AutoDischange.ViewModel
                     }
                     catch (Exception ex)
                     {
+                        Log4net.log.Error(ex.Message);
                         MessageBox.Show("Error al ejecutar transferencia de paquetes Jenkins: " + ex.Message, "Error al ejecutar transferencia de paquetes Jenkins", MessageBoxButton.OK, MessageBoxImage.Error);
                     }
 

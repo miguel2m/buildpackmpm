@@ -55,7 +55,9 @@ namespace AutoDischange.ViewModel.Helpers
 
             if (!Directory.Exists(pathAlojables) && !Directory.Exists(pathConfigurables) && !Directory.Exists(pathScript))
             {
+                Log4net.log.Error("Debe seleccionar carpeta de componentes");
                 throw new DirectoryNotFoundException("Debe seleccionar carpeta de componentes");
+
             }
             
             MemoryStream msPass = new MemoryStream();

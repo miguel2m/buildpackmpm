@@ -107,6 +107,7 @@ namespace AutoDischange.ViewModel
             }
             catch (Exception ex)
             {
+                Log4net.log.Error(ex.Message);
                 DischangeStatus = $"Error en Excel: { ex.Message}.";
                 MessageBox.Show("Error en Excel: " + ex.Message, "Error en Excel", MessageBoxButton.OK, MessageBoxImage.Error);
             }
@@ -158,6 +159,7 @@ namespace AutoDischange.ViewModel
                 }
                 catch (Exception ex)
                 {
+                    Log4net.log.Error(ex.Message);
                     DischangeStatus = $"Error al intentar conectar con el TFS: { ex.Message}.";
                     MessageBox.Show("Error al intentar conectar con el TFS: " + ex.Message, "Error al intentar conectar con el TFS", MessageBoxButton.OK, MessageBoxImage.Error);
                 }
@@ -226,6 +228,7 @@ namespace AutoDischange.ViewModel
                 }
                 catch (Exception ex)
                 {
+                    Log4net.log.Error(ex.Message);
                     DischangeStatus = $"Error al intentar conectar con el DIS-Change.xlsx: { ex.Message}.";
                     MessageBox.Show("Error al intentar conectar con el DIS-Change.xlsx : " + ex.Message, "Error al intentar conectar con el DIS-Change.xlsx", MessageBoxButton.OK, MessageBoxImage.Error);
                 }

@@ -59,6 +59,7 @@ namespace AutoDischange.ViewModel.Helpers
             }
             catch (Exception ex)
             {
+                Log4net.log.Error(ex.Message);
                 MessageBox.Show("Error clasificación de paquetes: " + ex.Message, "Error clasificación de paquetes", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }

@@ -10,6 +10,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
 
 namespace AutoDischange.ViewModel
 {
@@ -247,10 +248,18 @@ namespace AutoDischange.ViewModel
                     //CREAR ESTRUCTURA DE ARCHIVOS
                     UtilHelper.buildStructure(rutaF);
 
-                    foreach (string itemPathGU in PathGU)
+                    try
                     {
-                        result = TransferFileJenkinsHelper.JenkinsTransferFile(itemPathGU, rutaF, branch);
+                        foreach (string itemPathGU in PathGU)
+                        {
+                            result = TransferFileJenkinsHelper.JenkinsTransferFile(itemPathGU, rutaF, branch);
+                        }
                     }
+                    catch (Exception ex)
+                    {
+                        MessageBox.Show("Error al ejecutar transferencia de paquetes Jenkins: " + ex.Message, "Error al ejecutar transferencia de paquetes Jenkins", MessageBoxButton.OK, MessageBoxImage.Error);
+                    }
+
                     SortPackDischange.SortPack(@rutaF);
                     ListComponentStatus = $"Transferencia de archivos culminado.";
                 }

@@ -46,41 +46,38 @@ namespace AutoDischange.ViewModel.Helpers
             }
 
             string rutaF = rutaUsr + $@"{rutaPack}";
-            try
+
+
+            //verifico que el directorio de busqueda exista
+            if (!Directory.Exists(rutaI))
             {
-                //verifico que el directorio de busqueda exista
-                if (!Directory.Exists(rutaI))
-                {
-                    return "El directorio donde quiere acceder no existe";
-                }
+                return "El directorio donde quiere acceder no existe";
+            }
 
-                //Verifico que el directorio de destino exista
-                if (!Directory.Exists(rutaF))
-                {
-                    //Crear el directorio
-                    Directory.CreateDirectory(rutaF);
-                }
+            //Verifico que el directorio de destino exista
+            if (!Directory.Exists(rutaF))
+            {
+                //Crear el directorio
+                Directory.CreateDirectory(rutaF);
+            }
 
-                string rutaFileFinal = rutaF + fileExamp;
-                //Verifico que el archivo en directorio destino exista o no
-                if (File.Exists(rutaFileFinal))
-                {
-                    //SI SE TRATA DE UN CSV POR UNA EXTRANA RAZON ME DA UN ERROR DE EXCEPCION CUANDO ES ESTE TIPO DE ARCHIVO LUEGO LO VEO
-                    //if (fileExamp.Contains(".csv") || fileExamp.Contains(".sql") || fileExamp.Contains(".sql"))
-                    //{
-                    //    File.SetAttributes(rutaFileFinal, FileAttributes.Normal);
-                    //    File.Delete(rutaFileFinal);
-                    //}
-                    File.SetAttributes(rutaFileFinal, FileAttributes.Normal);
-                    File.Delete(rutaFileFinal);
-                }
+            string rutaFileFinal = rutaF + fileExamp;
+            //Verifico que el archivo en directorio destino exista o no
+            if (File.Exists(rutaFileFinal))
+            {
+                File.SetAttributes(rutaFileFinal, FileAttributes.Normal);
+                File.Delete(rutaFileFinal);
+            }
 
+
+            if (File.Exists(rutaI + fileExamp))
+            {
                 //Copiar archivo
                 File.Copy(rutaI + fileExamp, rutaFileFinal, true);
             }
-            catch (Exception ex)
+            else
             {
-                MessageBox.Show("Error al ejecutar transferencia de paquetes Jenkins: " + ex.Message, "Error al ejecutar transferencia de paquetes Jenkins", MessageBoxButton.OK, MessageBoxImage.Error);
+                Log4net.log.Info(rutaI + fileExamp);
             }
             return "El conjunto de directorios fue copiado correctamente.";
         }

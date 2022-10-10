@@ -19,7 +19,8 @@ namespace AutoDischange.ViewModel.Helpers
 
                 char backSlash = Path.DirectorySeparatorChar;
                 string pathAlojables = $"{@pathRoot}Alojables{backSlash}DIS{backSlash}";
-                string pathConfigurables = $"{@pathRoot}Configurables{backSlash}Cert{backSlash}";
+                //string pathConfigurables = $"{@pathRoot}Configurables{backSlash}Cert{backSlash}";
+                string pathConfigurables = $"{@pathRoot}Configurables{backSlash}";
                 string pathScript = $"{@pathRoot}Scripts{backSlash}DIS{backSlash}";
 
                 System.IO.DirectoryInfo dirRoot = new System.IO.DirectoryInfo(pathRoot);

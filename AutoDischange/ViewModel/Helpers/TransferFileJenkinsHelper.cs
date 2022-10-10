@@ -18,12 +18,12 @@ namespace AutoDischange.ViewModel.Helpers
             string ext = Path.GetExtension(rutaUbicFile);
             string rutaServer = string.Empty, rutaDisChanges = string.Empty, fileExamp = string.Empty;
             string rutaPack = string.Empty, rutaI = string.Empty;
-            if (ext == ".sql")
+            if (ext == ".sql" || ext == ".config")
             {
                 rutaServer = rutaUbicFile;
                 fileExamp = nameFile(rutaServer);
                 rutaPack = rutaNoFile(rutaServer, ext);
-                rutaI = rutaNoFile(rutaServer); ;
+                rutaI = rutaNoFile(rutaServer);
             }
             else
             {
@@ -95,9 +95,9 @@ namespace AutoDischange.ViewModel.Helpers
             string result = string.Empty;
             List<string> list = new List<string>();
             list = url.Split('\\').ToList();
-            int a = list.IndexOf("Scripts");
-            if (ext == ".sql")
+            if (ext == ".sql" || ext == ".config")
             {
+                int a = ext == ".sql" ? list.IndexOf("Scripts") : list.IndexOf("Configurables");
                 for (int i = a; i < list.Count - 1; i++)
                 {
                     result += list[i] + "\\";

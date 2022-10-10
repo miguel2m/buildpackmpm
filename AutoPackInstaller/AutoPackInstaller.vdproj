@@ -87,6 +87,12 @@
         }
         "Entry"
         {
+        "MsmKey" = "8:_0FD235C61F6B4A1A80C2B77BB47CC31D"
+        "OwnerKey" = "8:_UNDEFINED"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
         "MsmKey" = "8:_10D982A3B6F8D9C9E7B386C83981C5DA"
         "OwnerKey" = "8:_3EB60DA0C1BD489198C245118C50518C"
         "MsmSig" = "8:_UNDEFINED"
@@ -1209,12 +1215,6 @@
         }
         "Entry"
         {
-        "MsmKey" = "8:_A9127D7745B8407989204D4274B29C5E"
-        "OwnerKey" = "8:_UNDEFINED"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
         "MsmKey" = "8:_A96A620C62057885C6B472AD11C0A03C"
         "OwnerKey" = "8:_3EB60DA0C1BD489198C245118C50518C"
         "MsmSig" = "8:_UNDEFINED"
@@ -2151,6 +2151,12 @@
         }
         "Entry"
         {
+        "MsmKey" = "8:_DB1C32313A3A328D9DE0819886A5E611"
+        "OwnerKey" = "8:_3EB60DA0C1BD489198C245118C50518C"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
         "MsmKey" = "8:_DD950CE9F26F59D162304F64DA3D09A7"
         "OwnerKey" = "8:_3EB60DA0C1BD489198C245118C50518C"
         "MsmSig" = "8:_UNDEFINED"
@@ -2441,6 +2447,12 @@
         {
         "MsmKey" = "8:_UNDEFINED"
         "OwnerKey" = "8:_DE459EA3839EB7C04E9337CC3E876180"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_UNDEFINED"
+        "OwnerKey" = "8:_DB1C32313A3A328D9DE0819886A5E611"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
@@ -3010,6 +3022,26 @@
             {
             "SourcePath" = "8:..\\AutoDischange\\bin\\Debug\\AutoDischange.pdb"
             "TargetName" = "8:AutoDischange.pdb"
+            "Tag" = "8:"
+            "Folder" = "8:_6D70B325BE8B422EAA2D481072B1F0E5"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:FALSE"
+            "IsolateTo" = "8:"
+            }
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_0FD235C61F6B4A1A80C2B77BB47CC31D"
+            {
+            "SourcePath" = "8:..\\AutoDischange\\bin\\Debug\\ExcelEntrega.xlsx"
+            "TargetName" = "8:ExcelEntrega.xlsx"
             "Tag" = "8:"
             "Folder" = "8:_6D70B325BE8B422EAA2D481072B1F0E5"
             "Condition" = "8:"
@@ -5887,26 +5919,6 @@
             "IsDependency" = "11:FALSE"
             "IsolateTo" = "8:"
             }
-            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_A9127D7745B8407989204D4274B29C5E"
-            {
-            "SourcePath" = "8:..\\AutoDischange\\bin\\Debug\\ExcelEntrega.xlsx"
-            "TargetName" = "8:ExcelEntrega.xlsx"
-            "Tag" = "8:"
-            "Folder" = "8:_6D70B325BE8B422EAA2D481072B1F0E5"
-            "Condition" = "8:"
-            "Transitive" = "11:FALSE"
-            "Vital" = "11:TRUE"
-            "ReadOnly" = "11:FALSE"
-            "Hidden" = "11:FALSE"
-            "System" = "11:FALSE"
-            "Permanent" = "11:FALSE"
-            "SharedLegacy" = "11:FALSE"
-            "PackageAs" = "3:1"
-            "Register" = "3:1"
-            "Exclude" = "11:FALSE"
-            "IsDependency" = "11:FALSE"
-            "IsolateTo" = "8:"
-            }
             "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_A96A620C62057885C6B472AD11C0A03C"
             {
             "AssemblyRegister" = "3:1"
@@ -6877,6 +6889,37 @@
             "IsDependency" = "11:TRUE"
             "IsolateTo" = "8:"
             }
+            "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_DB1C32313A3A328D9DE0819886A5E611"
+            {
+            "AssemblyRegister" = "3:1"
+            "AssemblyIsInGAC" = "11:FALSE"
+            "AssemblyAsmDisplayName" = "8:log4net, Version=2.0.15.0, Culture=neutral, PublicKeyToken=669e0ddf0bb1aa2a, processorArchitecture=MSIL"
+                "ScatterAssemblies"
+                {
+                    "_DB1C32313A3A328D9DE0819886A5E611"
+                    {
+                    "Name" = "8:log4net.dll"
+                    "Attributes" = "3:512"
+                    }
+                }
+            "SourcePath" = "8:log4net.dll"
+            "TargetName" = "8:"
+            "Tag" = "8:"
+            "Folder" = "8:_6D70B325BE8B422EAA2D481072B1F0E5"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:TRUE"
+            "IsolateTo" = "8:"
+            }
             "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_DD950CE9F26F59D162304F64DA3D09A7"
             {
             "AssemblyRegister" = "3:1"
@@ -7620,7 +7663,7 @@
         "Name" = "8:Microsoft Visual Studio"
         "ProductName" = "8:AutoPackInstaller"
         "ProductCode" = "8:{0594E8F2-24F2-4B17-AA3C-60D826E639A1}"
-        "PackageCode" = "8:{5637D78E-1D92-47C0-AD4D-F0FE731629C0}"
+        "PackageCode" = "8:{23279C9C-51C0-4F64-90D0-48F47AC80385}"
         "UpgradeCode" = "8:{F672D158-0A78-4C49-880F-029ABC36CF75}"
         "AspNetVersion" = "8:4.0.30319.0"
         "RestartWWWService" = "11:FALSE"
@@ -7740,6 +7783,20 @@
         }
         "Shortcut"
         {
+            "{970C0BB2-C7D0-45D7-ABFA-7EC378858BC0}:_9354FAFA716A4539BAAD236FC6AD6232"
+            {
+            "Name" = "8:AutoPack"
+            "Arguments" = "8:"
+            "Description" = "8:"
+            "ShowCmd" = "3:1"
+            "IconIndex" = "3:0"
+            "Transitive" = "11:FALSE"
+            "Target" = "8:_3EB60DA0C1BD489198C245118C50518C"
+            "Folder" = "8:_E2DF10167F70472D9E103BC5655B06F4"
+            "WorkingFolder" = "8:_6D70B325BE8B422EAA2D481072B1F0E5"
+            "Icon" = "8:_F42D472B1ADE4517B1A688A798E3A466"
+            "Feature" = "8:"
+            }
         }
         "UserInterface"
         {

@@ -189,7 +189,7 @@ namespace AutoDischange.ViewModel
                         if (ext == ".sql")
                         {
                             bool flag = false; 
-                            valueString = UtilHelper.extraerBranchTfs(TfsSelected.path, '/');
+                            valueString = UtilHelper.extraerBranchTfs(TfsSelected.path, '/', ext);
                             string[] info = TfsSelected.path.Split('/');
 
                             foreach (string s in info)
@@ -203,12 +203,11 @@ namespace AutoDischange.ViewModel
                                     valueString += $"\\{s}";
                                 }
                             }
-
                         }
                         else
                         {
                             valueString = UtilHelper.nameFile(TfsSelected.path, '/');
-                        }                        
+                        }
                     }
                     //ACA BUSCO LOS SCRIPT DE SQL PERO EN EL JENKINS PARA MOSTRARLO EN FRONT
                     if (ext == ".sql")
@@ -218,7 +217,7 @@ namespace AutoDischange.ViewModel
                     }
                     else
                     {
-                        var DischangePathList = (DatabaseHelper.Read<DischangePath>()).Where(n => n.Path.Contains(valueString)).ToList();
+                        List<DischangePath> DischangePathList = DatabaseHelper.Read<DischangePath>().Where(n => n.Path.Contains(valueString)).ToList();
 
                         foreach (DischangePath itemLocal in DischangePathList)
                         {

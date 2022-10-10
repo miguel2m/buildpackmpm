@@ -185,7 +185,7 @@ namespace AutoDischange.ViewModel
                                         if (ext == ".sql")
                                         {
                                             bool flag2 = false;
-                                            valueString = UtilHelper.extraerBranchTfs(item.path, '/');
+                                            valueString = UtilHelper.extraerBranchTfs(item.path, '/', ext, branch);
                                             string[] info = item.path.Split('/');
 
                                             foreach (string s in info)
@@ -215,11 +215,20 @@ namespace AutoDischange.ViewModel
                                         else
                                         {
                                             //guia de ubicaciones
-                                            DischangePathList = (DatabaseHelper.Read<DischangePath>()).Where(n => n.Path.Contains(valueString)).ToList();
+                                            DischangePathList = DatabaseHelper.Read<DischangePath>().Where(n => n.Path.Contains(valueString)).ToList();
 
                                             for (int i = 0; i < DischangePathList.Count; i++)
                                             {
-                                                PathGU.Add(DischangePathList[i].Path);
+                                                if (ext == ".config")
+                                                {
+                                                    string cad = UtilHelper.extraerBranchTfs(DischangePathList[i].Path, '/', ext, branch);
+                                                    PathGU.Add(cad + DischangePathList[i].Path);
+                                                }
+                                                else
+                                                {
+                                                    PathGU.Add(DischangePathList[i].Path);
+                                                }
+                                                
                                             }
 
                                         }

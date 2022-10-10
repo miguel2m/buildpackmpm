@@ -41,7 +41,7 @@ namespace AutoDischange.ViewModel.Helpers
             return list;
         }
 
-        public static string extraerBranchTfs(string url, char separator)
+        public static string extraerBranchTfs(string url, char separator, string ext, string branch = null)
         {
             string brancho = ConfigurationManager.AppSettings["rutaJenkins"]; 
             string[] pathTfs = url.Split('/');
@@ -51,6 +51,11 @@ namespace AutoDischange.ViewModel.Helpers
             int count = 0;
             foreach (string busqueda in pathTfs)
             {
+                if (ext == ".config" && branch != null)
+                {
+                    brancho += $"{branch}\\Pack\\Latest";
+                    return brancho;
+                }
                 while (count < cant)
                 {
                     if (nombRama[count].NameBranch != "Customers" && nombRama[count].NameBranch != "Logs" && nombRama[count].NameBranch != "utils")

@@ -84,6 +84,7 @@ namespace AutoDischange.ViewModel
             LoadBranch();
             ListComponent = new ListComponent();
             //SelectedBranch = new ListComponent();
+            PathComponent=Environment.GetFolderPath(Environment.SpecialFolder.UserProfile);
 
         }
 
@@ -274,6 +275,7 @@ namespace AutoDischange.ViewModel
 
                     SortPackDischange.SortPack(@rutaF);
                     ListComponentStatus = $"Transferencia de archivos culminado.";
+                    MessageBox.Show("Transferencia de archivos culminado. ", "Transferencia de archivos culminado.", MessageBoxButton.OK, MessageBoxImage.Information);
                 }
                 else
                 {

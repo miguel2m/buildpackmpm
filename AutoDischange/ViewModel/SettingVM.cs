@@ -57,10 +57,11 @@ namespace AutoDischange.ViewModel
                 SyncStatus = true;
                 //string dbFile = Path.Combine(Environment.CurrentDirectory, "dischangesPath.db3");
                 StatusExcel = "Carga Excel finalizada.";
+                MessageBox.Show("Listo ", "Listo", MessageBoxButton.OK, MessageBoxImage.Information);
                 //Console.WriteLine(File.Exists(dbFile));
                 //if (File.Exists(dbFile) == false)
                 //{
-                    
+
                 //    //if (await ExcelHelper.ReadExcelDIS_Changes(filePath))
                 //    //{
                 //    //    //var notebooks = (DatabaseHelper.Read<DischangePath>()).Where(n => n.Path.Contains("pt")).ToList();

@@ -86,6 +86,7 @@ namespace AutoDischange.ViewModel
         {
             DiffComponentCommand = new DiffComponentCommand(this);
             DiffVisible = true;
+            PathStartComponent = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile);
         }
 
 
@@ -104,6 +105,7 @@ namespace AutoDischange.ViewModel
                 await DiffComponentHelper.DiffFiles(DiffComponent, pathUser);
                 DiffVisible = true;
                 DiffStatus = $"Tarea comparación de paquetes finalizada";
+                MessageBox.Show("Listo ", "Listo", MessageBoxButton.OK, MessageBoxImage.Information);
             }
             catch (Exception ex)
             {

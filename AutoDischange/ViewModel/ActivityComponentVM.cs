@@ -83,6 +83,7 @@ namespace AutoDischange.ViewModel
             activityComponent = new ActivityComponent();
             ActivityVisible = true;
             EnvEntrega = "PRE";
+            ActivityPathComponent = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile); 
         }
 
         public async void ExcuteActivityExport(string pathUser)

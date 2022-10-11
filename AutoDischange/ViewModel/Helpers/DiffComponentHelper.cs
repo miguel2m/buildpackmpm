@@ -77,8 +77,30 @@ namespace AutoDischange.ViewModel.Helpers
         /// <param name="pathB">Ruta Destino</param>
         public static async Task<bool> DiffFiles(DiffComponent diffComponent, string pathUser)
         {
-            
-                System.IO.DirectoryInfo dir1 = new System.IO.DirectoryInfo(@diffComponent.PathStart);
+            char backSlash = Path.DirectorySeparatorChar;
+            string pathAlojablesStart = $"{@diffComponent.PathStart}{backSlash}Alojables";
+            string pathConfigurablesStart = $"{@diffComponent.PathStart}{backSlash}Configurables";
+            string pathScriptStart = $"{@diffComponent.PathStart}{backSlash}Scripts";
+
+            string pathAlojablesEnd = $"{@diffComponent.PathEnd}{backSlash}Alojables";
+            string pathConfigurablesEnd = $"{@diffComponent.PathEnd}{backSlash}Configurables";
+            string pathScriptEnd = $"{@diffComponent.PathEnd}{backSlash}Scripts";
+
+            if (!Directory.Exists(pathAlojablesStart) && !Directory.Exists(pathConfigurablesStart) && !Directory.Exists(pathScriptStart))
+            {
+                Log4net.log.Error("Debe seleccionar carpeta de componentes para el paquete Inicio");
+                throw new DirectoryNotFoundException("Debe seleccionar carpeta de componentes para el paquete Inicio");
+
+            }
+
+            if (!Directory.Exists(pathAlojablesEnd) && !Directory.Exists(pathConfigurablesEnd) && !Directory.Exists(pathScriptEnd))
+            {
+                Log4net.log.Error("Debe seleccionar carpeta de componentes para el paquete a comparar");
+                throw new DirectoryNotFoundException("Debe seleccionar carpeta de componentes para el paquete a comparar");
+
+            }
+
+            System.IO.DirectoryInfo dir1 = new System.IO.DirectoryInfo(@diffComponent.PathStart);
                 System.IO.DirectoryInfo dir2 = new System.IO.DirectoryInfo(@diffComponent.PathEnd);
 
                 // Take a snapshot of the file system.  

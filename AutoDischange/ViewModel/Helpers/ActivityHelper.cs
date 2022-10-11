@@ -118,10 +118,10 @@ namespace AutoDischange.ViewModel.Helpers
             {
                 
                 List<ActividadDespliegue> lstExcel = await ActividadDespliegueOrderBy(ActivityComponentListScriptList);
-                
+
                 if (lstExcel.Any())
                 {
-                   
+                    if (lstExcel.Count == ActivityComponentListScriptList.Count) {
 
                         List<ActivityComponentPrePro> lstExcelActivityPre = await ListActivityScript(0, ActivityResultListPre.Count().ToString(), lstExcel);
                         if (lstExcelActivityPre.Any())
@@ -144,6 +144,12 @@ namespace AutoDischange.ViewModel.Helpers
                         }
 
                     }
+                    else
+                    {
+                        msPass.Close();
+                        throw new TaxonomyNotFoundException("Alguno de los scripts no posee la nomenclatura adecuada Ejemplo: 02_DDL_CrearVista_ECL_CON.sql");
+                    }
+                }
 
                    
                 

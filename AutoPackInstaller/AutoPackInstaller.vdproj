@@ -117,6 +117,12 @@
         }
         "Entry"
         {
+        "MsmKey" = "8:_18602C78304F4DDABC20288A8159BD75"
+        "OwnerKey" = "8:_UNDEFINED"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
         "MsmKey" = "8:_18796952396AA7BEAD70EC23EF1CAACA"
         "OwnerKey" = "8:_3EB60DA0C1BD489198C245118C50518C"
         "MsmSig" = "8:_UNDEFINED"
@@ -3149,6 +3155,26 @@
             "Register" = "3:1"
             "Exclude" = "11:FALSE"
             "IsDependency" = "11:TRUE"
+            "IsolateTo" = "8:"
+            }
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_18602C78304F4DDABC20288A8159BD75"
+            {
+            "SourcePath" = "8:..\\Manual\\Manual de App Automatizacion de Paquetes V1.0.pdf"
+            "TargetName" = "8:Manual de App Automatizacion de Paquetes V1.0.pdf"
+            "Tag" = "8:"
+            "Folder" = "8:_6D70B325BE8B422EAA2D481072B1F0E5"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:FALSE"
             "IsolateTo" = "8:"
             }
             "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_18796952396AA7BEAD70EC23EF1CAACA"
@@ -7663,7 +7689,7 @@
         "Name" = "8:Microsoft Visual Studio"
         "ProductName" = "8:AutoPackInstaller"
         "ProductCode" = "8:{0594E8F2-24F2-4B17-AA3C-60D826E639A1}"
-        "PackageCode" = "8:{23279C9C-51C0-4F64-90D0-48F47AC80385}"
+        "PackageCode" = "8:{D7B2730D-2BE9-4F72-A4A9-963D134E349A}"
         "UpgradeCode" = "8:{F672D158-0A78-4C49-880F-029ABC36CF75}"
         "AspNetVersion" = "8:4.0.30319.0"
         "RestartWWWService" = "11:FALSE"

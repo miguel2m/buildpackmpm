@@ -34,8 +34,8 @@ namespace AutoDischange.ViewModel.Commands
                 return false;
             if (string.IsNullOrEmpty(data.Path))
                 return false;
-            if (string.IsNullOrEmpty(data.Branch))
-                return false;
+            //if (string.IsNullOrEmpty(data.Branch))
+            //    return false;
 
             if (!Path.IsPathRooted(data.Path)) //La ruta debe ser valida
                 return false;

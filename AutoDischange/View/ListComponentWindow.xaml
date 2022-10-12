@@ -6,7 +6,7 @@
         xmlns:local="clr-namespace:AutoDischange.View"
         mc:Ignorable="d"
         Title="Exportar Componentes Jenkins"
-        Height="249.533" Width="469.827"
+        Height="213.929" Width="469.827"
         xmlns:vm="clr-namespace:AutoDischange.ViewModel"
         WindowStartupLocation="CenterScreen" Icon="/AutoDischange;component/img/export.ico">
     <Window.Resources>
@@ -26,7 +26,7 @@
                 <TextBlock  Text="{Binding ListComponentStatus}"/>
             </StatusBarItem>
         </StatusBar>
-        <StackPanel DockPanel.Dock="Top" Margin="10">
+        <StackPanel DockPanel.Dock="Top" Margin="10,10,10.333,10" Height="126">
 
             <TextBlock Text="Ruta:"/>
             <TextBox Name="tbPathComponent" Text="{Binding PathComponent, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
@@ -36,14 +36,14 @@
                     Content="Abrir carpeta"
                     Click="PickupFolder_Click">
             </Button>
-            <TextBlock Text="Branch:"/>
+            <!--<TextBlock Text="Branch:"/>-->
             <!--<TextBox Text="{Binding Branch, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>-->
-            <ComboBox 
+            <!--<ComboBox 
                  ItemsSource="{Binding ListComponentObjs}"
                  SelectedValue="{Binding SelectedBranch, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                  SelectedValuePath="Branch"
                  DisplayMemberPath="Branch"
-                 />
+                 />-->
             
 
             <Button Command="{Binding ListComponentCommand}"

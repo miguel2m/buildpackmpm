@@ -6,7 +6,7 @@
         xmlns:local="clr-namespace:AutoDischange.View"
         mc:Ignorable="d"
         Title="Comparación de Componentes" 
-        Height="300" Width="394"
+        Height="350" Width="394"
         xmlns:vm="clr-namespace:AutoDischange.ViewModel"
         WindowStartupLocation="CenterScreen" Icon="/AutoDischange;component/img/compare.ico">
     <Window.Resources>
@@ -24,7 +24,7 @@
         <ScrollViewer VerticalScrollBarVisibility="Auto" Margin="0,0,0.333,27.333">
             <StackPanel x:Name="inputContainer" DockPanel.Dock="Top" Margin="10">
 
-                <TextBlock Text="Ruta Inicio:"/>
+                <TextBlock Text="Ruta Inicio (paquete 1):"/>
                 <TextBox Name="startPathComponentText" Text="{Binding PathStartComponent, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
                 <Button Name="startPathComponent"
                         Margin="0,5"
@@ -34,9 +34,19 @@
                     >
                 </Button>
 
-                <TextBlock Text="Ruta Destino:"/>
+                <TextBlock Text="Ruta Comparación (paquete 2):"/>
                 <TextBox Name="endPathComponentText" Text="{Binding PathEndComponent, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
                 <Button Name="endPathComponent"
+                        Margin="0,5"
+                        Width="100"
+                        Content="Abrir carpeta"
+                        Click="PickupFolder_Click"
+                    >
+                </Button>
+
+                <TextBlock Text="Ruta de descarga:"/>
+                <TextBox Name="downloadPathComponentText" Text="{Binding PathDownload, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                <Button Name="downloadPathComponent"
                         Margin="0,5"
                         Width="100"
                         Content="Abrir carpeta"

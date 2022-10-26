@@ -36,12 +36,29 @@ namespace AutoDischange.ViewModel
                 ActivityComponent = new ActivityComponent
                 {
                     PathStart = activityPathComponent,
+                    PathDownload = this.pathDownload,
                 };
                 OnPropertyChanged("ActivityPathComponent");
             }
         }
 
-        
+        private string pathDownload;
+        public string PathDownload
+        {
+            get { return pathDownload; }
+            set
+            {
+                pathDownload = value;
+                ActivityComponent = new ActivityComponent
+                {
+                    PathStart = this.activityPathComponent,
+                    PathDownload = pathDownload,
+                };
+                OnPropertyChanged("PathDownload");
+            }
+        }
+
+
 
         private string activityStatus;
 
@@ -86,7 +103,7 @@ namespace AutoDischange.ViewModel
             ActivityPathComponent = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile); 
         }
 
-        public async void ExcuteActivityExport(string pathUser)
+        public async void ExcuteActivityExport()
         {
             try
             {
@@ -110,7 +127,7 @@ namespace AutoDischange.ViewModel
                         break;
                 }
                 //await DiffComponentHelper.DiffFiles(DiffComponent, pathUser);
-                await ActivityHelper.ExportActivity(activityComponent, pathUser, ambiente);
+                await ActivityHelper.ExportActivity(activityComponent, PathDownload, ambiente);
                 ActivityVisible = true;
                 ActivityStatus = $"Tarea comparación de paquetes finalizada";
                 MessageBox.Show("Listo ", "Listo", MessageBoxButton.OK, MessageBoxImage.Information);

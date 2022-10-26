@@ -86,19 +86,19 @@ namespace AutoDischange.ViewModel.Helpers
             string pathConfigurablesEnd = $"{@diffComponent.PathEnd}{backSlash}Configurables";
             string pathScriptEnd = $"{@diffComponent.PathEnd}{backSlash}Scripts";
 
-            if (!Directory.Exists(pathAlojablesStart) && !Directory.Exists(pathConfigurablesStart) && !Directory.Exists(pathScriptStart))
-            {
-                Log4net.log.Error("Debe seleccionar carpeta de componentes para el paquete Inicio");
-                throw new DirectoryNotFoundException("Debe seleccionar carpeta de componentes para el paquete Inicio");
+            //if (!Directory.Exists(pathAlojablesStart) && !Directory.Exists(pathConfigurablesStart) && !Directory.Exists(pathScriptStart))
+            //{
+            //    Log4net.log.Error("Debe seleccionar carpeta de componentes para el paquete Inicio");
+            //    throw new DirectoryNotFoundException("Debe seleccionar carpeta de componentes para el paquete Inicio");
 
-            }
+            //}
 
-            if (!Directory.Exists(pathAlojablesEnd) && !Directory.Exists(pathConfigurablesEnd) && !Directory.Exists(pathScriptEnd))
-            {
-                Log4net.log.Error("Debe seleccionar carpeta de componentes para el paquete a comparar");
-                throw new DirectoryNotFoundException("Debe seleccionar carpeta de componentes para el paquete a comparar");
+            //if (!Directory.Exists(pathAlojablesEnd) && !Directory.Exists(pathConfigurablesEnd) && !Directory.Exists(pathScriptEnd))
+            //{
+            //    Log4net.log.Error("Debe seleccionar carpeta de componentes para el paquete a comparar");
+            //    throw new DirectoryNotFoundException("Debe seleccionar carpeta de componentes para el paquete a comparar");
 
-            }
+            //}
 
             System.IO.DirectoryInfo dir1 = new System.IO.DirectoryInfo(@diffComponent.PathStart);
                 System.IO.DirectoryInfo dir2 = new System.IO.DirectoryInfo(@diffComponent.PathEnd);

@@ -38,12 +38,20 @@ namespace AutoDischange.ViewModel.Commands
                 return false;
             if (string.IsNullOrEmpty(data.PathEnd))
                 return false;
+            if (string.IsNullOrEmpty(data.PathDownload))
+                return false;
 
             if (!Path.IsPathRooted(data.PathStart)) //La ruta debe ser valida
                 return false;
             if (!Path.IsPathRooted(data.PathEnd)) //la ruta debe ser un directorio
+                return false;   
+            if (!Path.IsPathRooted(data.PathDownload)) //la ruta debe ser un directorio
                 return false;
             if (data.PathStart == data.PathEnd) //la ruta no debe ser igual
+                return false;
+            if (data.PathStart == data.PathDownload) //la ruta no debe ser igual
+                return false;
+            if (data.PathEnd == data.PathDownload) //la ruta no debe ser igual
                 return false;
 
             //string dbFile = DatabaseHelper.dbFile;
@@ -57,18 +65,20 @@ namespace AutoDischange.ViewModel.Commands
         public void Execute(object parameter)
         {
            
-            using (var fbd = new FolderBrowserDialog())
-            {
-                DialogResult result = fbd.ShowDialog();
+            //using (var fbd = new FolderBrowserDialog())
+            //{
+            //    DialogResult result = fbd.ShowDialog();
 
-                if (!string.IsNullOrWhiteSpace(fbd.SelectedPath))
-                {
-                    ViewModel.GenericInput(fbd.SelectedPath);
+            //    if (!string.IsNullOrWhiteSpace(fbd.SelectedPath))
+            //    {
+            //        ViewModel.GenericInput(fbd.SelectedPath);
 
-                }
-            }
+            //    }
+            //}
 
+            ViewModel.GenericInput();
 
         }
+
     }
 }

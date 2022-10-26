@@ -6,7 +6,7 @@
         xmlns:local="clr-namespace:AutoDischange.View"
         mc:Ignorable="d"
         xmlns:vm="clr-namespace:AutoDischange.ViewModel"
-        Title="Excel de Entrega" Height="300" Width="435.381"
+        Title="Excel de Entrega" Height="350" Width="435.381"
          WindowStartupLocation="CenterScreen" Icon="/AutoDischange;component/img/excel_down.ico">
     <Window.Resources>
         <ResourceDictionary>
@@ -41,7 +41,16 @@
                     <ComboBoxItem Content = "PRE - PRO" />
                 </ComboBox>
 
-
+                <TextBlock Text="Ruta de descarga:"/>
+                <TextBox Name="pathDownloadText" Text="{Binding PathDownload, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                <Button Name="pathDownload"
+                        Margin="0,5"
+                        Width="100"
+                        Content="Abrir carpeta"
+                        Click="PickupFolder_Click"
+                    >
+                </Button>
+                
                 <Button IsEnabled="{Binding ActivityVisible}"
                         Command="{Binding ActivityComponentCommand}" 
                         CommandParameter="{Binding ActivityComponent}"

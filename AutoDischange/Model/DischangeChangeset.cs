@@ -36,6 +36,7 @@ namespace AutoDischange.Model
         public int Id { get; set; }
         public string PathStart { get; set; }
         public string PathEnd { get; set; }
+        public string PathDownload { get; set; }
     }
 
    

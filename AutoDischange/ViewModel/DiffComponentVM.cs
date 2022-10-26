@@ -38,6 +38,7 @@ namespace AutoDischange.ViewModel
                 {
                     PathStart = pathStartComponent,
                     PathEnd = this.PathEndComponent,
+                    PathDownload = this.PathDownload,
                 };
                 OnPropertyChanged("PathStartComponent");
             }
@@ -54,13 +55,30 @@ namespace AutoDischange.ViewModel
                 {
                     PathStart = this.pathStartComponent,
                     PathEnd = pathEndComponent,
+                    PathDownload = this.PathDownload,
                 };
                 OnPropertyChanged("PathEndComponent");
             }
         }
 
-        private string diffStatus;
+        private string pathDownload;
+        public string PathDownload
+        {
+            get { return pathDownload; }
+            set
+            {
+                pathDownload = value;
+                DiffComponent = new DiffComponent
+                {
+                    PathStart = this.pathStartComponent,
+                    PathEnd = this.pathEndComponent,
+                    PathDownload = pathDownload,
+                };
+                OnPropertyChanged("PathDownload");
+            }
+        }
 
+        private string diffStatus;
         public string DiffStatus
         {
             get { return diffStatus; }
@@ -93,7 +111,7 @@ namespace AutoDischange.ViewModel
 
         public event EventHandler AddInput;
 
-        public async void GenericInput(string pathUser)
+        public async void GenericInput()
         {
 
 
@@ -102,7 +120,7 @@ namespace AutoDischange.ViewModel
             {
                 DiffStatus = $"Leyendo paquetes";
                 DiffVisible = false;
-                await DiffComponentHelper.DiffFiles(DiffComponent, pathUser);
+                await DiffComponentHelper.DiffFiles(DiffComponent, PathDownload);
                 DiffVisible = true;
                 DiffStatus = $"Tarea comparación de paquetes finalizada";
                 MessageBox.Show("Listo ", "Listo", MessageBoxButton.OK, MessageBoxImage.Information);

@@ -116,7 +116,13 @@ namespace AutoDischange.ViewModel
 
         public async void GetChangeset()
         {
-            if (SelectedChangeset != null)
+            if (SelectedChangeset == null)
+            {
+                TfsList.Clear();
+                ComponentList.Clear();
+                JenkinsListPath.Clear();
+            }
+            else
             {
                 try
                 {
@@ -163,7 +169,7 @@ namespace AutoDischange.ViewModel
                     DischangeStatus = $"Error al intentar conectar con el TFS: { ex.Message}.";
                     MessageBox.Show("Error al intentar conectar con el TFS: " + ex.Message, "Error al intentar conectar con el TFS", MessageBoxButton.OK, MessageBoxImage.Error);
                 }
-                
+
             }
 
         }
@@ -209,6 +215,7 @@ namespace AutoDischange.ViewModel
                             valueString = UtilHelper.nameFile(TfsSelected.path, '/');
                         }
                     }
+                    
                     //ACA BUSCO LOS SCRIPT DE SQL PERO EN EL JENKINS PARA MOSTRARLO EN FRONT
                     if (ext == ".sql")
                     {
@@ -217,6 +224,14 @@ namespace AutoDischange.ViewModel
                     }
                     else
                     {
+                        if (valueString == "mpm.seg.Customers.Workflow")
+                        {
+                            valueString += ".BSM.dll";
+                        }
+                        if (valueString == "mpm.seg.Customers.DataRecovers")
+                        {
+                            valueString += ".dll";
+                        }
                         List<DischangePath> DischangePathList = DatabaseHelper.Read<DischangePath>().Where(n => n.Path.Contains(valueString)).ToList();
 
                         foreach (DischangePath itemLocal in DischangePathList)

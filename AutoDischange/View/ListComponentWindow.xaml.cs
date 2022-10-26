@@ -40,5 +40,23 @@ namespace AutoDischange.View
                 }
             }
         }
+
+        //private void cbAllFeatures_CheckedChanged(object sender, RoutedEventArgs e)
+        //{
+        //    bool newVal = (cbAllFeatures.IsChecked == true);
+        //    hogar_1.IsChecked = newVal;
+        //    cuatro_uno.IsChecked = newVal;
+        //    prod.IsChecked = newVal;
+        //    hog_2.IsChecked = newVal;
+        //}
+
+        //private void cbFeature_CheckedChanged(object sender, RoutedEventArgs e)
+        //{
+        //    cbAllFeatures.IsChecked = null;
+        //    if ((hogar_1.IsChecked == true) && (cuatro_uno.IsChecked == true) && (prod.IsChecked == true) && (hog_2.IsChecked == true))
+        //        cbAllFeatures.IsChecked = true;
+        //    if ((hogar_1.IsChecked == false) && (cuatro_uno.IsChecked == false) && (prod.IsChecked == false) && (hog_2.IsChecked == false))
+        //        cbAllFeatures.IsChecked = false;
+        //}
     }
 }

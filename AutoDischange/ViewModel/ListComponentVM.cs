@@ -56,6 +56,49 @@ namespace AutoDischange.ViewModel
             }
         }
 
+       
+        private bool hogar1;
+        public bool Hogar1
+        {
+            get { return hogar1; }
+            set
+            {
+                hogar1 = value;
+                OnPropertyChanged("Hogar1");
+            }
+        }
+        private bool cuatroUno;
+        public bool CuatroUno
+        {
+            get { return cuatroUno; }
+            set
+            {
+                cuatroUno = value;
+                OnPropertyChanged("CuatroUno");
+            }
+        }
+        private bool prod;
+        public bool Prod
+        {
+            get { return prod; }
+            set
+            {
+                prod = value;
+                OnPropertyChanged("Prod");
+            }
+        }
+
+        private bool hogar2;
+        public bool Hogar2
+        {
+            get { return hogar2; }
+            set
+            {
+                hogar2 = value;
+                OnPropertyChanged("Hogar2");
+            }
+        }
+
         //private string selectedBranch;
         //public string SelectedBranch
         //{
@@ -71,7 +114,7 @@ namespace AutoDischange.ViewModel
         //        OnPropertyChanged("SelectedBranch");
         //    }
         //}
-        
+
         public ListComponentVM()
         {
             ListComponentCommand = new ListComponentCommand(this);
@@ -82,7 +125,8 @@ namespace AutoDischange.ViewModel
             //listcomponentobjtemp2.Branch = "test2";
             //ListComponentObjs.Add(listcomponentobjtemp1);
             //ListComponentObjs.Add(listcomponentobjtemp2);
-            LoadBranch();
+            //LoadBranch();
+            CuatroUno = true;
             ListComponent = new ListComponent();
             //SelectedBranch = new ListComponent();
             PathComponent=Environment.GetFolderPath(Environment.SpecialFolder.UserProfile);
@@ -106,10 +150,20 @@ namespace AutoDischange.ViewModel
 
         public async void copyToJenkins()
         {
+            bool _hogar1_branch = Hogar1;
+            bool _cuatroUno_branch = CuatroUno;
+            bool _prod_branch = Prod;
+            bool _hogar2_branch = Hogar2;
+
+            Console.WriteLine("_hogar1_branch "+ Hogar1);
+            Console.WriteLine("_cuatroUno_branch " + CuatroUno);
+            Console.WriteLine("_prod_branch " + Prod);
+            Console.WriteLine("_hogar2_branch " + Hogar2);
+
             string result = string.Empty, rutaPack = string.Empty, rutaF = string.Empty;
             ListComponentStatus = $"Leyendo paquetes";
             List<DischangeChangeset> changesetList = DatabaseHelper.Read<DischangeChangeset>().OrderBy(x => x.Branch).ToList();
-            List<TfsItem> TodosItemTfs = new List<TfsItem>();            
+            List<TfsItem> TodosItemTfs = new List<TfsItem>();
             //string branch = ListComponent.Branch;
             List<DischangePath> DischangePathList = new List<DischangePath>();
             List<string> PathGU = new List<string>();
@@ -270,7 +324,7 @@ namespace AutoDischange.ViewModel
                     SortPackDischange.SortPack(@rutaF);
                 }
 
-                
+
                 ListComponentStatus = $"Transferencia de archivos culminado.";
                 MessageBox.Show("Transferencia de archivos culminado. ", "Transferencia de archivos culminado.", MessageBoxButton.OK, MessageBoxImage.Information);
             }

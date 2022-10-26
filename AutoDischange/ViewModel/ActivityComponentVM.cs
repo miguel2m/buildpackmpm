@@ -90,7 +90,7 @@ namespace AutoDischange.ViewModel
         {
             try
             {
-                Console.WriteLine(EnvEntrega);
+                //Console.WriteLine(EnvEntrega);
                 ActivityStatus = $"Leyendo paquetes";
                 ActivityVisible = false;
                 string ambiente;

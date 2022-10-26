@@ -6,7 +6,7 @@
         xmlns:local="clr-namespace:AutoDischange.View"
         mc:Ignorable="d"
         Title="Exportar Componentes Jenkins"
-        Height="213.929" Width="469.827"
+        Height="300" Width="469.827"
         xmlns:vm="clr-namespace:AutoDischange.ViewModel"
         WindowStartupLocation="CenterScreen" Icon="/AutoDischange;component/img/export.ico">
     <Window.Resources>
@@ -26,9 +26,9 @@
                 <TextBlock  Text="{Binding ListComponentStatus}"/>
             </StatusBarItem>
         </StatusBar>
-        <StackPanel DockPanel.Dock="Top" Margin="10,10,10.333,10" Height="126">
+        <StackPanel DockPanel.Dock="Top" Margin="10,10,10.333,10" Height="250">
 
-            <TextBlock Text="Ruta:"/>
+            <TextBlock Text="Ruta del paquete:"/>
             <TextBox Name="tbPathComponent" Text="{Binding PathComponent, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
             <Button 
                     Margin="0,5"
@@ -45,6 +45,14 @@
                  DisplayMemberPath="Branch"
                  />-->
             
+            <Label FontWeight="Bold">Application Options</Label>
+            
+            <!--<CheckBox IsThreeState="True" Name="cbAllFeatures" Checked="cbAllFeatures_CheckedChanged" Unchecked="cbAllFeatures_CheckedChanged">Seleccionar todo</CheckBox>-->
+
+            <CheckBox IsChecked="{Binding Hogar1}" Content="20211118_ HOG"/>
+            <CheckBox IsChecked="{Binding CuatroUno}" Content="20211118_ P4.1"/>
+            <CheckBox IsChecked="{Binding Prod}" Content="20220222_ PRO"/>
+            <CheckBox IsChecked="{Binding Hogar2}" Content="202211118_ HOG"/>
 
             <Button Command="{Binding ListComponentCommand}"
                     CommandParameter="{Binding ListComponent}"

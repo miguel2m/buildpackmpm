@@ -46,6 +46,40 @@ namespace AutoDischange.ViewModel
             }
         }
 
+        private string displayName;
+
+        public string DisplayName
+        {
+            get { return displayName; }
+            set
+            {
+                displayName = value;
+                OnPropertyChanged("DisplayName");
+            }
+        }
+        private string commentAuth;
+
+        public string CommentAuth
+        {
+            get { return commentAuth; }
+            set
+            {
+                commentAuth = value;
+                OnPropertyChanged("CommentAuth");
+            }
+        }
+        private string changeCreated;
+
+        public string ChangeCreated
+        {
+            get { return changeCreated; }
+            set
+            {
+                changeCreated = value;
+                OnPropertyChanged("ChangeCreated");
+            }
+        }
+
         public ObservableCollection<TfsItem> TfsList{ get; set; }
       
 
@@ -131,7 +165,11 @@ namespace AutoDischange.ViewModel
                     JenkinsListPath.Clear();
                     DischangeStatus = "Obteniendo Path del TFS.";
                     List<TfsItem> allItem = await TFSRequest.GetChangeset(SelectedChangeset.Changeset);
-                    
+                    TfsModelDetail author = await TFSRequest.GetChangesetAuthor(SelectedChangeset.Changeset);
+
+                    DisplayName = author.author.displayName;
+                    CommentAuth = author.comment;
+                    ChangeCreated = author.createdDate.ToShortDateString();
                     if (!string.IsNullOrEmpty(SelectedChangeset.Branch))
                     {
                         allItem = allItem.FindAll((item)=> item.path.Contains(SelectedChangeset.Branch));

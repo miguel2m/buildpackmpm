@@ -101,7 +101,15 @@
 
                     <TextBlock FontSize="14"  FontFamily="Century Gothic" Height="23" FontWeight="Bold" Text="Branch:"/>
                     <TextBox Text="{Binding Branch}"/>
-
+                    <StackPanel DataContext="{StaticResource vm}"
+                    Margin="10">
+                        <TextBlock FontSize="14"  FontFamily="Century Gothic" Height="23" FontWeight="Bold" Text="Autor:"/>
+                        <TextBox Text="{Binding DisplayName , Mode=TwoWay}"/>
+                        <TextBlock FontSize="14"  FontFamily="Century Gothic" Height="23" FontWeight="Bold" Text="Comentario:"/>
+                        <TextBox Text="{Binding CommentAuth , Mode=TwoWay}"/>
+                        <TextBlock FontSize="14"  FontFamily="Century Gothic" Height="23" FontWeight="Bold" Text="Creado el:"/>
+                        <TextBox Text="{Binding ChangeCreated , Mode=TwoWay}"/>
+                    </StackPanel>
                     <TextBlock FontSize="14"  FontFamily="Century Gothic" Height="23" FontWeight="Bold" Text="Path TFS "/>
                     <ListView DockPanel.Dock="Left"
                           

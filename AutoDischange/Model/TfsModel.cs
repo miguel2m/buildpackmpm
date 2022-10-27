@@ -27,5 +27,18 @@ namespace AutoDischange.Model
             public int count { get; set; }
             public List<TfsValue> value { get; set; }
         }
+
     
+    public class CheckedInBy
+    {
+        public string displayName { get; set; }
+    }
+
+    public class TfsModelDetail
+        {
+            public CheckedInBy author { get; set; }
+            public string comment { get; set; }
+            public DateTime createdDate { get; set; }
+    }
+
 }

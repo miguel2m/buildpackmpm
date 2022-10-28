@@ -212,7 +212,14 @@ namespace AutoDischange.ViewModel
                         }
                         else
                         {
-                            valueString = UtilHelper.nameFile(TfsSelected.path, '/');
+                            if (TfsSelected.path.Contains("/Configuracion/Procesos/"))///Configuracion/Procesos/
+                            {
+                                valueString = "\\ProcesosFull\\" + UtilHelper.nameFile(TfsSelected.path, '/');
+                            }
+                            else
+                            {
+                                valueString = UtilHelper.nameFile(TfsSelected.path, '/');
+                            }
                         }
                     }
                     
@@ -232,11 +239,23 @@ namespace AutoDischange.ViewModel
                         {
                             valueString += ".dll";
                         }
-                        List<DischangePath> DischangePathList = DatabaseHelper.Read<DischangePath>().Where(n => n.Path.Contains(valueString)).ToList();
+                        List<DischangePath> DischangePathList = DatabaseHelper.Read<DischangePath>().Where(n => n.Path.Contains(valueString) && !n.Path.Contains("Upgrade")).ToList();
 
                         foreach (DischangePath itemLocal in DischangePathList)
                         {
-                            ComponentList.Add(itemLocal);
+                            if (itemLocal.Path.Contains("custom-context.xml"))
+                            {
+                                if (!itemLocal.Path.Contains("Configurables") && 
+                                    !itemLocal.Path.Contains("ecDataProvider") &&
+                                    !itemLocal.Path.Contains("BSM"))
+                                {
+                                    ComponentList.Add(itemLocal);
+                                }
+                            }
+                            else
+                            {
+                                ComponentList.Add(itemLocal);
+                            }
                         }
                     }
                 }

@@ -260,6 +260,14 @@ namespace AutoDischange.ViewModel
                                     }
                                     else
                                     {
+                                        if (valueString == "mpm.seg.Customers.Workflow")
+                                        {
+                                            valueString += ".BSM.dll";
+                                        }
+                                        if (valueString == "mpm.seg.Customers.DataRecovers")
+                                        {
+                                            valueString += ".dll";
+                                        }
                                         //guia de ubicaciones
                                         DischangePathList = DatabaseHelper.Read<DischangePath>().Where(n => n.Path.Contains(valueString)).ToList();
 

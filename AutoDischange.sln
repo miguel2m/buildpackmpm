@@ -1,11 +1,11 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 15
-VisualStudioVersion = 15.0.28307.2092
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.32802.440
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AutoDischange", "AutoDischange\AutoDischange.csproj", "{27243368-952E-49E6-870B-3CB982364C93}"
 EndProject
-Project("{54435603-DBB4-11D2-8724-00A0C9A8B90C}") = "AutoPackInstaller", "AutoPackInstaller\AutoPackInstaller.vdproj", "{19D87C34-BA5A-4BB3-B20F-5FEE594D1CC1}"
+Project("{54435603-DBB4-11D2-8724-00A0C9A8B90C}") = "AutpPackInstaller2.0", "AutpPackInstaller2.0\AutpPackInstaller2.0.vdproj", "{A2D62501-BEC5-4774-8CD1-5E8D6C2D1EA3}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -17,8 +17,8 @@ Global
 		{27243368-952E-49E6-870B-3CB982364C93}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{27243368-952E-49E6-870B-3CB982364C93}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{27243368-952E-49E6-870B-3CB982364C93}.Release|Any CPU.Build.0 = Release|Any CPU
-		{19D87C34-BA5A-4BB3-B20F-5FEE594D1CC1}.Debug|Any CPU.ActiveCfg = Debug
-		{19D87C34-BA5A-4BB3-B20F-5FEE594D1CC1}.Release|Any CPU.ActiveCfg = Release
+		{A2D62501-BEC5-4774-8CD1-5E8D6C2D1EA3}.Debug|Any CPU.ActiveCfg = Debug
+		{A2D62501-BEC5-4774-8CD1-5E8D6C2D1EA3}.Release|Any CPU.ActiveCfg = Release
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

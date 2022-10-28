@@ -221,32 +221,29 @@ namespace AutoDischange.ViewModel
                 {
                     ComponentList.Clear();
                     JenkinsListPath.Clear();
-                    string valueString = String.Empty;
+                    string valueString = String.Empty, nameFile2 = String.Empty;
                     ext = Path.GetExtension(TfsSelected.path);
                     if (ext == ".cs")
                     {
                         List<string> listValue = UtilHelper.fileList(TfsSelected.path, '/');
-                        valueString = listValue.First(i => i.Contains("mpm.seg"));
+                        if (listValue.Where(n => n.Contains("mpm.seg")).Count() > 0)
+                        {
+                            valueString = listValue.First(i => i.Contains("mpm.seg"));
+                        }
+                        else
+                        {
+                            valueString = UtilHelper.nameFile(TfsSelected.path, '/');
+                        }
+                        
                     }
                     else
                     {
                         if (ext == ".sql")
                         {
-                            bool flag = false; 
                             valueString = UtilHelper.extraerBranchTfs(TfsSelected.path, '/', ext);
-                            string[] info = TfsSelected.path.Split('/');
-
-                            foreach (string s in info)
-                            {
-                                if (s == "BD")
-                                {
-                                    flag = true;
-                                }
-                                if (flag && s != "BD")
-                                {
-                                    valueString += $"\\{s}";
-                                }
-                            }
+                            List<string> listValue = UtilHelper.fileList(TfsSelected.path, '/');
+                            nameFile2 = listValue.First(i => i.Contains(".sql"));
+                            valueString += $"\\{nameFile2}";
                         }
                         else
                         {
@@ -278,7 +275,18 @@ namespace AutoDischange.ViewModel
                             valueString += ".dll";
                         }
                         List<DischangePath> DischangePathList = DatabaseHelper.Read<DischangePath>().Where(n => n.Path.Contains(valueString) && !n.Path.Contains("Upgrade")).ToList();
-
+                        
+                        //QUIERO EVALUAR SI TIENE LAS CARPETAS COMPLETAS
+                        
+                        if (DischangePathList.Where(n => n.Path.Contains("\\Configurables\\")).Count() > 0 && DischangePathList.Where(n => n.Path.Contains("\\Configurables\\")).Count() < 4)//n.Path.Contains("appCustomerDataRecoverSettingsAhorro.config") &&  
+                        {
+                            if ((DischangePathList.Where(n => n.Path.Contains("\\Configurables\\Des")).Count() == 0) || (DischangePathList.Where(n => n.Path.Contains("\\Configurables\\Desa")).Count() == 0))
+                            {
+                                DischangePath dischangePath = new DischangePath();
+                                dischangePath.Path = "\\Configurables\\Des\\DIS\\ecDataProvider\\CustomerSettings\\appCustomerDataRecoverSettingsAhorro.config";
+                                ComponentList.Add(dischangePath);
+                            }
+                        }
                         foreach (DischangePath itemLocal in DischangePathList)
                         {
                             if (itemLocal.Path.Contains("custom-context.xml"))

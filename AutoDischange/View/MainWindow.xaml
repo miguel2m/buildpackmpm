@@ -86,31 +86,46 @@
         <Grid>
             <ScrollViewer VerticalScrollBarVisibility="Auto" Margin="0,0,0.333,27.333">
                 <StackPanel DataContext="{Binding SelectedChangeset}"
-                    Margin="10">
+                    Margin="5">
                     <TextBlock Background="AntiqueWhite" 
-                           Foreground="Navy" 
-                           FontFamily="Century Gothic"
-                           FontSize="16"
-                           FontStretch="UltraExpanded"
-                           FontStyle="Italic"
-                           FontWeight="UltraBold" 
-                           Text="Changeset Excel"/>
+                               Foreground="Navy" 
+                               FontFamily="Century Gothic"
+                               FontSize="16"
+                               FontStretch="UltraExpanded"
+                               FontStyle="Italic"
+                               FontWeight="UltraBold" 
+                               Text="Changeset Excel"/>
+                    <ScrollViewer HorizontalScrollBarVisibility="Auto" Margin="0,0,0.333,10.333">
+                        <StackPanel 
+                                Orientation="Horizontal"
+                                Margin="5">
 
-                    <TextBlock FontSize="14"  FontFamily="Century Gothic" Height="23" FontWeight="Bold" Text="Changeset:" HorizontalAlignment="Left" Width="713" UseLayoutRounding="False"/>
-                    <TextBox Text="{Binding Changeset}"/>
+                            
 
-                    <TextBlock FontSize="14"  FontFamily="Century Gothic" Height="23" FontWeight="Bold" Text="Branch:"/>
-                    <TextBox Text="{Binding Branch}"/>
+                            <TextBlock FontSize="14"  FontFamily="Century Gothic" Width="85" FontWeight="Bold" Text="Changeset:" HorizontalAlignment="Left" UseLayoutRounding="False"/>
+                            <TextBox Text="{Binding Changeset}" IsReadOnly="True"/>
+
+                            <TextBlock FontSize="14"  FontFamily="Century Gothic" Width="65" FontWeight="Bold" Text="Branch:"/>
+                            <TextBox Text="{Binding Branch}" IsReadOnly="True"/>
+
+                        </StackPanel>
+                    </ScrollViewer>
+
+                    <ScrollViewer HorizontalScrollBarVisibility="Auto" Margin="0,0,0.333,10.333">
                     <StackPanel DataContext="{StaticResource vm}"
-                    Margin="10">
-                        <TextBlock FontSize="14"  FontFamily="Century Gothic" Height="23" FontWeight="Bold" Text="Autor:"/>
-                        <TextBox Text="{Binding DisplayName , Mode=TwoWay}"/>
-                        <TextBlock FontSize="14"  FontFamily="Century Gothic" Height="23" FontWeight="Bold" Text="Comentario:"/>
-                        <TextBox Text="{Binding CommentAuth , Mode=TwoWay}"/>
-                        <TextBlock FontSize="14"  FontFamily="Century Gothic" Height="23" FontWeight="Bold" Text="Creado el:"/>
-                        <TextBox Text="{Binding ChangeCreated , Mode=TwoWay}"/>
+                                Orientation="Horizontal"
+                                Margin="5">
+                        
+                            <TextBlock FontSize="14"  FontFamily="Century Gothic" Width="45" FontWeight="Bold" Text="Autor:"/>
+                            <TextBox Text="{Binding DisplayName , Mode=TwoWay }"  IsReadOnly="True"/>
+                            <TextBlock FontSize="14"  FontFamily="Century Gothic" Width="95" FontWeight="Bold" Text="Comentario:"/>
+                            <TextBox Text="{Binding CommentAuth , Mode=TwoWay}"  IsReadOnly="True"/>
+                            <TextBlock FontSize="14"  FontFamily="Century Gothic" Width="75" FontWeight="Bold" Text="Creado el:"/>
+                            <TextBox Text="{Binding ChangeCreated , Mode=TwoWay}" IsReadOnly="True"/>
+                        
                     </StackPanel>
-                    <TextBlock FontSize="14"  FontFamily="Century Gothic" Height="23" FontWeight="Bold" Text="Path TFS "/>
+                    </ScrollViewer>
+            <TextBlock FontSize="14"  FontFamily="Century Gothic" Height="23" FontWeight="Bold" Text="Path TFS "/>
                     <ListView DockPanel.Dock="Left"
                           
                           SelectionMode="Single"
@@ -119,7 +134,7 @@
                           ItemsSource="{Binding TfsList}">
                         <ListView.ItemTemplate>
                             <DataTemplate>
-                                <TextBlock  Text="{Binding path}"/>
+                                <TextBox  Text="{Binding path}" IsReadOnly="True"/>
                             </DataTemplate>
                         </ListView.ItemTemplate>
                     </ListView>
@@ -131,7 +146,7 @@
                           ItemsSource="{Binding ComponentList}">
                         <ListView.ItemTemplate>
                             <DataTemplate>
-                                <TextBlock Text="{Binding Path}"/>
+                                <TextBox Text="{Binding Path}" IsReadOnly="True"/>
                             </DataTemplate>
                         </ListView.ItemTemplate>
                     </ListView>
@@ -142,7 +157,7 @@
                           ItemsSource="{Binding JenkinsListPath}">
                         <ListView.ItemTemplate>
                             <DataTemplate>
-                                <TextBlock Text="{Binding JkPath}"/>
+                                <TextBox Text="{Binding JkPath}" IsReadOnly="True"/>
                             </DataTemplate>
                         </ListView.ItemTemplate>
                     </ListView>

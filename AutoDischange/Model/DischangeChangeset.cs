@@ -20,10 +20,12 @@ namespace AutoDischange.Model
         [PrimaryKey , AutoIncrement]
         public int Id { get; set; }
         public string Path { get; set; }
+        public string Rama { get; set; }
     }
 
     public class ListComponent
     {
+
         [PrimaryKey, AutoIncrement]
         public int Id { get; set; }
         public string Path { get; set; }
@@ -37,6 +39,12 @@ namespace AutoDischange.Model
         public string PathStart { get; set; }
         public string PathEnd { get; set; }
         public string PathDownload { get; set; }
+    }
+
+    public class BranchUse
+    {
+        public bool UseBranch { get; set; }
+        public string NameBranch { get; set; }
     }
 
    

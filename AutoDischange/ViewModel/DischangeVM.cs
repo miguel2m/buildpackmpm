@@ -233,8 +233,7 @@ namespace AutoDischange.ViewModel
                         else
                         {
                             valueString = UtilHelper.nameFile(TfsSelected.path, '/');
-                        }
-                        
+                        }                        
                     }
                     else
                     {

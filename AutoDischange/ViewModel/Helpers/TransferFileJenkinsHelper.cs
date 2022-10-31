@@ -17,13 +17,14 @@ namespace AutoDischange.ViewModel.Helpers
         {
             string ext = Path.GetExtension(rutaUbicFile);
             string rutaServer = string.Empty, rutaDisChanges = string.Empty, fileExamp = string.Empty;
-            string rutaPack = string.Empty, rutaI = string.Empty;
+            string rutaPack = string.Empty, rutaI = string.Empty, rutaPack2 = string.Empty, rutaF = string.Empty;
             if (ext == ".sql" || ext == ".config")
             {
                 rutaServer = rutaUbicFile;
                 fileExamp = nameFile(rutaServer);
                 rutaPack = rutaNoFile(rutaServer, ext);
                 rutaI = rutaNoFile(rutaServer);
+                rutaF = $@"{rutaUsr}\{rutaPack}";
             }
             else
             {
@@ -43,9 +44,11 @@ namespace AutoDischange.ViewModel.Helpers
                 rutaPack = rutaNoFile(rutaDisChanges);
 
                 rutaI = rutaServer + rutaPack;
-            }
 
-            string rutaF = rutaUsr + $@"{rutaPack}";
+                rutaPack2 = rutaNoFile(rutaUbicFile);
+
+                rutaF = $@"{rutaUsr}{rutaPack2}";
+            }
 
 
             //verifico que el directorio de busqueda exista

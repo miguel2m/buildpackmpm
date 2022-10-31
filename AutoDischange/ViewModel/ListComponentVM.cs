@@ -17,6 +17,7 @@ namespace AutoDischange.ViewModel
     public class ListComponentVM : INotifyPropertyChanged
     {
         public ObservableCollection<ListComponent> ListComponentObjs { get; set; }
+        public ObservableCollection<DischangePath> ComponentList { get; set; }
         public ListComponentCommand ListComponentCommand { get; set; }
         private ListComponent listComponent;
         List<string> listaBranchs = new List<string>();
@@ -55,8 +56,7 @@ namespace AutoDischange.ViewModel
                 OnPropertyChanged("PathComponent");
             }
         }
-
-       
+        
         private bool hogar1;
         public bool Hogar1
         {
@@ -67,6 +67,7 @@ namespace AutoDischange.ViewModel
                 OnPropertyChanged("Hogar1");
             }
         }
+
         private bool cuatroUno;
         public bool CuatroUno
         {
@@ -77,6 +78,7 @@ namespace AutoDischange.ViewModel
                 OnPropertyChanged("CuatroUno");
             }
         }
+
         private bool prod;
         public bool Prod
         {
@@ -99,98 +101,104 @@ namespace AutoDischange.ViewModel
             }
         }
 
-        //private string selectedBranch;
-        //public string SelectedBranch
-        //{
-        //    get { return selectedBranch; }
-        //    set
-        //    {
-        //        selectedBranch = value;
-        //        ListComponent = new ListComponent
-        //        {
-        //            Path = this.PathComponent,
-        //            Branch = selectedBranch,
-        //        };
-        //        OnPropertyChanged("SelectedBranch");
-        //    }
-        //}
-
+        public List<BranchUse> _branchUses = new List<BranchUse>();
         public ListComponentVM()
         {
             ListComponentCommand = new ListComponentCommand(this);
             ListComponentObjs = new ObservableCollection<ListComponent>();
-            //ListComponent listcomponentobjtemp1 = new ListComponent();
-            //ListComponent listcomponentobjtemp2 = new ListComponent();
-            //listcomponentobjtemp1.Branch = "test1";
-            //listcomponentobjtemp2.Branch = "test2";
-            //ListComponentObjs.Add(listcomponentobjtemp1);
-            //ListComponentObjs.Add(listcomponentobjtemp2);
-            //LoadBranch();
             CuatroUno = true;
             ListComponent = new ListComponent();
-            //SelectedBranch = new ListComponent();
-            PathComponent=Environment.GetFolderPath(Environment.SpecialFolder.UserProfile);
+            PathComponent =Environment.GetFolderPath(Environment.SpecialFolder.UserProfile);
 
         }
 
         public void LoadBranch()
         {
+            bool _hogar1_branch = Hogar1;
+            bool _cuatroUno_branch = CuatroUno;
+            bool _prod_branch = Prod;
+            bool _hogar2_branch = Hogar2;
             
-            string rutaBranch = ConfigurationManager.AppSettings["rutaJenkins"];
-            string[] subDir = Directory.GetDirectories(rutaBranch, "20*", SearchOption.TopDirectoryOnly);
-            foreach (var item in subDir.Select((value, i) => new { i, value }))
+            //MEJORAR ESTO
+            if (_hogar1_branch)
             {
-                var value = UtilHelper.nameFile(item.value, '\\');
-                var index = item.i;
-                ListComponent ListComponentObjTemp1 = new ListComponent();
-                ListComponentObjTemp1.Branch = value;
-                ListComponentObjs.Add(ListComponentObjTemp1);
+                BranchUse branchUses1 = new BranchUse();
+                branchUses1.UseBranch = _hogar1_branch;
+                branchUses1.NameBranch = "20211118_HOG";
+                _branchUses.Add(branchUses1);
+            }
+            if (_cuatroUno_branch)
+            {
+                BranchUse branchUses2 = new BranchUse();
+                branchUses2.UseBranch = _cuatroUno_branch;
+                branchUses2.NameBranch = "20211118_P4.1";
+                _branchUses.Add(branchUses2);
+            }
+            if (_prod_branch)
+            {
+                BranchUse branchUses3 = new BranchUse();
+                branchUses3.UseBranch = _prod_branch;
+                branchUses3.NameBranch = "20220222_PRO";
+                _branchUses.Add(branchUses3);
+            }
+            if (_hogar2_branch)
+            {
+                BranchUse branchUses4 = new BranchUse();
+                branchUses4.UseBranch = _hogar2_branch;
+                branchUses4.NameBranch = "202211118_HOG";
+                _branchUses.Add(branchUses4);
             }
         }
 
         public async void copyToJenkins()
         {
-            bool _hogar1_branch = Hogar1;
-            bool _cuatroUno_branch = CuatroUno;
-            bool _prod_branch = Prod;
-            bool _hogar2_branch = Hogar2;
-
-            Console.WriteLine("_hogar1_branch "+ Hogar1);
-            Console.WriteLine("_cuatroUno_branch " + CuatroUno);
-            Console.WriteLine("_prod_branch " + Prod);
-            Console.WriteLine("_hogar2_branch " + Hogar2);
-
-            string result = string.Empty, rutaPack = string.Empty, rutaF = string.Empty;
-            ListComponentStatus = $"Leyendo paquetes";
-            List<DischangeChangeset> changesetList = DatabaseHelper.Read<DischangeChangeset>().OrderBy(x => x.Branch).ToList();
+            string result = string.Empty, rutaPack = string.Empty, rutaF = string.Empty, branchFound = string.Empty;
             List<TfsItem> TodosItemTfs = new List<TfsItem>();
-            //string branch = ListComponent.Branch;
             List<DischangePath> DischangePathList = new List<DischangePath>();
-            List<string> PathGU = new List<string>();
-            if (changesetList.Count > 0)
+            List<ListComponent> PathGU = new List<ListComponent>();
+
+            //CARGAMOS LA LISTA DE BRANCHES SELECCIONADAS
+            LoadBranch();
+
+            //VERIFICAMOS QUE SE HAYAN SELECCIONADO LOS BRANCHES
+            if (_branchUses.Count > 0)
             {
-                try
+                //VERIFICAMOS QUE EXSITA UNA LISTA DE CHANGESET
+                ListComponentStatus = $"Leyendo Changeset";
+                List<DischangeChangeset> changesetList = DatabaseHelper.Read<DischangeChangeset>().OrderBy(x => x.Branch).ToList();
+                if (changesetList.Count > 0)
                 {
-                    ListComponentStatus = $"Leyendo Changeset";
-                    foreach (DischangeChangeset item in changesetList)
+                    try
                     {
-                        List<TfsItem> TodosItmTfs2 = await TFSRequest.GetChangeset(item.Changeset);
+                        //VERIFIQUEMOS QUE LOS BRANCHES SELECCIONADOS SE ENCUENTREN ASOCIADOS A LOS CHANGESET
 
-                        //FUNCION PARA EXTRAER EL NOMBRE COMPLETO DE LOS BRANCHS A UTILIZAR
-                        ExtraerBranch(TodosItmTfs2, item.Branch);
-
-                        if (!string.IsNullOrEmpty(item.Branch))
+                        foreach (DischangeChangeset item in changesetList)
                         {
-                            TodosItmTfs2 = TodosItmTfs2.FindAll((item2) => item2.path.Contains(item.Branch));
-                        }
-
-                        if (TodosItmTfs2.FirstOrDefault() != null)
-                        {
-                            foreach (TfsItem itemLocal in TodosItmTfs2)
+                            ListComponentStatus = $"Comparando ramas seleccionadas con la lista de changeset";
+                            branchFound = BranchSeleccionado(_branchUses, item);
+                            if (branchFound.Contains("Error"))
                             {
-                                if (!string.IsNullOrEmpty(item.Branch))
+                                MessageBox.Show(branchFound);
+                                return;
+                            }
+                            else
+                            {
+                                if (!listaBranchs.Contains(branchFound))
                                 {
-                                    if (itemLocal.path.Contains(item.Branch))
+                                    listaBranchs.Add(branchFound);
+                                }
+                            }
+
+                            //LO DEL TFS //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+                            List<TfsItem> TodosItmTfs2 = await TFSRequest.GetChangeset(item.Changeset);
+
+                            TodosItmTfs2 = TodosItmTfs2.FindAll((item2) => item2.path.Contains(branchFound));
+
+                            if (TodosItmTfs2.FirstOrDefault() != null)
+                            {
+                                foreach (TfsItem itemLocal in TodosItmTfs2)
+                                {
+                                    if (itemLocal.path.Contains(branchFound))
                                     {
                                         TodosItemTfs.Add(itemLocal);
                                     }
@@ -198,147 +206,268 @@ namespace AutoDischange.ViewModel
                             }
                         }
                     }
-                }
-                catch (Exception e)
-                {
-                    Log4net.log.Error(e.Message);
-                    string exc = e.Message;
-                    ListComponentStatus = $"Exception:{exc}";
-                }
-
-                //obtener lista guia de ubicaciones 
-                try
-                {
-                    if (TodosItemTfs.Count > 0)
+                    catch (Exception e)
                     {
-                        ListComponentStatus = $"Cargando datos de TFS.";
-                        List<string> list = new List<string>();
-                        string valueString = String.Empty, ext = string.Empty;
-                        foreach (TfsItem item in TodosItemTfs)
+                        Log4net.log.Error(e.Message);
+                        string exc = e.Message;
+                        ListComponentStatus = $"Exception:{exc}";
+                    }
+
+                    //obtener lista guia de ubicaciones 
+                    try
+                    {
+                        if (TodosItemTfs.Count > 0)
                         {
-                            ext = Path.GetExtension(item.path);
-
-                            list = item.path.Split('.').ToList();
-                            if (ext != ".csproj")
+                            ListComponentStatus = $"Cargando datos de TFS.";
+                            List<string> list = new List<string>();
+                            string valueString = String.Empty, ext = string.Empty, nameFile2 = String.Empty, nameBranch2 = string.Empty, cad = string.Empty;
+                            foreach (TfsItem item in TodosItemTfs)
                             {
-                                if (ext == ".cs")
-                                {
-                                    List<string> listValue = UtilHelper.fileList(item.path, '/');
-                                    valueString = listValue.FirstOrDefault(i => i.Contains("mpm.seg"));
-                                }
-                                else
-                                {
-                                    if (ext == ".sql")
-                                    {
-                                        bool flag2 = false;
-                                        valueString = UtilHelper.extraerBranchTfs(item.path, '/', ext);
-                                        string[] info = item.path.Split('/');
+                                ext = Path.GetExtension(item.path);
 
-                                        foreach (string s in info)
+                                list = item.path.Split('.').ToList();
+                                if (ext != ".csproj")
+                                {
+                                    if (ext == ".cs")
+                                    {
+                                        List<string> listValue = UtilHelper.fileList(item.path, '/');
+                                        if (listValue.Where(n => n.Contains("mpm.seg")).Count() > 0)
                                         {
-                                            if (s == "BD")
-                                            {
-                                                flag2 = true;
-                                            }
-                                            if (flag2 && s != "BD")
-                                            {
-                                                valueString += $"\\{s}";
-                                            }
+                                            valueString = listValue.First(i => i.Contains("mpm.seg"));
+                                        }
+                                        else
+                                        {
+                                            valueString = UtilHelper.nameFile(item.path, '/');
                                         }
                                     }
                                     else
                                     {
-                                        valueString = UtilHelper.nameFile(item.path, '/');
-                                    }
-                                }
-
-                                if (valueString != null)
-                                {
-                                    if (ext == ".sql")
-                                    {
-                                        PathGU.Add(valueString);
-                                    }
-                                    else
-                                    {
-                                        if (valueString == "mpm.seg.Customers.Workflow")
+                                        if (ext == ".sql")
                                         {
-                                            valueString += ".BSM.dll";
+                                            valueString = UtilHelper.extraerBranchTfs(item.path, '/', ext);
+                                            List<string> listValue = UtilHelper.fileList(item.path, '/');
+                                            nameFile2 = listValue.First(i => i.Contains(".sql"));
+                                            valueString += $"\\{nameFile2}";
                                         }
-                                        if (valueString == "mpm.seg.Customers.DataRecovers")
+                                        else
                                         {
-                                            valueString += ".dll";
-                                        }
-                                        //guia de ubicaciones
-                                        DischangePathList = DatabaseHelper.Read<DischangePath>().Where(n => n.Path.Contains(valueString)).ToList();
-
-                                        for (int i = 0; i < DischangePathList.Count; i++)
-                                        {
-                                            if (ext == ".config")
+                                            if (item.path.Contains("/Configuracion/Procesos/"))///Configuracion/Procesos/
                                             {
-                                                foreach (var item2 in listaBranchs)
-                                                {
-                                                    string cad = UtilHelper.extraerBranchTfs(DischangePathList[i].Path, '/', ext, item2);
-                                                    PathGU.Add(cad + DischangePathList[i].Path);
-                                                }
+                                                valueString = "\\ProcesosFull\\" + UtilHelper.nameFile(item.path, '/');
                                             }
                                             else
                                             {
-                                                PathGU.Add(DischangePathList[i].Path);
+                                                valueString = UtilHelper.nameFile(item.path, '/');
+                                            }
+                                        }
+                                    }
+                                    if (valueString != null)
+                                    {
+                                        if (ext == ".sql")
+                                        {
+                                            foreach (BranchUse item2 in _branchUses)
+                                            {
+                                                if (item.path.Contains(item2.NameBranch))
+                                                {
+                                                    ExtraerBranchTFS2(valueString, item);
+                                                }
+                                            }
+                                            if (!PathGU.Contains(ListComponent))
+                                            {
+                                                PathGU.Add(ListComponent);
+                                            }
+                                        }
+                                        else
+                                        {
+                                            if (valueString == "mpm.seg.Customers.Workflow")
+                                            {
+                                                valueString += ".BSM.dll";
+                                            }
+                                            if (valueString == "mpm.seg.Customers.DataRecovers")
+                                            {
+                                                valueString += ".dll";
+                                            }
+                                            //guia de ubicaciones
+                                            //DischangePathList = DatabaseHelper.Read<DischangePath>().Where(n => n.Path.Contains(valueString)).ToList();
+                                            DischangePathList = DatabaseHelper.Read<DischangePath>().Where(n => n.Path.Contains(valueString) && !n.Path.Contains("Upgrade")).ToList();
+
+                                            //QUIERO EVALUAR SI TIENE LAS CARPETAS COMPLETAS
+                                            if (DischangePathList.Where(n => n.Path.Contains("\\Configurables\\")).Count() > 0 && DischangePathList.Where(n => n.Path.Contains("\\Configurables\\")).Count() < 4)//n.Path.Contains("appCustomerDataRecoverSettingsAhorro.config") &&  
+                                            {
+                                                if ((DischangePathList.Where(n => n.Path.Contains("\\Configurables\\Des")).Count() == 0) || (DischangePathList.Where(n => n.Path.Contains("\\Configurables\\Desa")).Count() == 0))
+                                                {
+                                                    DischangePath dischangePath = new DischangePath();
+                                                    string rutaConf = "\\Configurables\\Desa\\DIS\\ecDataProvider\\CustomerSettings\\appCustomerDataRecoverSettingsAhorro.config";
+                                                    foreach (BranchUse item2 in _branchUses)
+                                                    {
+                                                        if (item.path.Contains(item2.NameBranch))
+                                                        {
+                                                            cad = UtilHelper.extraerBranchTfs(rutaConf, '/', ext, item2.NameBranch);
+                                                            cad += rutaConf;
+                                                            ExtraerBranchTFS2(cad, item);
+
+                                                        }
+                                                    }
+                                                    if (!PathGU.Contains(ListComponent))
+                                                    {
+                                                        PathGU.Add(ListComponent);
+                                                    }
+                                                }
+                                            }
+
+                                            for (int i = 0; i < DischangePathList.Count; i++)
+                                            {
+                                                if (DischangePathList[i].Path.Contains("custom-context.xml"))
+                                                {
+                                                    if (!DischangePathList[i].Path.Contains("Configurables") &&
+                                                        !DischangePathList[i].Path.Contains("ecDataProvider") &&
+                                                        !DischangePathList[i].Path.Contains("BSM"))
+                                                    {
+                                                        ExtraerBranchTFS2(DischangePathList[i].Path, item);
+                                                        if (!PathGU.Contains(ListComponent))
+                                                        {
+                                                            PathGU.Add(ListComponent);
+                                                        }
+                                                    }
+                                                }
+                                                else if (ext == ".config")
+                                                {
+                                                    //ExtraerBranchTFS2(DischangePathList[i].Path, _branchUses, item);
+                                                    foreach (var item2 in _branchUses)
+                                                    {
+                                                        if (item.path.Contains(item2.NameBranch))
+                                                        {
+                                                            cad = UtilHelper.extraerBranchTfs(DischangePathList[i].Path, '/', ext, item2.NameBranch);
+                                                            cad += DischangePathList[i].Path;
+                                                            if (cad.Contains("Des"))
+                                                            {
+                                                                cad = cad.Replace("Des", "DESA");
+                                                            }
+                                                            else if (cad.Contains("Cer"))
+                                                            {
+                                                                cad = cad.Replace("Cer", "CERT");
+                                                            }
+                                                            else if (cad.Contains("Pre"))
+                                                            {
+                                                                cad = cad.Replace("Pre", "PRE");
+                                                            }
+                                                            else if (cad.Contains("Pro"))
+                                                            {
+                                                                cad = cad.Replace("Pro", "PRO");
+                                                            }
+                                                            ExtraerBranchTFS2(cad, item);
+
+                                                        }
+                                                    }
+                                                    if (!PathGU.Contains(ListComponent))
+                                                    {
+                                                        PathGU.Add(ListComponent);
+                                                    }
+                                                }
+                                                else
+                                                {
+                                                    ExtraerBranchTFS2(DischangePathList[i].Path, item);
+                                                    if (!PathGU.Contains(ListComponent))
+                                                    {
+                                                        PathGU.Add(ListComponent);
+                                                    }
+                                                }
+
                                             }
 
                                         }
 
                                     }
-
                                 }
                             }
-                        }
-                    }
-                }
-                catch (Exception ex)
-                {
-                    Log4net.log.Error(ex.Message);
-                    string exc = ex.Message;
-                    ListComponentStatus = $"Exception:{exc}";
-                }
-            }
-
-            string rutaCont = ListComponent.Path + "\\";
-            if (PathGU.Count > 0)
-            {
-                ListComponentStatus = $"Transfiriendo archivos de Jenkins.";
-
-                foreach (var branch in listaBranchs)
-                {
-                    //voy agregar el directorio donde se va a agregar el paquete del Jenkins
-                    rutaF = rutaCont + $@"{branch}_{DateTime.Now.ToString("yyyyMMddHHmmss")}\";
-
-                    //CREAR ESTRUCTURA DE ARCHIVOS
-                    UtilHelper.buildStructure(rutaF);
-
-                    try
-                    {
-                        foreach (string itemPathGU in PathGU)
-                        {
-                            result = TransferFileJenkinsHelper.JenkinsTransferFile(itemPathGU, rutaF, branch);
                         }
                     }
                     catch (Exception ex)
                     {
                         Log4net.log.Error(ex.Message);
-                        MessageBox.Show("Error al ejecutar transferencia de paquetes Jenkins: " + ex.Message, "Error al ejecutar transferencia de paquetes Jenkins", MessageBoxButton.OK, MessageBoxImage.Error);
+                        string exc = ex.Message;
+                        ListComponentStatus = $"Exception:{exc}";
                     }
-
-                    SortPackDischange.SortPack(@rutaF);
                 }
 
+                string rutaCont = PathComponent + "\\";
+                if (PathGU.Count > 0)
+                {
+                    ListComponentStatus = $"Transfiriendo archivos de Jenkins.";
 
-                ListComponentStatus = $"Transferencia de archivos culminado.";
-                MessageBox.Show("Transferencia de archivos culminado. ", "Transferencia de archivos culminado.", MessageBoxButton.OK, MessageBoxImage.Information);
+                    foreach (var pathFound in PathGU)
+                    {
+                        //voy agregar el directorio donde se va a agregar el paquete del Jenkins
+                        rutaF = $@"{rutaCont}{pathFound.Branch}_{DateTime.Now.ToString("yyyyMMddHHmmss")}";
+
+                        try
+                        {
+                            //CREAR ESTRUCTURA DE ARCHIVOS
+                            UtilHelper.buildStructure(rutaF);
+
+                            result = TransferFileJenkinsHelper.JenkinsTransferFile(pathFound.Path, rutaF, pathFound.Branch);
+                        }
+                        catch (Exception ex)
+                        {
+                            Log4net.log.Error(ex.Message);
+                            MessageBox.Show("Error al ejecutar transferencia de paquetes Jenkins: " + ex.Message, "Error al ejecutar transferencia de paquetes Jenkins", MessageBoxButton.OK, MessageBoxImage.Error);
+                        }
+
+                        //SortPackDischange.SortPack(@rutaF);
+                    }
+
+
+                    ListComponentStatus = $"Transferencia de archivos culminado.";
+                    MessageBox.Show("Transferencia de archivos culminado. ", "Transferencia de archivos culminado.", MessageBoxButton.OK, MessageBoxImage.Information);
+                }
+                else
+                {
+                    ListComponentStatus = $"No hay archivos para transferir.";
+                }
+
             }
             else
             {
-                ListComponentStatus = $"No hay archivos para transferir.";
+                MessageBox.Show("Debe seleccionar al menos un branch para continuar");
+            }
+        }
+
+        private void ExtraerBranchTFS2(string rutaConf, TfsItem item)
+        {
+            ListComponent = new ListComponent();
+            ListComponent.Path = rutaConf;
+            foreach (BranchUse item2 in _branchUses)
+            {
+                if (item2.UseBranch)
+                {
+                    if (item.path.Contains(item2.NameBranch))
+                    {
+                        ListComponent.Branch = item2.NameBranch;
+                    }
+                }
+            }
+        }
+
+
+        public string BranchSeleccionado(List<BranchUse> branchUses, DischangeChangeset item)
+        {
+            string resultado = string.Empty;
+            if (_branchUses.Count > 0)
+            {
+                //NECESITO VERIFICAR QUE SE HAYA SELECCIONADO LOS BRANCH CORRECTOS
+                foreach (BranchUse branchUse in _branchUses)
+                {
+                    //BUSCO LO QUE FUE SELECCIONADO
+                    if (branchUse.NameBranch.Contains(item.Branch))
+                    {
+                        return resultado = branchUse.NameBranch;
+                    }
+                }
+                return "Error: Seleccione el branch asociado al changeset para generar el paquete";
+            }
+            else
+            {
+                return "Error: No fue seleccionado ningun branch para generar el paquete";
             }
         }
 

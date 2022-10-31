@@ -44,7 +44,7 @@ namespace AutoDischange.ViewModel.Helpers
         public static string extraerBranchTfs(string url, char separator, string ext, string branch = null)
         {
             string brancho = ConfigurationManager.AppSettings["rutaJenkins"];
-            string[] pathTfs = url.Split('/');
+            string[] pathTfs = url.Split(separator);
 
             List<BranchJenkins> nombRama = ListaBranchesJenkins();
             int cant = nombRama.Count;

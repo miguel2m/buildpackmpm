@@ -18,13 +18,13 @@ namespace AutoDischange.ViewModel.Helpers
                 string pathRoot = path;
 
                 char backSlash = Path.DirectorySeparatorChar;
-                string pathAlojables = $"{@pathRoot}Alojables{backSlash}DIS{backSlash}";
+                string pathAlojables = $"{@pathRoot}{backSlash}Alojables{backSlash}DIS{backSlash}";
                 //string pathConfigurables = $"{@pathRoot}Configurables{backSlash}Cert{backSlash}";
                 //string pathConfigurables = $"{@pathRoot}Configurables{backSlash}";
                 string pathConfigurables = $"{@pathRoot}{backSlash}";
-                string pathScript = $"{@pathRoot}Scripts{backSlash}DIS{backSlash}";
+                string pathScript = $"{@pathRoot}{backSlash}Scripts{backSlash}DIS{backSlash}";
 
-                System.IO.DirectoryInfo dirRoot = new System.IO.DirectoryInfo(pathRoot);
+                System.IO.DirectoryInfo dirRoot = new System.IO.DirectoryInfo(pathRoot + backSlash);
 
                 //IEnumerable<System.IO.FileInfo> listPathRoot = dirRoot.GetFiles("*.*", System.IO.SearchOption.AllDirectories).Where(s => !(s.Name.EndsWith(".config") || s.Name.EndsWith(".sql"))); ;
                 IEnumerable<System.IO.FileInfo> listPathAlojables = dirRoot.GetFiles("*.*", System.IO.SearchOption.AllDirectories).Where(s => !(s.Name.EndsWith(".config") || s.Name.EndsWith(".sql")));
@@ -36,7 +36,7 @@ namespace AutoDischange.ViewModel.Helpers
                 {
 
 
-                    string outputFolder = NormalizePath(item.DirectoryName, pathRoot, pathAlojables);
+                    string outputFolder = NormalizePath(item.DirectoryName, pathRoot + backSlash, pathAlojables);
                     string outputFile = outputFolder + backSlash + item.Name;
                     CreateFolderOutput(item.FullName, outputFolder, outputFile);
 
@@ -69,7 +69,7 @@ namespace AutoDischange.ViewModel.Helpers
         private static string NormalizePath(string pathInput,string pathRoot,string pathEnv) { 
             string directoryFile = pathInput.Replace(pathRoot, "");
      
-            string directoryOut = $@"{pathEnv + directoryFile}"; ;
+            string directoryOut = $@"{pathEnv + directoryFile}";
 
             return directoryOut;
         }

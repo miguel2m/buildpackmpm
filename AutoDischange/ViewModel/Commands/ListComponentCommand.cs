@@ -46,7 +46,7 @@ namespace AutoDischange.ViewModel.Commands
 
         public void Execute(object parameter)
         {
-            ViewModel.copyToJenkins();
+            ViewModel.CopyToJenkinsAsync();
         }
     }
 }

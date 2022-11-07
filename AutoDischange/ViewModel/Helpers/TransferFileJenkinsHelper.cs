@@ -18,7 +18,7 @@ namespace AutoDischange.ViewModel.Helpers
             string ext = Path.GetExtension(rutaUbicFile);
             string rutaServer = string.Empty, rutaDisChanges = string.Empty, fileExamp = string.Empty;
             string rutaPack = string.Empty, rutaI = string.Empty, rutaPack2 = string.Empty, rutaF = string.Empty;
-            if (ext == ".sql" || ext == ".config")
+            if (ext == ".sql" || ext == ".config" || ext == ".cmd")
             {
                 rutaServer = rutaUbicFile;
                 fileExamp = nameFile(rutaServer);
@@ -43,18 +43,20 @@ namespace AutoDischange.ViewModel.Helpers
                 //Separo la ruta del dischange para quitar el nombre del archivo
                 rutaPack = rutaNoFile(rutaDisChanges);
 
-                rutaI = rutaServer + rutaPack;
+                //ARMO LA RUTA PARA BUSCAR EN JENKINS
+                rutaI = rutaPack.Contains($@"\ci-jenkins\branches\BSM\{branch}\Pack\Latest\") ? rutaPack : rutaServer + rutaPack;
 
                 rutaPack2 = rutaNoFile(rutaUbicFile);
-
-                rutaF = $@"{rutaUsr}{rutaPack2}";
+                //ARMO LA RUTA PARA COPIAR EN LOCAL
+                rutaF = rutaUbicFile.Contains($@"\\ci-jenkins\branches\BSM\{branch}\Pack\Latest\") ? rutaUsr + "\\Alojables\\DIS" +  rutaNoFile(rutaUbicFile.Replace($@"\\ci-jenkins\branches\BSM\{branch}\Pack\Latest", "")) : $@"{rutaUsr}{rutaPack2}";
             }
 
 
             //verifico que el directorio de busqueda exista
             if (!Directory.Exists(rutaI))
             {
-                return "El directorio donde quiere acceder no existe";
+                Log4net.log.Error($@"El directorio {rutaI} donde quiere acceder no existe");
+                MessageBox.Show($@"El directorio {rutaI} donde quiere acceder no existe");
             }
 
             //Verifico que el directorio de destino exista
@@ -80,7 +82,8 @@ namespace AutoDischange.ViewModel.Helpers
             }
             else
             {
-                Log4net.log.Info(rutaI + fileExamp);
+                Log4net.log.Error($@"El archivo {fileExamp} no esta en la ruta {rutaI}");
+                MessageBox.Show($@"El archivo {fileExamp} no esta en la ruta {rutaI}");
             }
             return "El conjunto de directorios fue copiado correctamente.";
         }
@@ -98,7 +101,7 @@ namespace AutoDischange.ViewModel.Helpers
             string result = string.Empty;
             List<string> list = new List<string>();
             list = url.Split('\\').ToList();
-            if (ext == ".sql" || ext == ".config")
+            if (ext == ".sql" || ext == ".config" || ext == ".cmd")
             {
                 int a = ext == ".sql" ? list.IndexOf("Scripts") : list.IndexOf("Configurables");
                 for (int i = a; i < list.Count - 1; i++)

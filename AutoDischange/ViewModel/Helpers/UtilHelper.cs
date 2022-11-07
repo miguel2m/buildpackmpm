@@ -51,24 +51,35 @@ namespace AutoDischange.ViewModel.Helpers
             int count = 0;
             foreach (string busqueda in pathTfs)
             {
-                if (ext == ".config" && branch != null)
+                if (branch != null)
                 {
-                    brancho += $"{branch}\\Pack\\Latest";
-                    return brancho;
-                }
-                while (count < cant)
-                {
-                    if (nombRama[count].NameBranch != "Customers" && nombRama[count].NameBranch != "Logs" && nombRama[count].NameBranch != "utils")
+                    if (busqueda.Contains(ext))
                     {
-                        if (nombRama[count].NameBranch == busqueda )
+                        if (ext == ".sql")
                         {
-                            brancho += nombRama[count].NameBranch + "\\Pack\\Latest\\Scripts";
-                            return brancho;
+                            brancho += $"{branch}\\Pack\\Latest\\Scripts";
+                        }
+                        else
+                        {
+                            brancho += $"{branch}\\Pack\\Latest";
                         }
                     }
-                    count++;
                 }
-                count = 0;
+                else
+                {
+                    while (count < cant)
+                    {
+                        if (nombRama[count].NameBranch != "Customers" && nombRama[count].NameBranch != "Logs" && nombRama[count].NameBranch != "utils")
+                        {
+                            if (nombRama[count].NameBranch == busqueda)
+                            {
+                                brancho += nombRama[count].NameBranch + "\\Pack\\Latest\\Scripts";
+                            }
+                        }
+                        count++;
+                    }
+                    count = 0;
+                }
             }
             return brancho;
         }

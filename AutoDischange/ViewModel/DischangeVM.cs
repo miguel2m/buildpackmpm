@@ -274,25 +274,65 @@ namespace AutoDischange.ViewModel
                             valueString += ".dll";
                         }
                         List<DischangePath> DischangePathList = DatabaseHelper.Read<DischangePath>().Where(n => n.Path.Contains(valueString) && !n.Path.Contains("Upgrade")).ToList();
-                        
-                        //QUIERO EVALUAR SI TIENE LAS CARPETAS COMPLETAS
-                        
-                        if (DischangePathList.Where(n => n.Path.Contains("\\Configurables\\")).Count() > 0 && DischangePathList.Where(n => n.Path.Contains("\\Configurables\\")).Count() < 4)//n.Path.Contains("appCustomerDataRecoverSettingsAhorro.config") &&  
+
+                        DischangePath dischangePath = new DischangePath();
+
+                        string rutaConf = string.Empty;
+                        //TENGO UN ARCHIVO EN EL TFS PERO NO TENGO LA RUTA EN LA GUIA DE UBICACIONES
+                        if (DischangePathList.Count() == 0)
                         {
-                            if ((DischangePathList.Where(n => n.Path.Contains("\\Configurables\\Des")).Count() == 0) || (DischangePathList.Where(n => n.Path.Contains("\\Configurables\\Desa")).Count() == 0))
+                            if (valueString.Count() > 0)
                             {
-                                DischangePath dischangePath = new DischangePath();
-                                dischangePath.Path = "\\Configurables\\Des\\DIS\\ecDataProvider\\CustomerSettings\\appCustomerDataRecoverSettingsAhorro.config";
-                                ComponentList.Add(dischangePath);
+                                if (TfsSelected.path.Contains("/Mappings/General/"))
+                                {
+                                    dischangePath.Path = $@"\Alojables\DIS\Batch\Mappings\Partials\General\{valueString}";
+                                    ComponentList.Add(dischangePath);
+                                }
+                            }
+                        }                
+                        //QUIERO EVALUAR SI LA CARPETA CONFIGURABLE ESTA COMPLETA EN LOS 4 AMBIENTES
+                        if (DischangePathList.Where(n => n.Path.Contains("\\Configurables\\Cer")).Count() > 0 && 
+                            DischangePathList.Where(n => n.Path.Contains("\\Configurables\\Pre")).Count() > 0 &&
+                            DischangePathList.Where(n => n.Path.Contains("\\Configurables\\Pro")).Count() > 0 &&
+                                (
+                                    DischangePathList.Where(n => n.Path.Contains("\\Configurables\\Des")).Count() == 0 && 
+                                    DischangePathList.Where(n => n.Path.Contains("\\Configurables\\Desa")).Count() == 0
+                                )
+                            )
+                        {
+                            foreach (var item in DischangePathList)
+                            {
+                                if (!item.Path.Contains("custom-context.xml") && !item.Path.Contains("customer-operation-services.xml"))
+                                {
+                                    if (!item.Path.Contains("Alojables"))
+                                    {
+                                        if (item.Path.Contains("Cer"))
+                                        {
+                                            rutaConf = item.Path;
+                                            dischangePath.Path = rutaConf.Replace("Cer", "Desa");
+                                            ComponentList.Add(dischangePath);
+                                        }
+                                    }
+                                }
                             }
                         }
+                        ///HASTA AQUI 
+                        
+
                         foreach (DischangePath itemLocal in DischangePathList)
                         {
                             if (itemLocal.Path.Contains("custom-context.xml"))
                             {
-                                if (!itemLocal.Path.Contains("Configurables") && 
+                                if (!itemLocal.Path.Contains("Configurables") &&
                                     !itemLocal.Path.Contains("ecDataProvider") &&
                                     !itemLocal.Path.Contains("BSM"))
+                                {
+                                    ComponentList.Add(itemLocal);
+                                }
+                            }
+                            else if (itemLocal.Path.Contains("customer-operation-services.xml")) 
+                            {
+                                if (itemLocal.Path.Contains("Alojables"))
                                 {
                                     ComponentList.Add(itemLocal);
                                 }

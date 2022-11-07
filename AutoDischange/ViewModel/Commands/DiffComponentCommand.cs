@@ -64,20 +64,7 @@ namespace AutoDischange.ViewModel.Commands
 
         public void Execute(object parameter)
         {
-           
-            //using (var fbd = new FolderBrowserDialog())
-            //{
-            //    DialogResult result = fbd.ShowDialog();
-
-            //    if (!string.IsNullOrWhiteSpace(fbd.SelectedPath))
-            //    {
-            //        ViewModel.GenericInput(fbd.SelectedPath);
-
-            //    }
-            //}
-
             ViewModel.GenericInput();
-
         }
 
     }

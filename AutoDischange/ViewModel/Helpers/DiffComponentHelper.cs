@@ -165,14 +165,20 @@ namespace AutoDischange.ViewModel.Helpers
                             diffCompareModel.FechaResult = 1;
                             diffCompareModel.LenghtResult = 1;
 
-                            diffCompareModelList.Add(diffCompareModel);
+                            //diffCompareModelList.Add(diffCompareModel);
                             diffCompareModelListIguales.Add(diffCompareModel);
                             count++;
                         }
                     });
                     task1.Start();
                     await task1;
+                    if (diffCompareModelListIguales.Any())
+                    {
+                        diffCompareModelList.AddRange(diffCompareModelListIguales.OrderBy(o => o.PathA).ToList());
+                    }
                 }
+
+            
                 Task<IEnumerable<System.IO.FileInfo>> task2 = new Task<IEnumerable<System.IO.FileInfo>>(() =>
                 {
                     //Los que estan solo en A
@@ -251,7 +257,7 @@ namespace AutoDischange.ViewModel.Helpers
                                     diffCompareModel.HashA.CompareTo(diffCompareModel.LenghtB) == 0 ? 2 : 3
                                     : 4; // 2= Iguales , 3= A es mayor B y 4= B es mayor A
 
-                                diffCompareModelList.Add(diffCompareModel);
+                                //diffCompareModelList.Add(diffCompareModel);
                                 diffCompareModelListDiferentes.Add(diffCompareModel);
                                 count++;
 
@@ -260,6 +266,11 @@ namespace AutoDischange.ViewModel.Helpers
                     });
                     task5.Start();
                     await task5;
+
+                    if (diffCompareModelListDiferentes.Any())
+                    {
+                        diffCompareModelList.AddRange(diffCompareModelListDiferentes.OrderBy(o => o.PathA).ToList());
+                    }
                 }
 
                 if (queryNameList1Only.Count() > 0)
@@ -293,13 +304,18 @@ namespace AutoDischange.ViewModel.Helpers
                             diffCompareModel.FechaResult = 5;
                             diffCompareModel.LenghtResult = 5;
 
-                            diffCompareModelList.Add(diffCompareModel);
+                            //diffCompareModelList.Add(diffCompareModel);
                             diffCompareModelListHuerfanos.Add(diffCompareModel);
                             count++;
                         }
                     });
                     task6.Start();
                     await task6;
+
+                    if (diffCompareModelListHuerfanos.Any())
+                    {
+                        diffCompareModelList.AddRange(diffCompareModelListHuerfanos.OrderBy(o => o.PathA).ToList());
+                    }
                 }
 
                 

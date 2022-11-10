@@ -114,7 +114,10 @@ namespace AutoDischange.ViewModel.Helpers
 
                 //Los que estan A y B
                 List<DiffCompareModel> diffCompareModelList = new List<DiffCompareModel>();
-                DiffCompareModel diffCompareModel;
+                List<DiffCompareModel> diffCompareModelListIguales = new List<DiffCompareModel>();
+                List<DiffCompareModel> diffCompareModelListDiferentes = new List<DiffCompareModel>();
+                List<DiffCompareModel> diffCompareModelListHuerfanos = new List<DiffCompareModel>();
+            DiffCompareModel diffCompareModel;
                 string s;
                 string sHash;
                 string sizeAll;
@@ -163,7 +166,7 @@ namespace AutoDischange.ViewModel.Helpers
                             diffCompareModel.LenghtResult = 1;
 
                             diffCompareModelList.Add(diffCompareModel);
-
+                            diffCompareModelListIguales.Add(diffCompareModel);
                             count++;
                         }
                     });
@@ -249,7 +252,7 @@ namespace AutoDischange.ViewModel.Helpers
                                     : 4; // 2= Iguales , 3= A es mayor B y 4= B es mayor A
 
                                 diffCompareModelList.Add(diffCompareModel);
-
+                                diffCompareModelListDiferentes.Add(diffCompareModel);
                                 count++;
 
                             }
@@ -291,7 +294,7 @@ namespace AutoDischange.ViewModel.Helpers
                             diffCompareModel.LenghtResult = 5;
 
                             diffCompareModelList.Add(diffCompareModel);
-
+                            diffCompareModelListHuerfanos.Add(diffCompareModel);
                             count++;
                         }
                     });
@@ -301,7 +304,12 @@ namespace AutoDischange.ViewModel.Helpers
 
                 
 
-                ExcelHelper.CreateExcelDiffComapre(diffCompareModelList, pathUser, diffComponent);
+                ExcelHelper.CreateExcelDiffComapre(diffCompareModelList,
+                    diffCompareModelListIguales,
+                    diffCompareModelListDiferentes,
+                    diffCompareModelListHuerfanos,
+                    pathUser,
+                    diffComponent);
                 return true;
             
             

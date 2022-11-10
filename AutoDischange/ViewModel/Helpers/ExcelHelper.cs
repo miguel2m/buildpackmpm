@@ -83,7 +83,12 @@ namespace AutoDischange.ViewModel.Helpers
 
         //Inicio Comparacion de componeentes
         //Create excel aand insert worksheet for Comparacion de componeentes
-        public static void CreateExcelDiffComapre(List<DiffCompareModel> diffCompareModelList,string pathUser, DiffComponent diffComponent)
+        public static void CreateExcelDiffComapre(List<DiffCompareModel> diffCompareModelList,
+            List<DiffCompareModel> diffCompareModelListIguales,
+            List<DiffCompareModel> diffCompareModelListDiferentes,
+            List<DiffCompareModel> diffCompareModelListHuerfanos,
+            string pathUser,
+            DiffComponent diffComponent)
         {
             string rtfFile = System.IO.Path.Combine(pathUser, $"InformeComparacionComponentes_{DateTime.Now.ToString("yyyyMMddHHmmss")}.xlsx");
 
@@ -93,6 +98,7 @@ namespace AutoDischange.ViewModel.Helpers
 
 
             SLDocument sl = new SLDocument();
+            sl.RenameWorksheet(SLDocument.DefaultFirstSheetName, "Comparación");
 
             sl.SetCellValue("B1", "PAQUETE 1");
             sl.SetCellValue("H1", "PAQUETE 2");
@@ -318,6 +324,30 @@ namespace AutoDischange.ViewModel.Helpers
 
                 _index++;
             }
+
+
+            sl.AddWorksheet("Resumen");
+            sl.SetCellValue(1, 1, "Total de componentes comparados");
+            sl.SetCellValue(2, 1, "Total de componentes iguales");
+            sl.SetCellValue(3, 1, "Total de componentes con diferencias");
+            sl.SetCellValue(4, 1, "Total de componentes huérfanos");
+
+            sl.SetCellValue(1, 2, diffCompareModelList.Count());
+            sl.SetCellValue(2, 2, diffCompareModelListIguales.Count());
+            sl.SetCellValue(3, 2, diffCompareModelListDiferentes.Count());
+            sl.SetCellValue(4, 2, diffCompareModelListHuerfanos.Count());
+
+            //styleColor.Alignment.JustifyLastLine = true;
+            //styleColor.Alignment.ReadingOrder = SLAlignmentReadingOrderValues.RightToLeft;
+            //styleColor.Alignment.ShrinkToFit = true;
+            //styleColor.SetVerticalAlignment(VerticalAlignmentValues.Center);
+            styleColor.Font.FontColor = System.Drawing.Color.Black;
+            sl.SetRowStyle(2, styleColor);
+            styleColor.Font.FontColor = System.Drawing.Color.Red;
+            sl.SetRowStyle(3, styleColor);
+            styleColor.Font.FontColor = System.Drawing.Color.Blue;
+            sl.SetRowStyle(4, styleColor);
+
             sl.SaveAs($"{rtfFile}");
             //return result;
 

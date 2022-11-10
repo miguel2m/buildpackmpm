@@ -147,7 +147,8 @@ namespace AutoDischange.ViewModel.Helpers
                             diffCompareModel = new DiffCompareModel();
                             diffCompareModel.Id = count;
                             //PathA
-                            diffCompareModel.UbicacionA = v.FullName;
+                            //diffCompareModel.UbicacionA = v.FullName;
+                            diffCompareModel.UbicacionA = v.FullName.Contains("CR")? v.FullName.Split(new[] { "CR" }, StringSplitOptions.None)[1] : v.FullName;
                             diffCompareModel.PathA = v.Name;
                             diffCompareModel.HashA = sHash;
                             diffCompareModel.FechaA = v.LastWriteTime;
@@ -155,8 +156,11 @@ namespace AutoDischange.ViewModel.Helpers
                             //PathB
                             var queryList2IntersectTemp = (from file in list2
                                                            select file).Intersect(list1, myFileCompare).Where(i => i.Name == v.Name).First();
-                            diffCompareModel.UbicacionB = queryList2IntersectTemp.FullName;
+                            //diffCompareModel.UbicacionB = queryList2IntersectTemp.FullName;
+                            diffCompareModel.UbicacionB = queryList2IntersectTemp.FullName.Contains("CR") ? queryList2IntersectTemp.FullName.Split(new[] { "CR" }, StringSplitOptions.None)[1] : queryList2IntersectTemp.FullName;
+
                             diffCompareModel.PathB = queryList2IntersectTemp.Name;
+
                             diffCompareModel.HashB = sHash;
                             diffCompareModel.FechaB = v.LastWriteTime;
                             diffCompareModel.LenghtB = sizeAll;
@@ -224,7 +228,8 @@ namespace AutoDischange.ViewModel.Helpers
                             diffCompareModel = new DiffCompareModel();
                             diffCompareModel.Id = count;
                             //PathA
-                            diffCompareModel.UbicacionA = v.FullName;
+                            //diffCompareModel.UbicacionA = v.FullName;
+                            diffCompareModel.UbicacionA = v.FullName.Contains("CR") ? v.FullName.Split(new[] { "CR" }, StringSplitOptions.None)[1] : v.FullName;
                             diffCompareModel.PathA = v.Name;
                             diffCompareModel.HashA = sHash;
                             diffCompareModel.FechaA = v.LastWriteTime;
@@ -241,7 +246,8 @@ namespace AutoDischange.ViewModel.Helpers
                                 //sizeAll = CompareFile.GetSizeByte(queryList2IntersectTemp);
                                 sizeAll = queryList2IntersectTemp.Length.ToString();
 
-                                diffCompareModel.UbicacionB = queryList2IntersectTemp.FullName;
+                                //diffCompareModel.UbicacionB = queryList2IntersectTemp.FullName;
+                                diffCompareModel.UbicacionB = queryList2IntersectTemp.FullName.Contains("CR") ? queryList2IntersectTemp.FullName.Split(new[] { "CR" }, StringSplitOptions.None)[1] : queryList2IntersectTemp.FullName;
                                 diffCompareModel.PathB = queryList2IntersectTemp.Name;
                                 diffCompareModel.HashB = sHash;
                                 diffCompareModel.FechaB = queryList2IntersectTemp.LastWriteTime;
@@ -288,7 +294,8 @@ namespace AutoDischange.ViewModel.Helpers
                             diffCompareModel = new DiffCompareModel();
                             diffCompareModel.Id = count;
                             //PathA
-                            diffCompareModel.UbicacionA = v.FullName;
+                            //diffCompareModel.UbicacionA = v.FullName;
+                            diffCompareModel.UbicacionA = v.FullName.Contains("CR") ? v.FullName.Split(new[] { "CR" }, StringSplitOptions.None)[1] : v.FullName;
                             diffCompareModel.PathA = v.Name;
                             diffCompareModel.HashA = sHash;
                             diffCompareModel.FechaA = v.LastWriteTime;

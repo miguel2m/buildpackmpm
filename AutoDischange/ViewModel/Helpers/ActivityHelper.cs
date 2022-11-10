@@ -193,7 +193,7 @@ namespace AutoDischange.ViewModel.Helpers
 
             //Si traigo otros alojables y/o configurables entonces debo ejecutar actividades de despligue y de manejo de pools (prender y apagar)
             //manejo de pools
-            if (ActivityComponentListAlojablesList.Any() && ActivityComponentListConfigurablesList.Any())
+            if (ActivityComponentListAlojablesList.Any() || ActivityComponentListConfigurablesList.Any())
             {
                 //PRE
                 if (ActivityProcessImportListPre.Any())

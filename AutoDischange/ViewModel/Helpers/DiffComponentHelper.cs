@@ -136,8 +136,10 @@ namespace AutoDischange.ViewModel.Helpers
                         foreach (var v in queryList1Intersect)
                         {
                             s = $"{v.Name}{v.Length}{v.LastWriteTime.ToString()}";
-                            sHash = s.GetHashCode().ToString();
-                            sizeAll = CompareFile.GetSizeByte(v);
+                            //sHash = s.GetHashCode().ToString();
+                            sHash = MD5_Compare.CreateMD5(s);
+                            //sizeAll = CompareFile.GetSizeByte(v);
+                            sizeAll = v.Length.ToString();
 
                             diffCompareModel = new DiffCompareModel();
                             diffCompareModel.Id = count;
@@ -206,9 +208,10 @@ namespace AutoDischange.ViewModel.Helpers
                         foreach (var v in queryList1OnlyTemp)
                         {
                             s = $"{v.Name}{v.Length}{v.LastWriteTime.ToString()}";
-                            sHash = s.GetHashCode().ToString();
-                            sizeAll = CompareFile.GetSizeByte(v);
-
+                            //sHash = s.GetHashCode().ToString();
+                            sHash = MD5_Compare.CreateMD5(s);
+                            //sizeAll = CompareFile.GetSizeByte(v);
+                            sizeAll = v.Length.ToString();
                             diffCompareModel = new DiffCompareModel();
                             diffCompareModel.Id = count;
                             //PathA
@@ -224,8 +227,10 @@ namespace AutoDischange.ViewModel.Helpers
                             {
                                 var queryList2IntersectTemp = queryList2IntersectTempList.First();
                                 s = $"{queryList2IntersectTemp.Name}{queryList2IntersectTemp.Length}{queryList2IntersectTemp.LastWriteTime.ToString()}";
-                                sHash = queryList2IntersectTemp.GetHashCode().ToString();
-                                sizeAll = CompareFile.GetSizeByte(queryList2IntersectTemp);
+                                //sHash = queryList2IntersectTemp.GetHashCode().ToString();
+                                sHash = MD5_Compare.CreateMD5(s);
+                                //sizeAll = CompareFile.GetSizeByte(queryList2IntersectTemp);
+                                sizeAll = queryList2IntersectTemp.Length.ToString();
 
                                 diffCompareModel.UbicacionB = queryList2IntersectTemp.FullName;
                                 diffCompareModel.PathB = queryList2IntersectTemp.Name;
@@ -262,9 +267,10 @@ namespace AutoDischange.ViewModel.Helpers
                         foreach (var v in queryNameList1Only)
                         {
                             s = $"{v.Name}{v.Length}{v.LastWriteTime.ToString()}";
-                            sHash = s.GetHashCode().ToString();
-                            sizeAll = CompareFile.GetSizeByte(v);
-
+                            //sHash = s.GetHashCode().ToString();
+                            sHash = MD5_Compare.CreateMD5(s);
+                            //sizeAll = CompareFile.GetSizeByte(v);
+                            sizeAll = v.Length.ToString();
                             diffCompareModel = new DiffCompareModel();
                             diffCompareModel.Id = count;
                             //PathA

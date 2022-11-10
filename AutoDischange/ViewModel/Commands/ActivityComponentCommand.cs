@@ -41,8 +41,8 @@ namespace AutoDischange.ViewModel.Commands
                 return false;
             if (!Path.IsPathRooted(data.PathDownload)) //La ruta debe ser valida
                 return false;
-            if (data.PathStart == data.PathDownload) //la ruta no debe ser igual
-                return false;
+            //if (data.PathStart == data.PathDownload) //la ruta no debe ser igual
+            //    return false;
             //string dbFile = DatabaseHelper.dbFile;
             string dbFile = Path.Combine(Environment.CurrentDirectory, "dischangesPath.db3");
             if (File.Exists(dbFile) != true)

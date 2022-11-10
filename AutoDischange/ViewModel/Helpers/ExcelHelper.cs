@@ -85,7 +85,7 @@ namespace AutoDischange.ViewModel.Helpers
         //Create excel aand insert worksheet for Comparacion de componeentes
         public static void CreateExcelDiffComapre(List<DiffCompareModel> diffCompareModelList,string pathUser, DiffComponent diffComponent)
         {
-            string rtfFile = System.IO.Path.Combine(pathUser, $"InformeComparacionComponentes_{Math.Abs(diffCompareModelList.GetHashCode())}.xlsx");
+            string rtfFile = System.IO.Path.Combine(pathUser, $"InformeComparacionComponentes_{DateTime.Now.ToString("yyyyMMddHHmmss")}.xlsx");
 
 
             //bool result = false;
@@ -106,22 +106,22 @@ namespace AutoDischange.ViewModel.Helpers
             sl.SetCellValue(2, 1, "Contador");
             //SET Header Paquete A
             sl.SetCellValue(2, 2, "Ubicación");
-            sl.SetCellValue(2, 3, diffComponent.PathStart);
+            sl.SetCellValue(2, 3, "Componente paquete A");
             sl.SetCellValue(2, 4, "Hash");
             sl.SetCellValue(2, 5, "Fecha Modificación");
             sl.SetCellValue(2, 6, "Hora");
-            sl.SetCellValue(2, 7, "Tamaño");
+            sl.SetCellValue(2, 7, "Tamaño Bytes");
             //SET Header Paquete B
             sl.SetCellValue(2, 8, "Ubicación");
-            sl.SetCellValue(2, 9, diffComponent.PathEnd);
+            sl.SetCellValue(2, 9, "Componente paquete B");
             sl.SetCellValue(2, 10, "Hash");
             sl.SetCellValue(2, 11, "Fecha Modificación");
             sl.SetCellValue(2, 12, "Hora");
-            sl.SetCellValue(2, 13, "Tamaño");
+            sl.SetCellValue(2, 13, "Tamaño Bytes");
             //SET Header Evaluaciones
             sl.SetCellValue(2, 14, "Hash");
             sl.SetCellValue(2, 15, "Fecha");
-            sl.SetCellValue(2, 16, "Tamaño");
+            sl.SetCellValue(2, 16, "Tamaño Bytes");
 
             SLStyle styleFecha = sl.CreateStyle();
 
@@ -130,7 +130,7 @@ namespace AutoDischange.ViewModel.Helpers
             styleFecha.Alignment.JustifyLastLine = true;
             styleFecha.Alignment.ReadingOrder = SLAlignmentReadingOrderValues.RightToLeft;
             styleFecha.Alignment.ShrinkToFit = true;
-            styleFecha.FormatCode = "dd/mm/yyyy";
+            styleFecha.FormatCode = "dd/mm/yy";
 
             SLStyle styleHora = sl.CreateStyle();
 
@@ -139,7 +139,7 @@ namespace AutoDischange.ViewModel.Helpers
             styleHora.Alignment.JustifyLastLine = true;
             styleHora.Alignment.ReadingOrder = SLAlignmentReadingOrderValues.RightToLeft;
             styleHora.Alignment.ShrinkToFit = true;
-            styleHora.FormatCode = "h:m:s";
+            styleHora.FormatCode = "hh:mm:ss";
             styleHora.SetVerticalAlignment(VerticalAlignmentValues.Center);
             //styleFecha.SetWrapText(true);
 

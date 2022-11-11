@@ -460,7 +460,6 @@ namespace AutoDischange.ViewModel.Helpers
             {
                 foreach (System.IO.FileInfo item in listInput)
                 {
-                    
                     DischangePathList.Add(item.Name);
                 }
             });
@@ -493,8 +492,7 @@ namespace AutoDischange.ViewModel.Helpers
                         //DischangePathList.Add(dischangePathListTemp.First().Path);
                         foreach (DischangePath itemTemp in dischangePathListTemp)
                         {
-                            if (!itemTemp.Path.Contains("Upgrade"))
-                                ActivityComponentListAlojables.DischangeComponentName.Add(itemTemp.Path);
+                            ActivityComponentListAlojables.DischangeComponentName.Add(itemTemp.Path);
 
                         }
                     }
@@ -502,9 +500,11 @@ namespace AutoDischange.ViewModel.Helpers
                     {
                         ActivityComponentListAlojables.DischangeComponentName.Add(item);
                     }
+
                     ActivityComponentListAlojablesListTask.Add(ActivityComponentListAlojables);
                     _contador++;
                 }
+
                 return ActivityComponentListAlojablesListTask;
             });
             task0.Start();
@@ -644,7 +644,7 @@ namespace AutoDischange.ViewModel.Helpers
                         ActivityComponentPrePro.TypeActivity = "Despliegue";
                         ActivityComponentPrePro.rst.AppendText($"Ejecutar los siguientes ");
                         ActivityComponentPrePro.rst.AppendText($"scripts {lstExcelGroup.First().TipoScrpt} ", ActivityComponentPrePro.font);
-                        ActivityComponentPrePro.rst.AppendText($"en el ordern indicado: { System.Environment.NewLine}");
+                        ActivityComponentPrePro.rst.AppendText($"en el orden indicado: { System.Environment.NewLine}");
                         ActivityComponentPrePro.rst.AppendText($"{ System.Environment.NewLine}");
                         string _servidor ="";
                         string _instancia = "";
@@ -703,8 +703,8 @@ namespace AutoDischange.ViewModel.Helpers
                         ActivityComponentPrePro.PendindActivity = int.Parse(_pendingActivity)!=0 ? _pendingActivity: "Ninguna" ;
                         ActivityComponentPrePro.TypeActivity = "Despliegue";
                         //ActivityComponentPrePro.Activity = $"Entrar al servidor <b>SRNEUIWM1MXR309 180.228.64.204 Batch</b> y hacer las siguientes acciones:{ System.Environment.NewLine}";
-                        //ActivityComponentPrePro.rst.AppendText($" ");
-                        ActivityComponentPrePro.rst.AppendText( $"Entrar al servidor SRNEUIWM1MXR309 180.228.64.204 Batch ", ActivityComponentPrePro.font);
+                        ActivityComponentPrePro.rst.AppendText($"Entrar al servidor ");
+                        ActivityComponentPrePro.rst.AppendText( $"SRNEUIWM1MXR309 180.228.64.204 Batch ", ActivityComponentPrePro.font);
                         ActivityComponentPrePro.rst.AppendText($"y hacer las siguientes acciones:{ System.Environment.NewLine}");
                         ActivityComponentPrePro.rst.AppendText($"1.-");
                         ActivityComponentPrePro.rst.AppendText($"Eliminar el contenido de la carpeta ", ActivityComponentPrePro.font);
@@ -715,8 +715,8 @@ namespace AutoDischange.ViewModel.Helpers
                     {   //PRO
                         ActivityComponentPrePro.PendindActivity = int.Parse(_pendingActivity) != 0 ? _pendingActivity : "Ninguna";
                         ActivityComponentPrePro.TypeActivity = "Despliegue";
-                        //ActivityComponentPrePro.rst.AppendText($" ");
-                        ActivityComponentPrePro.rst.AppendText($"Entrar al servidor SRVNEUPVWMX09 180.181.167.59 Batch", ActivityComponentPrePro.font);
+                        ActivityComponentPrePro.rst.AppendText($"Entrar al servidor ");
+                        ActivityComponentPrePro.rst.AppendText($"SRVNEUPVWMX09 180.181.167.59 Batch", ActivityComponentPrePro.font);
                         ActivityComponentPrePro.rst.AppendText($"y hacer las siguientes acciones:{ System.Environment.NewLine}");
                         ActivityComponentPrePro.rst.AppendText($"1.-");
                         ActivityComponentPrePro.rst.AppendText($"Eliminar el contenido de la carpeta", ActivityComponentPrePro.font);
@@ -736,8 +736,8 @@ namespace AutoDischange.ViewModel.Helpers
                         ActivityComponentPrePro.PendindActivity = _pendingActivity.ToString();
                         ActivityComponentPrePro.TypeActivity = "Despliegue";
 
-                        //ActivityComponentPrePro.rst.AppendText($"");
-                        ActivityComponentPrePro.rst.AppendText($"Entrar al servidor SRNEUIWM1MXR309 180.228.64.204 Batch ", ActivityComponentPrePro.font);
+                        ActivityComponentPrePro.rst.AppendText($"Entrar al servidor ");
+                        ActivityComponentPrePro.rst.AppendText($"SRNEUIWM1MXR309 180.228.64.204 Batch ", ActivityComponentPrePro.font);
                         ActivityComponentPrePro.rst.AppendText($"Abrir como Administrador la línea de comandos{ System.Environment.NewLine}");
                         ActivityComponentPrePro.rst.AppendText($@"Ir a la carpeta D:\MPM\DIS\InstallBSM\{ System.Environment.NewLine}");
                         ActivityComponentPrePro.rst.AppendText($"Ejecutar el archivo ");
@@ -786,8 +786,8 @@ namespace AutoDischange.ViewModel.Helpers
                         ActivityComponentPrePro.PendindActivity = _pendingActivity.ToString();
                         ActivityComponentPrePro.TypeActivity = "Despliegue";
 
-                        //ActivityComponentPrePro.rst.AppendText($" ");
-                        ActivityComponentPrePro.rst.AppendText($"Entrar al servidor SRVNEUPVWMX09 180.181.167.59 Batch ", ActivityComponentPrePro.font);
+                        ActivityComponentPrePro.rst.AppendText($"Entrar al servidor ");
+                        ActivityComponentPrePro.rst.AppendText($"SRVNEUPVWMX09 180.181.167.59 Batch ", ActivityComponentPrePro.font);
                         ActivityComponentPrePro.rst.AppendText($"Abrir como Administrador la línea de comandos{ System.Environment.NewLine}");
                         ActivityComponentPrePro.rst.AppendText($@"Ir a la carpeta D:\MPM\DIS\InstallBSM\{ System.Environment.NewLine}");
                         ActivityComponentPrePro.rst.AppendText($"Ejecutar el archivo ");
@@ -1106,8 +1106,8 @@ namespace AutoDischange.ViewModel.Helpers
                 {   //PRE
                     ActivityComponentPrePro.PendindActivity = !string.IsNullOrEmpty(_pendingActivity) ? _pendingActivity : "Ninguna";
                     ActivityComponentPrePro.TypeActivity = "Despliegue";
-                    //ActivityComponentPrePro.rst.AppendText($@"En el servidor.{ System.Environment.NewLine}");
-                    ActivityComponentPrePro.rst.AppendText($"En el servidor SRNEUIWM1MXR309 180.228.64.204 Batch:", ActivityComponentPrePro.font);
+                    ActivityComponentPrePro.rst.AppendText($@"En el servidor.{ System.Environment.NewLine}");
+                    ActivityComponentPrePro.rst.AppendText($"SRNEUIWM1MXR309 180.228.64.204 Batch:", ActivityComponentPrePro.font);
                     ActivityComponentPrePro.rst.AppendText($@"{ System.Environment.NewLine}");
                     ActivityComponentPrePro.rst.AppendText($@"Abrir como Administrador la línea de comandos { System.Environment.NewLine}");
                     ActivityComponentPrePro.rst.AppendText($@"Ir a la carpeta D:\MPM\DIS\InstallBSM\Resources\ImportarRecursos { System.Environment.NewLine}");
@@ -1132,8 +1132,8 @@ namespace AutoDischange.ViewModel.Helpers
                 {   //PRO
                     ActivityComponentPrePro.PendindActivity = !string.IsNullOrEmpty(_pendingActivity) ? _pendingActivity : "Ninguna";
                     ActivityComponentPrePro.TypeActivity = "Despliegue";
-                    //ActivityComponentPrePro.rst.AppendText($@".{ System.Environment.NewLine}");
-                    ActivityComponentPrePro.rst.AppendText($"En el servidor SRVNEUPVWMX09 180.181.167.59 Batch:", ActivityComponentPrePro.font);
+                    ActivityComponentPrePro.rst.AppendText($@"En el servidor.{ System.Environment.NewLine}");
+                    ActivityComponentPrePro.rst.AppendText($"SRVNEUPVWMX09 180.181.167.59 Batch:", ActivityComponentPrePro.font);
                     ActivityComponentPrePro.rst.AppendText($@"{ System.Environment.NewLine}");
                     ActivityComponentPrePro.rst.AppendText($@"Abrir como Administrador la línea de comandos { System.Environment.NewLine}");
                     ActivityComponentPrePro.rst.AppendText($@"Ir a la carpeta D:\MPM\DIS\InstallBSM\Resources\ImportarRecursos { System.Environment.NewLine}");

@@ -45,7 +45,5 @@ namespace AutoDischange.Model
     {
         public bool UseBranch { get; set; }
         public string NameBranch { get; set; }
-    }
-
-   
+    }   
 }

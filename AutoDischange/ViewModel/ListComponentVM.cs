@@ -24,6 +24,9 @@ namespace AutoDischange.ViewModel
         public List<TfsItem> TodosItemTfs = new List<TfsItem>();
         public List<ListComponent> PathGU = new List<ListComponent>();
 
+        public FilesPacksToUpdates filesPacksToUpdates;
+        public List<FilesPacksToUpdates> FilesPacksTos = new List<FilesPacksToUpdates>();
+
 
         List<string> listaBranchs = new List<string>();
 
@@ -116,6 +119,8 @@ namespace AutoDischange.ViewModel
             ListComponentObjs = new ObservableCollection<ListComponent>();
             CuatroUno = true;
             ListComponent = new ListComponent();
+
+
             PathComponent =Environment.GetFolderPath(Environment.SpecialFolder.UserProfile);
 
         }
@@ -165,6 +170,7 @@ namespace AutoDischange.ViewModel
             string result = string.Empty, rutaPack = string.Empty, rutaF = string.Empty, branchFound = string.Empty;
             string valueString = String.Empty, ext = string.Empty, nameFile2 = String.Empty, nameBranch2 = string.Empty, cad = string.Empty;
             List<DischangePath> DischangePathList = new List<DischangePath>();
+            PathGU.Clear();
             try
             {
                 //CARGAMOS LA LISTA DE BRANCHES SELECCIONADAS
@@ -231,6 +237,7 @@ namespace AutoDischange.ViewModel
                     if (PathGU.Count > 0)
                     {
                         ListComponentStatus = $"Transfiriendo archivos de Jenkins.";
+                        FilesPacksTos.Clear();
                         foreach (var pathFound in PathGU)
                         {
                             if (!rutaF.Contains(pathFound.Branch))
@@ -243,15 +250,46 @@ namespace AutoDischange.ViewModel
                             {
                                 //CREAR ESTRUCTURA DE ARCHIVOS
                                 UtilHelper.buildStructure(rutaF);
-
-                                result = TransferFileJenkinsHelper.JenkinsTransferFile(pathFound.Path, rutaF, pathFound.Branch);
+                                FilesPacksTos = TransferFileJenkinsHelper.JenkinsTransferFile(pathFound.Path, rutaF, pathFound.Branch);
+                            
+                            
+                            
                             }
                             catch (Exception ex)
                             {
                                 Log4net.log.Error(ex.Message);
                                 MessageBox.Show("Error al ejecutar transferencia de paquetes Jenkins: " + ex.Message, "Error al ejecutar transferencia de paquetes Jenkins", MessageBoxButton.OK, MessageBoxImage.Error);
                             }
-                            //SortPackDischange.SortPack(@rutaF);
+                        }
+                        //METODO PARA LA HOMOLOGACION DE LOS ARCHIVOS
+                        if (FilesPacksTos.Count > 0)
+                        {
+
+                            var GroupedByFiles = FilesPacksTos.GroupBy(user => user.nameFile);
+                            foreach (var nameFileKey in GroupedByFiles)
+                            {
+                                int cantFiles = FilesPacksTos.Where(x => x.nameFile == nameFileKey.Key).Count();
+                                if (cantFiles > 1)
+                                {
+                                    var mostCurrentFile = FilesPacksTos.Where(x => x.nameFile == nameFileKey.Key).OrderByDescending(y => y.dateTimeFile).FirstOrDefault();
+                                    
+                                    //ruta inicial
+                                    string mostCurrentPathFile = mostCurrentFile.pathFile;
+                                    DateTime mostCurrentDateTimeFile = mostCurrentFile.dateTimeFile;
+                                    foreach (var item in nameFileKey)
+                                    {
+                                        if (mostCurrentPathFile != item.pathFile && mostCurrentDateTimeFile != item.dateTimeFile)
+                                        {
+                                            if (File.Exists(item.pathFile))
+                                            {
+                                                File.SetAttributes(item.pathFile, FileAttributes.Normal);
+                                                File.Delete(item.pathFile);
+                                            }
+                                            File.Copy(mostCurrentPathFile, item.pathFile);
+                                        }
+                                    }
+                                }
+                            }
                         }
 
 
@@ -296,44 +334,11 @@ namespace AutoDischange.ViewModel
             }
             else
             {
-                if (valueString == "mpm.seg.Customers.Workflow")
-                {
-                    valueString += ".BSM.dll";
-                }
-                if (valueString == "mpm.seg.Customers.DataRecovers")
-                {
-                    valueString += ".dll";
-                }
-                dischangePathList = DatabaseHelper.Read<DischangePath>().Where(n => n.Path.Contains(valueString) && !n.Path.Contains("Upgrade")).ToList();
+                dischangePathList = DatabaseHelper.Read<DischangePath>().Where(n => n.Path.Contains(valueString) && !n.Path.Contains("\\DIS\\Upgrade\\")).ToList();
                 string rutaConf = string.Empty;
 
-
-                //TENGO UN ARCHIVO EN EL TFS PERO NO TENGO LA RUTA EN LA GUIA DE UBICACIONES
-                if (dischangePathList.Count() == 0)
-                {
-                    if (valueString.Count() > 0)
-                    {
-                        if (item.path.Contains("/Mappings/General/"))
-                        {
-                            rutaConf = $@"\Batch\Mappings\Partials\General\{valueString}";
-
-                            foreach (BranchUse item2 in _branchUses)
-                            {
-                                if (item.path.Contains(item2.NameBranch))
-                                {
-                                    cad = UtilHelper.extraerBranchTfs(rutaConf, '/', ext, item2.NameBranch);
-                                    cad += rutaConf;
-                                    ExtraerBranchTFS2(cad, item);
-                                }
-                            }
-                            if (!PathGU.Contains(ListComponent))
-                            {
-                                PathGU.Add(ListComponent);
-                            }
-                        }
-
-                    }
-                }
+                // TENGO UN ARCHIVO EN EL TFS PERO NO TENGO LA RUTA EN LA GUIA DE UBICACIONES
+                NoGuiaUbicaciones(dischangePathList, valueString, item, rutaConf, _branchUses, cad, ext);
 
                 //QUIERO EVALUAR SI LA CARPETA CONFIGURABLE ESTA COMPLETA EN LOS 4 AMBIENTES
                 if (dischangePathList.Where(n => n.Path.Contains("\\Configurables\\Cer")).Count() > 0 &&
@@ -375,38 +380,32 @@ namespace AutoDischange.ViewModel
                     }
                 }
 
-
-                //if (dischangePathList.Where(n => n.Path.Contains("\\Configurables\\")).Count() > 0 && dischangePathList.Where(n => n.Path.Contains("\\Configurables\\")).Count() < 4)
-                //{
-                //    if ((dischangePathList.Where(n => n.Path.Contains("\\Configurables\\Des")).Count() == 0) || (dischangePathList.Where(n => n.Path.Contains("\\Configurables\\Desa")).Count() == 0))
-                //    {
-                //        if (dischangePathList.Where(n => n.Path.Contains("appCustomerDataRecoverSettingsAhorro")).Count() > 0)
-                //        {
-                //            rutaConf = "\\Configurables\\DESA\\DIS\\ecDataProvider\\CustomerSettings\\appCustomerDataRecoverSettingsAhorro.config";
-                //        }
-                //        else if (dischangePathList.Where(n => n.Path.Contains("\\ImportarRecursos\\ImportarRecursos_1.cmd")).Count() > 0)
-                //        {
-                //            rutaConf = "\\Configurables\\DESA\\DIS\\InstallBSM\\Resources\\ImportarRecursos\\ImportarRecursos_1.cmd";
-                //        }
-                        
-                        
-                        
-                //    }
-                //}
-
                 for (int i = 0; i < dischangePathList.Count; i++)
                 {
-                    if (dischangePathList[i].Path.Contains("custom-context.xml") || dischangePathList[i].Path.Contains("customer-operation-services.xml"))
+                    if (dischangePathList[i].Path.Contains("custom-context.xml"))
                     {
-                        if (!dischangePathList[i].Path.Contains("Configurables") &&
-                            !dischangePathList[i].Path.Contains("ecDataProvider") &&
-                            !dischangePathList[i].Path.Contains("BSM"))
+                        if (!dischangePathList[i].Path.Contains("Configurables") && !dischangePathList[i].Path.Contains("BSM"))
                         {
-                            ExtraerBranchTFS2(dischangePathList[i].Path, item);
+                            if (item.path.Contains("mpm.seg.Customers.eClient.Web") && dischangePathList[i].Path.Contains(@"eClient\CustomerSettings"))
+                            {
+                                ExtraerBranchTFS2(dischangePathList[i].Path, item);
+                            }
+                            else if (item.path.Contains("mpm.seg.Customers.DataRecovers") && dischangePathList[i].Path.Contains(@"ecDataProvider\CustomerSettings"))
+                            {
+                                ExtraerBranchTFS2(dischangePathList[i].Path, item);
+                            }
                             if (!PathGU.Contains(ListComponent))
                             {
                                 PathGU.Add(ListComponent);
                             }
+                        }
+                    }
+                    else if (dischangePathList[i].Path.Contains("customer-operation-services.xml") && dischangePathList[i].Path.Contains("Alojables"))
+                    {
+                        ExtraerBranchTFS2(dischangePathList[i].Path, item);
+                        if (!PathGU.Contains(ListComponent))
+                        {
+                            PathGU.Add(ListComponent);
                         }
                     }
                     else if (ext == ".config" || ext == ".cmd")
@@ -453,6 +452,64 @@ namespace AutoDischange.ViewModel
             }
         }
 
+        private void NoGuiaUbicaciones(List<DischangePath> dischangePathList, string valueString, TfsItem item, string rutaConf, List<BranchUse> branchUses, string cad, string ext)
+        {
+            if (dischangePathList.Count() == 0)
+            {
+                if (valueString.Count() > 0)
+                {
+                    if (item.path.Contains("/Mappings/General/"))
+                    {
+                        rutaConf = $@"\Batch\Mappings\Partials\General\{valueString}";
+                    }
+                    if (valueString == "mpm.eClient.ecPortal.Web.dll")
+                    {
+                        rutaConf = $@"\eClient\bin\mpm.eClient.Web.dll";
+                    }
+                    if (rutaConf != null)
+                    {
+                        foreach (BranchUse item2 in _branchUses)
+                        {
+                            if (item.path.Contains(item2.NameBranch))
+                            {
+                                cad = UtilHelper.extraerBranchTfs(rutaConf, '/', ext, item2.NameBranch);
+                                cad += rutaConf;
+                                ExtraerBranchTFS2(cad, item);
+                            }
+                        }
+                        if (!PathGU.Contains(ListComponent))
+                        {
+                            PathGU.Add(ListComponent);
+                        }
+
+                    }
+                }
+            }
+            else
+            {
+                if (valueString == "mpm.seg.Customers.DataRecovers.dll" || valueString == "mpm.seg.Customers.DataRecovers.Ahorro.dll")
+                {
+                    if (dischangePathList.Where(n => n.Path.Contains("\\CalculusServices\\")).Count() == 0)
+                    {
+                        rutaConf = $@"\CalculusServices\bin\{valueString}";
+                        foreach (BranchUse item2 in _branchUses)
+                        {
+                            if (item.path.Contains(item2.NameBranch))
+                            {
+                                cad = UtilHelper.extraerBranchTfs(rutaConf, '/', ext, item2.NameBranch);
+                                cad += rutaConf;
+                                ExtraerBranchTFS2(cad, item);
+                            }
+                        }
+                        if (!PathGU.Contains(ListComponent))
+                        {
+                            PathGU.Add(ListComponent);
+                        }
+                    }
+                }
+            }
+        }
+
         private string ObtenerValueString(string ext, string pathTfs, string valueString, string nameFile2)
         {
             if (ext == ".cs")
@@ -461,6 +518,20 @@ namespace AutoDischange.ViewModel
                 if (listValue.Where(n => n.Contains("mpm.seg")).Count() > 0)
                 {
                     valueString = listValue.First(i => i.Contains("mpm.seg"));
+                    if (valueString.Contains("Customers.Workflow") ||
+                        valueString.Contains("mpm.seg.Customers.Constants") ||
+                        valueString.Contains("mpm.seg.Customers.PageRender"))
+                    {
+                        valueString = $"{valueString}.BSM.dll";
+                    }
+                    else
+                    {
+                        valueString += ".dll";
+                    }
+                }
+                else if (listValue.Where(n => n.Contains("mpm.eClient")).Count() > 0)
+                {
+                    valueString = listValue.First(i => i.Contains("mpm.eClient")) + ".dll";
                 }
                 else
                 {

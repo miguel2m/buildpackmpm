@@ -13,35 +13,50 @@ namespace AutoDischange.ViewModel.Helpers
 {
     public class TransferFileJenkinsHelper
     {
-        public static string JenkinsTransferFile(string rutaUbicFile, string rutaUsr, string branch)
+
+        public static FilesPacksToUpdates filesPacksToUpdates;
+        public static List<FilesPacksToUpdates> FilesPacksTos = new List<FilesPacksToUpdates>();
+        public static List<FilesPacksToUpdates> JenkinsTransferFile(string rutaUbicFile, string rutaUsr, string branch)
         {
             string ext = Path.GetExtension(rutaUbicFile);
             string rutaServer = string.Empty, rutaDisChanges = string.Empty, fileExamp = string.Empty;
             string rutaPack = string.Empty, rutaI = string.Empty, rutaPack2 = string.Empty, rutaF = string.Empty;
-            if (ext == ".sql" || ext == ".config" || ext == ".cmd")
+            if (ext == ".sql" || ext == ".config" || ext == ".cmd")//ESTE LADO SOLO LA CHUSMA
             {
                 rutaServer = rutaUbicFile;
                 fileExamp = nameFile(rutaServer);
                 rutaPack = rutaNoFile(rutaServer, ext);
+                if (ext == ".sql")
+                {
+                    rutaPack += @"DIS\";
+                }
                 rutaI = rutaNoFile(rutaServer);
                 rutaF = $@"{rutaUsr}\{rutaPack}";
             }
-            else
+            else//ESTE LADO SON SOLO ALOJABLES
             {
-                //Necesito extraer solo la parte que es necesaria de la ruta de la Guia de Ubicaciones
-                rutaDisChanges = cutPath(rutaUbicFile);
+                if (!rutaUbicFile.Contains(@"\\ci-jenkins\branches\BSM\"))
+                {
+                    //ruta del servidor
+                    rutaServer = ConfigurationManager.AppSettings["rutaJenkins"];
 
-                //ruta del servidor
-                rutaServer = ConfigurationManager.AppSettings["rutaJenkins"];
+                    //Necesito extraer solo la parte que es necesaria de la ruta de la Guia de Ubicaciones
+                    rutaDisChanges = cutPath(rutaUbicFile);
 
-                //Debo conectar la ruta del servidor jenkins con el branch seleccionado por el usuario
-                rutaServer = rutaServer + $@"{branch}\Pack\Latest\";
 
-                //Separo la ruta del dischange para obtener el nombre del archivo
-                fileExamp = nameFile(rutaDisChanges);
+                    //Debo conectar la ruta del servidor jenkins con el branch seleccionado por el usuario
+                    rutaServer = rutaServer + $@"{branch}\Pack\Latest\";
 
-                //Separo la ruta del dischange para quitar el nombre del archivo
-                rutaPack = rutaNoFile(rutaDisChanges);
+                    //Separo la ruta del dischange para obtener el nombre del archivo
+                    fileExamp = nameFile(rutaDisChanges);
+                    //Separo la ruta del dischange para quitar el nombre del archivo
+                    rutaPack = rutaNoFile(rutaDisChanges);
+                }
+                else
+                {
+                    fileExamp = nameFile(rutaUbicFile);
+                    rutaPack = rutaNoFile(rutaUbicFile);
+                }
 
                 //ARMO LA RUTA PARA BUSCAR EN JENKINS
                 rutaI = rutaPack.Contains($@"\ci-jenkins\branches\BSM\{branch}\Pack\Latest\") ? rutaPack : rutaServer + rutaPack;
@@ -59,6 +74,9 @@ namespace AutoDischange.ViewModel.Helpers
                 MessageBox.Show($@"El directorio {rutaI} donde quiere acceder no existe");
             }
 
+            string pathFileStart = $"{rutaI}{fileExamp}";
+            string pathFileEnd = rutaF + fileExamp;
+
             //Verifico que el directorio de destino exista
             if (!Directory.Exists(rutaF))
             {
@@ -66,26 +84,34 @@ namespace AutoDischange.ViewModel.Helpers
                 Directory.CreateDirectory(rutaF);
             }
 
-            string rutaFileFinal = rutaF + fileExamp;
             //Verifico que el archivo en directorio destino exista o no
-            if (File.Exists(rutaFileFinal))
+            if (File.Exists(pathFileEnd))
             {
-                File.SetAttributes(rutaFileFinal, FileAttributes.Normal);
-                File.Delete(rutaFileFinal);
+                File.SetAttributes(pathFileEnd, FileAttributes.Normal);
+                File.Delete(pathFileEnd);
             }
-
-
-            if (File.Exists(rutaI + fileExamp))
+            //SI EXISTE EL ARCHIVO EN EL JENKINS
+            if (File.Exists(pathFileStart))
             {
                 //Copiar archivo
-                File.Copy(rutaI + fileExamp, rutaFileFinal, true);
+                File.Copy(pathFileStart, pathFileEnd, true);
+
+                //TENGO UNA 
+                //CREAMOS UNA LISTA PARA GUARDAR TODAS LAS RUTAS CON SU PESO Y FECHA DE CREACION
+                filesPacksToUpdates = new FilesPacksToUpdates();
+                filesPacksToUpdates.pathFile = pathFileEnd;
+                filesPacksToUpdates.nameFile = fileExamp;
+                FileInfo fileInfo = new FileInfo(pathFileStart);
+                filesPacksToUpdates.dateTimeFile = fileInfo.LastWriteTime;
+                filesPacksToUpdates.weightFile = (int)fileInfo.Length;
+                FilesPacksTos.Add(filesPacksToUpdates);
             }
             else
             {
                 Log4net.log.Error($@"El archivo {fileExamp} no esta en la ruta {rutaI}");
                 MessageBox.Show($@"El archivo {fileExamp} no esta en la ruta {rutaI}");
             }
-            return "El conjunto de directorios fue copiado correctamente.";
+            return FilesPacksTos;
         }
         public static string nameFile(string url)
         {
@@ -145,5 +171,13 @@ namespace AutoDischange.ViewModel.Helpers
             }
             return result;
         }
+    }
+
+    public class FilesPacksToUpdates
+    {
+        public string pathFile { get; set; }
+        public string nameFile { get; set; }
+        public DateTime dateTimeFile { get; set; }
+        public int weightFile { get; set; }
     }
 }

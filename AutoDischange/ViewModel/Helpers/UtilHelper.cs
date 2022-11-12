@@ -64,6 +64,10 @@ namespace AutoDischange.ViewModel.Helpers
                             brancho += $"{branch}\\Pack\\Latest";
                         }
                     }
+                    else
+                    {
+                        brancho += $"{branch}\\Pack\\Latest";
+                    }
                 }
                 else
                 {
@@ -73,7 +77,14 @@ namespace AutoDischange.ViewModel.Helpers
                         {
                             if (nombRama[count].NameBranch == busqueda)
                             {
-                                brancho += nombRama[count].NameBranch + "\\Pack\\Latest\\Scripts";
+                                if (ext == ".sql")
+                                {
+                                    brancho += $"{nombRama[count].NameBranch}\\Pack\\Latest\\Scripts";
+                                }
+                                else
+                                {
+                                    brancho += $"{nombRama[count].NameBranch}\\Pack\\Latest";
+                                }
                             }
                         }
                         count++;

@@ -99,6 +99,8 @@ namespace AutoDischange.ViewModel
 
         public ObservableCollection<JenkinsItem> JenkinsListPath { get; set; }
 
+        public List<DischangePath> DischangePathList = new List<DischangePath>();
+
         public DischangeVM()
         {
             DischangeCommand = new DischangeCommand(this);
@@ -111,7 +113,6 @@ namespace AutoDischange.ViewModel
             //SortPackDischange.SortPack(@"C:\Users\miguelangel.medina\Documents\pack\20211118_P4.1_20221007180020\");
 
         }
-
         public async void GetExcel(string fileName)
         {
             try
@@ -229,6 +230,21 @@ namespace AutoDischange.ViewModel
                         if (listValue.Where(n => n.Contains("mpm.seg")).Count() > 0)
                         {
                             valueString = listValue.First(i => i.Contains("mpm.seg"));
+
+                            if (valueString.Contains("Customers.Workflow") || 
+                                valueString.Contains("mpm.seg.Customers.Constants") ||
+                                valueString.Contains("mpm.seg.Customers.PageRender"))
+                            {
+                                valueString = $"{valueString}.BSM.dll";
+                            }
+                            else
+                            {
+                                valueString += ".dll";
+                            }
+                        }
+                        else if (listValue.Where(n => n.Contains("mpm.eClient")).Count() > 0)
+                        {
+                            valueString = listValue.First(i => i.Contains("mpm.eClient")) + ".dll";
                         }
                         else
                         {
@@ -265,69 +281,30 @@ namespace AutoDischange.ViewModel
                     }
                     else
                     {
-                        if (valueString == "mpm.seg.Customers.Workflow")
-                        {
-                            valueString += ".BSM.dll";
-                        }
-                        if (valueString == "mpm.seg.Customers.DataRecovers")
-                        {
-                            valueString += ".dll";
-                        }
-                        List<DischangePath> DischangePathList = DatabaseHelper.Read<DischangePath>().Where(n => n.Path.Contains(valueString) && !n.Path.Contains("Upgrade")).ToList();
-
                         DischangePath dischangePath = new DischangePath();
+                        DischangePathList = DatabaseHelper.Read<DischangePath>().Where(n => n.Path.Contains(valueString) && !n.Path.Contains("\\DIS\\Upgrade\\")).ToList();
+
+                        //TENGO UN ARCHIVO EN EL TFS PERO NO TENGO LA RUTA EN LA GUIA DE UBICACIONES 
+                        NoGuiaUbicaciones(valueString, dischangePath, DischangePathList);
 
                         string rutaConf = string.Empty;
-                        //TENGO UN ARCHIVO EN EL TFS PERO NO TENGO LA RUTA EN LA GUIA DE UBICACIONES
-                        if (DischangePathList.Count() == 0)
-                        {
-                            if (valueString.Count() > 0)
-                            {
-                                if (TfsSelected.path.Contains("/Mappings/General/"))
-                                {
-                                    dischangePath.Path = $@"\Alojables\DIS\Batch\Mappings\Partials\General\{valueString}";
-                                    ComponentList.Add(dischangePath);
-                                }
-                            }
-                        }                
                         //QUIERO EVALUAR SI LA CARPETA CONFIGURABLE ESTA COMPLETA EN LOS 4 AMBIENTES
-                        if (DischangePathList.Where(n => n.Path.Contains("\\Configurables\\Cer")).Count() > 0 && 
-                            DischangePathList.Where(n => n.Path.Contains("\\Configurables\\Pre")).Count() > 0 &&
-                            DischangePathList.Where(n => n.Path.Contains("\\Configurables\\Pro")).Count() > 0 &&
-                                (
-                                    DischangePathList.Where(n => n.Path.Contains("\\Configurables\\Des")).Count() == 0 && 
-                                    DischangePathList.Where(n => n.Path.Contains("\\Configurables\\Desa")).Count() == 0
-                                )
-                            )
-                        {
-                            foreach (var item in DischangePathList)
-                            {
-                                if (!item.Path.Contains("custom-context.xml") && !item.Path.Contains("customer-operation-services.xml"))
-                                {
-                                    if (!item.Path.Contains("Alojables"))
-                                    {
-                                        if (item.Path.Contains("Cer"))
-                                        {
-                                            rutaConf = item.Path;
-                                            dischangePath.Path = rutaConf.Replace("Cer", "Desa");
-                                            ComponentList.Add(dischangePath);
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                        ///HASTA AQUI 
-                        
+                        ConfigurableNoDesa(DischangePathList, rutaConf, dischangePath);                                
 
                         foreach (DischangePath itemLocal in DischangePathList)
                         {
                             if (itemLocal.Path.Contains("custom-context.xml"))
                             {
-                                if (!itemLocal.Path.Contains("Configurables") &&
-                                    !itemLocal.Path.Contains("ecDataProvider") &&
-                                    !itemLocal.Path.Contains("BSM"))
+                                if (!itemLocal.Path.Contains("Configurables") && !itemLocal.Path.Contains("BSM"))
                                 {
-                                    ComponentList.Add(itemLocal);
+                                    if (TfsSelected.path.Contains("mpm.seg.Customers.eClient.Web") && itemLocal.Path.Contains(@"eClient\CustomerSettings"))
+                                    {
+                                        ComponentList.Add(itemLocal);
+                                    }
+                                    else if (TfsSelected.path.Contains("mpm.seg.Customers.DataRecovers") && itemLocal.Path.Contains(@"ecDataProvider\CustomerSettings"))
+                                    {
+                                        ComponentList.Add(itemLocal);
+                                    }
                                 }
                             }
                             else if (itemLocal.Path.Contains("customer-operation-services.xml")) 
@@ -353,6 +330,67 @@ namespace AutoDischange.ViewModel
 
             }
 
+        }
+
+        private void ConfigurableNoDesa(List<DischangePath> dischangePathList, string rutaConf, DischangePath dischangePath)
+        {
+            if (DischangePathList.Where(n => n.Path.Contains("\\Configurables\\Cer")).Count() > 0 &&
+                            DischangePathList.Where(n => n.Path.Contains("\\Configurables\\Pre")).Count() > 0 &&
+                            DischangePathList.Where(n => n.Path.Contains("\\Configurables\\Pro")).Count() > 0 &&
+                                (
+                                    DischangePathList.Where(n => n.Path.Contains("\\Configurables\\Des")).Count() == 0 &&
+                                    DischangePathList.Where(n => n.Path.Contains("\\Configurables\\Desa")).Count() == 0
+                                )
+                            )
+            {
+                foreach (var item in DischangePathList)
+                {
+                    if (!item.Path.Contains("custom-context.xml") && !item.Path.Contains("customer-operation-services.xml"))
+                    {
+                        if (!item.Path.Contains("Alojables"))
+                        {
+                            if (item.Path.Contains("Cer"))
+                            {
+                                rutaConf = item.Path;
+                                dischangePath.Path = rutaConf.Replace("Cer", "Desa");
+                                ComponentList.Add(dischangePath);
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        private void NoGuiaUbicaciones(string valueString, DischangePath dischangePath, List<DischangePath> dischangePathList)
+        {
+            //TENGO UN ARCHIVO EN EL TFS PERO NO TENGO LA RUTA EN LA GUIA DE UBICACIONES  
+            if (DischangePathList.Count() == 0)
+            {
+                if (valueString.Count() > 0)
+                {
+                    if (TfsSelected.path.Contains("/Mappings/General/"))
+                    {
+                        dischangePath.Path = $@"\Alojables\DIS\Batch\Mappings\Partials\General\{valueString}";
+                        ComponentList.Add(dischangePath);
+                    }
+                    if (valueString == "mpm.eClient.ecPortal.Web.dll")
+                    {
+                        dischangePath.Path = $@"\Alojables\DIS\eClient\bin\{valueString}";
+                        ComponentList.Add(dischangePath);
+                    }
+                }
+            }
+            else
+            {
+                if (valueString == "mpm.seg.Customers.DataRecovers.dll" || valueString == "mpm.seg.Customers.DataRecovers.Ahorro.dll")
+                {
+                    if (DischangePathList.Where(n => n.Path.Contains("\\CalculusServices\\")).Count() == 0)
+                    {
+                        dischangePath.Path = $@"\Alojables\DIS\CalculusServices\bin\{valueString}";
+                        ComponentList.Add(dischangePath);
+                    }
+                }
+            }
         }
 
         public event PropertyChangedEventHandler PropertyChanged;

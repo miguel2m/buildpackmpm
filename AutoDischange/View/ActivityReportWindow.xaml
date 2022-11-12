@@ -32,14 +32,14 @@
                         Click="PickupFolder_Click"
                     >
                 </Button>
-                <TextBlock Text="Ambiente:"/>
-                <ComboBox SelectedValue ="{Binding EnvEntrega, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                <!--<TextBlock Text="Ambiente:"/>-->
+                <!--<ComboBox SelectedValue ="{Binding EnvEntrega, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                           SelectedValuePath="Content">
 
                     <ComboBoxItem Content = "PRE" />
                     <ComboBoxItem Content = "PRO" />
                     <ComboBoxItem Content = "PRE - PRO" />
-                </ComboBox>
+                </ComboBox>-->
 
                 <TextBlock Text="Ruta de descarga:"/>
                 <TextBox Name="pathDownloadText" Text="{Binding PathDownload, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>

@@ -83,9 +83,14 @@ namespace AutoDischange.ViewModel.Helpers
 
         //Inicio Comparacion de componeentes
         //Create excel aand insert worksheet for Comparacion de componeentes
-        public static void CreateExcelDiffComapre(List<DiffCompareModel> diffCompareModelList,string pathUser, DiffComponent diffComponent)
+        public static void CreateExcelDiffComapre(List<DiffCompareModel> diffCompareModelList,
+            List<DiffCompareModel> diffCompareModelListIguales,
+            List<DiffCompareModel> diffCompareModelListDiferentes,
+            List<DiffCompareModel> diffCompareModelListHuerfanos,
+            string pathUser,
+            DiffComponent diffComponent)
         {
-            string rtfFile = System.IO.Path.Combine(pathUser, $"InformeComparacionComponentes_{Math.Abs(diffCompareModelList.GetHashCode())}.xlsx");
+            string rtfFile = System.IO.Path.Combine(pathUser, $"InformeComparacionComponentes_{DateTime.Now.ToString("yyyyMMddHHmmss")}.xlsx");
 
 
             //bool result = false;
@@ -93,6 +98,7 @@ namespace AutoDischange.ViewModel.Helpers
 
 
             SLDocument sl = new SLDocument();
+            sl.RenameWorksheet(SLDocument.DefaultFirstSheetName, "Comparación");
 
             sl.SetCellValue("B1", "PAQUETE 1");
             sl.SetCellValue("H1", "PAQUETE 2");
@@ -106,22 +112,22 @@ namespace AutoDischange.ViewModel.Helpers
             sl.SetCellValue(2, 1, "Contador");
             //SET Header Paquete A
             sl.SetCellValue(2, 2, "Ubicación");
-            sl.SetCellValue(2, 3, diffComponent.PathStart);
+            sl.SetCellValue(2, 3, "Componente paquete A");
             sl.SetCellValue(2, 4, "Hash");
             sl.SetCellValue(2, 5, "Fecha Modificación");
             sl.SetCellValue(2, 6, "Hora");
-            sl.SetCellValue(2, 7, "Tamaño");
+            sl.SetCellValue(2, 7, "Tamaño Bytes");
             //SET Header Paquete B
             sl.SetCellValue(2, 8, "Ubicación");
-            sl.SetCellValue(2, 9, diffComponent.PathEnd);
+            sl.SetCellValue(2, 9, "Componente paquete B");
             sl.SetCellValue(2, 10, "Hash");
             sl.SetCellValue(2, 11, "Fecha Modificación");
             sl.SetCellValue(2, 12, "Hora");
-            sl.SetCellValue(2, 13, "Tamaño");
+            sl.SetCellValue(2, 13, "Tamaño Bytes");
             //SET Header Evaluaciones
             sl.SetCellValue(2, 14, "Hash");
             sl.SetCellValue(2, 15, "Fecha");
-            sl.SetCellValue(2, 16, "Tamaño");
+            sl.SetCellValue(2, 16, "Tamaño Bytes");
 
             SLStyle styleFecha = sl.CreateStyle();
 
@@ -130,7 +136,7 @@ namespace AutoDischange.ViewModel.Helpers
             styleFecha.Alignment.JustifyLastLine = true;
             styleFecha.Alignment.ReadingOrder = SLAlignmentReadingOrderValues.RightToLeft;
             styleFecha.Alignment.ShrinkToFit = true;
-            styleFecha.FormatCode = "dd/mm/yyyy";
+            styleFecha.FormatCode = "dd/mm/yy";
 
             SLStyle styleHora = sl.CreateStyle();
 
@@ -139,7 +145,7 @@ namespace AutoDischange.ViewModel.Helpers
             styleHora.Alignment.JustifyLastLine = true;
             styleHora.Alignment.ReadingOrder = SLAlignmentReadingOrderValues.RightToLeft;
             styleHora.Alignment.ShrinkToFit = true;
-            styleHora.FormatCode = "h:m:s";
+            styleHora.FormatCode = "hh:mm:ss";
             styleHora.SetVerticalAlignment(VerticalAlignmentValues.Center);
             //styleFecha.SetWrapText(true);
 
@@ -203,31 +209,36 @@ namespace AutoDischange.ViewModel.Helpers
                     case 1://Iguales
                         // code block
                         sl.SetCellValue(_index, 14, "Iguales");
-                        styleColor.Fill.SetPattern(PatternValues.Solid, System.Drawing.Color.LightGreen, System.Drawing.Color.DarkSalmon);
+                        //styleColor.Fill.SetPattern(PatternValues.Solid, System.Drawing.Color.LightGreen, System.Drawing.Color.DarkSalmon);
+                        styleColor.Font.FontColor = System.Drawing.Color.Black;
                         sl.SetRowStyle(_index, styleColor);
                         break;
                     case 2:// Iguales
                         sl.SetCellValue(_index, 14, "Iguales");
-                        styleColor.Fill.SetPattern(PatternValues.Solid, System.Drawing.Color.Yellow, System.Drawing.Color.DarkSalmon);
+                        //styleColor.Fill.SetPattern(PatternValues.Solid, System.Drawing.Color.Yellow, System.Drawing.Color.DarkSalmon);
+                        styleColor.Font.FontColor = System.Drawing.Color.Red;
                         sl.SetRowStyle(_index, styleColor);
                         // code block
                         break;
                     case 3://A es mayor B
                         // code block
                         sl.SetCellValue(_index, 14, "Diferentes");
-                        styleColor.Fill.SetPattern(PatternValues.Solid, System.Drawing.Color.Yellow, System.Drawing.Color.DarkSalmon);
+                        //styleColor.Fill.SetPattern(PatternValues.Solid, System.Drawing.Color.Yellow, System.Drawing.Color.DarkSalmon);
+                        styleColor.Font.FontColor = System.Drawing.Color.Red;
                         sl.SetRowStyle(_index, styleColor);
                         break;
                     case 4://B es mayor A
                         // code block
                         sl.SetCellValue(_index, 14, "Diferentes");
-                        styleColor.Fill.SetPattern(PatternValues.Solid, System.Drawing.Color.Yellow, System.Drawing.Color.DarkSalmon);
+                        //styleColor.Fill.SetPattern(PatternValues.Solid, System.Drawing.Color.Yellow, System.Drawing.Color.DarkSalmon);
+                        styleColor.Font.FontColor = System.Drawing.Color.Red;
                         sl.SetRowStyle(_index, styleColor);
                         break;
                     case 5: // Diferentes
                         // code block
                         sl.SetCellValue(_index, 14, "El componenete solo existe en el paquete 1");
-                        styleColor.Fill.SetPattern(PatternValues.Solid, System.Drawing.Color.Red, System.Drawing.Color.DarkSalmon);
+                        //styleColor.Fill.SetPattern(PatternValues.Solid, System.Drawing.Color.Red, System.Drawing.Color.DarkSalmon);
+                        styleColor.Font.FontColor = System.Drawing.Color.Blue;
                         sl.SetRowStyle(_index, styleColor);
                         break;
                 }
@@ -236,31 +247,36 @@ namespace AutoDischange.ViewModel.Helpers
                     case 1://Iguales
                         // code block
                         sl.SetCellValue(_index, 15, "Iguales");
-                        styleColor.Fill.SetPattern(PatternValues.Solid, System.Drawing.Color.LightGreen, System.Drawing.Color.DarkSalmon);
+                        //styleColor.Fill.SetPattern(PatternValues.Solid, System.Drawing.Color.LightGreen, System.Drawing.Color.DarkSalmon);
+                        styleColor.Font.FontColor = System.Drawing.Color.Black;
                         sl.SetRowStyle(_index, styleColor);
                         break;
                     case 2:// Iguales
                         sl.SetCellValue(_index, 15, "Iguales");
-                        styleColor.Fill.SetPattern(PatternValues.Solid, System.Drawing.Color.Yellow, System.Drawing.Color.DarkSalmon);
+                        //styleColor.Fill.SetPattern(PatternValues.Solid, System.Drawing.Color.Yellow, System.Drawing.Color.DarkSalmon);
+                        styleColor.Font.FontColor = System.Drawing.Color.Red;
                         sl.SetRowStyle(_index, styleColor);
                         // code block
                         break;
                     case 3://A es mayor B
                         // code block
                         sl.SetCellValue(_index, 15, "El paquete 1 es más actual que el paquete 2");
-                        styleColor.Fill.SetPattern(PatternValues.Solid, System.Drawing.Color.Yellow, System.Drawing.Color.DarkSalmon);
+                        //styleColor.Fill.SetPattern(PatternValues.Solid, System.Drawing.Color.Yellow, System.Drawing.Color.DarkSalmon);
+                        styleColor.Font.FontColor = System.Drawing.Color.Red;
                         sl.SetRowStyle(_index, styleColor);
                         break;
                     case 4://B es mayor A
                         // code block
                         sl.SetCellValue(_index, 15, "El paquete 2 es más actual que el paquete 1");
-                        styleColor.Fill.SetPattern(PatternValues.Solid, System.Drawing.Color.Yellow, System.Drawing.Color.DarkSalmon);
+                        //styleColor.Fill.SetPattern(PatternValues.Solid, System.Drawing.Color.Yellow, System.Drawing.Color.DarkSalmon);
+                        styleColor.Font.FontColor = System.Drawing.Color.Red;
                         sl.SetRowStyle(_index, styleColor);
                         break;
                     case 5: // Diferentes
                         // code block
                         sl.SetCellValue(_index, 15, "El componenete solo existe en el paquete 1");
-                        styleColor.Fill.SetPattern(PatternValues.Solid, System.Drawing.Color.Red, System.Drawing.Color.DarkSalmon);
+                        //styleColor.Fill.SetPattern(PatternValues.Solid, System.Drawing.Color.Red, System.Drawing.Color.DarkSalmon);
+                        styleColor.Font.FontColor = System.Drawing.Color.Blue;
                         sl.SetRowStyle(_index, styleColor);
                         break;
                 }
@@ -269,12 +285,14 @@ namespace AutoDischange.ViewModel.Helpers
                     case 1://Iguales
                         // code block
                         sl.SetCellValue(_index, 16, "Iguales");
-                        styleColor.Fill.SetPattern(PatternValues.Solid, System.Drawing.Color.LightGreen, System.Drawing.Color.DarkSalmon);
+                        //styleColor.Fill.SetPattern(PatternValues.Solid, System.Drawing.Color.LightGreen, System.Drawing.Color.DarkSalmon);
+                        styleColor.Font.FontColor = System.Drawing.Color.Black;
                         sl.SetRowStyle(_index, styleColor);
                         break;
                     case 2:// Iguales
                         sl.SetCellValue(_index, 16, "Iguales");
-                        styleColor.Fill.SetPattern(PatternValues.Solid, System.Drawing.Color.Yellow, System.Drawing.Color.DarkSalmon);
+                        //styleColor.Fill.SetPattern(PatternValues.Solid, System.Drawing.Color.Yellow, System.Drawing.Color.DarkSalmon);
+                        styleColor.Font.FontColor = System.Drawing.Color.Red;
                         sl.SetRowStyle(_index, styleColor);
                         // code block
 
@@ -283,19 +301,22 @@ namespace AutoDischange.ViewModel.Helpers
                     case 3://A es mayor B
                         // code block
                         sl.SetCellValue(_index, 16, "El paquete 1 es mayor que el paquete 2");
-                        styleColor.Fill.SetPattern(PatternValues.Solid, System.Drawing.Color.Yellow, System.Drawing.Color.DarkSalmon);
+                        //styleColor.Fill.SetPattern(PatternValues.Solid, System.Drawing.Color.Yellow, System.Drawing.Color.DarkSalmon);
+                        styleColor.Font.FontColor = System.Drawing.Color.Red;
                         sl.SetRowStyle(_index, styleColor);
                         break;
                     case 4://B es mayor A
                         // code block
                         sl.SetCellValue(_index, 16, "El paquete 2 es mayor que el paquete 1");
-                        styleColor.Fill.SetPattern(PatternValues.Solid, System.Drawing.Color.Yellow, System.Drawing.Color.DarkSalmon);
+                        //styleColor.Fill.SetPattern(PatternValues.Solid, System.Drawing.Color.Yellow, System.Drawing.Color.DarkSalmon);
+                        styleColor.Font.FontColor = System.Drawing.Color.Red;
                         sl.SetRowStyle(_index, styleColor);
                         break;
                     case 5: // Solo existe en A
                         // code block
                         sl.SetCellValue(_index, 16, "El componenete solo existe en el paquete 1");
-                        styleColor.Fill.SetPattern(PatternValues.Solid, System.Drawing.Color.Red, System.Drawing.Color.DarkSalmon);
+                        //styleColor.Fill.SetPattern(PatternValues.Solid, System.Drawing.Color.Red, System.Drawing.Color.DarkSalmon);
+                        styleColor.Font.FontColor = System.Drawing.Color.Blue;
                         sl.SetRowStyle(_index, styleColor);
                         break;
                 }
@@ -303,6 +324,30 @@ namespace AutoDischange.ViewModel.Helpers
 
                 _index++;
             }
+
+
+            sl.AddWorksheet("Resumen");
+            sl.SetCellValue(1, 1, "Total de componentes comparados");
+            sl.SetCellValue(2, 1, "Total de componentes iguales");
+            sl.SetCellValue(3, 1, "Total de componentes con diferencias");
+            sl.SetCellValue(4, 1, "Total de componentes huérfanos");
+
+            sl.SetCellValue(1, 2, diffCompareModelList.Count());
+            sl.SetCellValue(2, 2, diffCompareModelListIguales.Count());
+            sl.SetCellValue(3, 2, diffCompareModelListDiferentes.Count());
+            sl.SetCellValue(4, 2, diffCompareModelListHuerfanos.Count());
+
+            //styleColor.Alignment.JustifyLastLine = true;
+            //styleColor.Alignment.ReadingOrder = SLAlignmentReadingOrderValues.RightToLeft;
+            //styleColor.Alignment.ShrinkToFit = true;
+            //styleColor.SetVerticalAlignment(VerticalAlignmentValues.Center);
+            styleColor.Font.FontColor = System.Drawing.Color.Black;
+            sl.SetRowStyle(2, styleColor);
+            styleColor.Font.FontColor = System.Drawing.Color.Red;
+            sl.SetRowStyle(3, styleColor);
+            styleColor.Font.FontColor = System.Drawing.Color.Blue;
+            sl.SetRowStyle(4, styleColor);
+
             sl.SaveAs($"{rtfFile}");
             //return result;
 
@@ -332,26 +377,49 @@ namespace AutoDischange.ViewModel.Helpers
             sl.SelectWorksheet(listData.First().Workbook);
             int _index = 2;
             int _contador = 1;
+            List<string> ListListadoAlojables = new List<string>();
             foreach (ActivityComponentListAlojables item in listData)
             {
 
                 
                 //sl.SetCellValue(_index, 1, item.Id);
-                int _indexComponet = _index;
                 
-                foreach (string itemComponent in item.DischangeComponentName)
+                ListListadoAlojables.AddRange(item.DischangeComponentName);
+                //int _indexComponet = _index;
+                //foreach (string itemComponent in item.DischangeComponentName)
+                //{
+
+
+
+                //        sl.SetCellValue(_index, 1, _contador);
+                //        sl.SetCellValue(_index, 2, itemComponent);
+                //        _index++;
+                //        _contador++;
+                //}
+                
+            }
+            if (ListListadoAlojables.Any())
+            {
+                foreach (string itemComponent in ListListadoAlojables.OrderBy(o=>o))
                 {
 
 
-                        sl.SetCellValue(_index, 1, _contador);
-                        sl.SetCellValue(_index, 2, itemComponent);
-                        _index++;
-                        _contador++;
+
+                    sl.SetCellValue(_index, 1, _contador);
+                    sl.SetCellValue(_index, 2, itemComponent);
+                    _index++;
+                    _contador++;
                 }
-                
+            }
+            else
+            {
+                sl.SetCellValue(_index, 1, _contador);
+                sl.SetCellValue(_index, 2, "El paquete no genera listado de alojables");
+                _index++;
+                _contador++;
             }
             //char backSlash = Path.DirectorySeparatorChar;
-           
+
             sl.SaveAs(msPassTemp);
             //msPassTemp.Position = 0;
             return msPassTemp;
@@ -367,18 +435,39 @@ namespace AutoDischange.ViewModel.Helpers
             sl.SelectWorksheet(listData.First().Workbook);
             int _index = 2;
             int _contador = 1;
+            List<string> ListListadoConfigurables = new List<string>();
             foreach (ActivityComponentListConfigurables item in listData)
             {
-               
-                foreach (string itemComponent in item.DischangeComponentName)
+                ListListadoConfigurables.AddRange(item.DischangeComponentName);
+                //foreach (string itemComponent in item.DischangeComponentName)
+                //{
+                //    sl.SetCellValue(_index, 1, _contador);
+                //    sl.SetCellValue(_index, 2, itemComponent);
+                //    sl.SetCellValue(_index, 3, item.ComponentEnv);
+                //    _index++;
+                //    _contador++;
+                //}
+
+            }
+            if (ListListadoConfigurables.Any())
+            {
+                foreach (string itemComponent in ListListadoConfigurables.OrderBy(o => o))
                 {
+
+
+
                     sl.SetCellValue(_index, 1, _contador);
                     sl.SetCellValue(_index, 2, itemComponent);
-                    sl.SetCellValue(_index, 3, item.ComponentEnv);
                     _index++;
                     _contador++;
                 }
-                
+            }
+            else
+            {
+                sl.SetCellValue(_index, 1, _contador);
+                sl.SetCellValue(_index, 2, "El paquete no genera listado de alojables");
+                _index++;
+                _contador++;
             }
             //char backSlash = Path.DirectorySeparatorChar;
             sl.SaveAs(msPassTemp);

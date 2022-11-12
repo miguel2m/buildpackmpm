@@ -855,8 +855,9 @@ namespace AutoDischange.ViewModel.Helpers
                 //int _contador = 1;
                 if (_env == 0) //0 Pre 1 Pro
                 {   //PRE
-                    
-                    ActivityComponentPrePro.PendindActivity = !string.IsNullOrEmpty(_pendingActivity) ? _pendingActivity : "Ninguna"; ;
+
+                    //ActivityComponentPrePro.PendindActivity = !string.IsNullOrEmpty(_pendingActivity) ? _pendingActivity : "Ninguna"; ;
+                    ActivityComponentPrePro.PendindActivity = !string.IsNullOrEmpty(_pendingActivity) ? "Ninguna" : "Ninguna"; 
                     ActivityComponentPrePro.TypeActivity = "Despliegue";
                     ActivityComponentPrePro.rst.AppendText($"Bajar pools ", ActivityComponentPrePro.font);
                     ActivityComponentPrePro.rst.AppendText($"de todos los servidores.");
@@ -866,8 +867,10 @@ namespace AutoDischange.ViewModel.Helpers
                     ActivityComponentPrePro = new ActivityComponentPrePro();
                     ActivityComponentPrePro.font = new SLFont();
                     ActivityComponentPrePro.font.Bold = true;
-
-                    ActivityComponentPrePro.PendindActivity = $"{_pendingActivity} y {int.Parse(_pendingActivity) + 1 }";
+                    if(int.Parse(_pendingActivity)>0)
+                        ActivityComponentPrePro.PendindActivity = $"{_pendingActivity} y {int.Parse(_pendingActivity) + 1 }";
+                    else
+                        ActivityComponentPrePro.PendindActivity = $" {int.Parse(_pendingActivity) + 1 }";
                     ActivityComponentPrePro.TypeActivity = "Despliegue";
                     ActivityComponentPrePro.rst.AppendText($@"Desplegar las siguientes CRs:{ System.Environment.NewLine}");
                     ActivityComponentPrePro.rst.AppendText($"Alojables", ActivityComponentPrePro.font);
@@ -980,7 +983,11 @@ namespace AutoDischange.ViewModel.Helpers
                     ActivityComponentPrePro.font = new SLFont();
                     ActivityComponentPrePro.font.Bold = true;
 
-                    ActivityComponentPrePro.PendindActivity = $"{_pendingActivity} y {int.Parse(_pendingActivity) + 1 }";
+                    //ActivityComponentPrePro.PendindActivity = $"{_pendingActivity} y {int.Parse(_pendingActivity) + 1 }";
+                    if (int.Parse(_pendingActivity) > 0)
+                        ActivityComponentPrePro.PendindActivity = $"{_pendingActivity} y {int.Parse(_pendingActivity) + 1 }";
+                    else
+                        ActivityComponentPrePro.PendindActivity = $" {int.Parse(_pendingActivity) + 1 }";
                     ActivityComponentPrePro.TypeActivity = "Despliegue";
                     ActivityComponentPrePro.rst.AppendText($@"Desplegar las siguientes CRs:{ System.Environment.NewLine}");
                     ActivityComponentPrePro.rst.AppendText($"Alojables", ActivityComponentPrePro.font);
@@ -1178,9 +1185,9 @@ namespace AutoDischange.ViewModel.Helpers
                 //int _contador = 1;
                 ActivityComponentPrePro.PendindActivity = ActivityComponentPrePro.PendindActivity = !string.IsNullOrEmpty(_pendingActivity) ? _pendingActivity : "Ninguna";
                 ActivityComponentPrePro.TypeActivity = "Despliegue";
-                ActivityComponentPrePro.rst.AppendText($"Generar fingerprint { System.Environment.NewLine}", ActivityComponentPrePro.font);
+                //ActivityComponentPrePro.rst.AppendText($"Generar fingerprint { System.Environment.NewLine}", ActivityComponentPrePro.font);
                 //ActivityComponentPrePro.Activity = $"<b>Generar fingerprint</b>{ System.Environment.NewLine}";
-                ActivityComponentPreProList.Add(ActivityComponentPrePro);
+                //ActivityComponentPreProList.Add(ActivityComponentPrePro);
 
                 ActivityComponentPrePro = new ActivityComponentPrePro();
                 ActivityComponentPrePro.font = new SLFont();
@@ -1212,7 +1219,7 @@ namespace AutoDischange.ViewModel.Helpers
                     ActivityComponentPrePro.TypeActivity = "";
                     ActivityComponentPrePro.rst.AppendText($"Post despliegue. { System.Environment.NewLine}", ActivityComponentPrePro.font);
                     //ActivityComponentPrePro.Activity = $"<b>Post despliegue.</b>{ System.Environment.NewLine}";
-                    ActivityComponentPreProList.Add(ActivityComponentPrePro);
+                    //ActivityComponentPreProList.Add(ActivityComponentPrePro);
                 }
                 else
                 {   //PRO

@@ -211,6 +211,17 @@ namespace AutoDischange.ViewModel
 
                         ///////////////////// GUIA DE UBICACIONES ///////////////////////////////////////////////////////////////
 
+                        if (TodosItemTfs.Where(n => n.path.Contains(".csproj")).Count() > 0)
+                        {
+                            for (int i = 0; i < TodosItemTfs.Count(); i++)
+                            {
+                                if (TodosItemTfs[i].path.Contains(".csproj"))
+                                {
+                                    TodosItemTfs.RemoveAt(i);
+                                }
+                            }                            
+                        }
+
                         if (TodosItemTfs.Count > 0)
                         {
                             ListComponentStatus = $"Cargando datos de TFS.";
@@ -243,13 +254,13 @@ namespace AutoDischange.ViewModel
                             if (!rutaF.Contains(pathFound.Branch))
                             {
                                 //voy agregar el directorio donde se va a agregar el paquete del Jenkins
-                                rutaF = $@"{rutaCont}{pathFound.Branch}_{DateTime.Now.ToString("yyyyMMddHHmmss")}";
+                                rutaF = $@"{rutaCont}{pathFound.Branch}_{DateTime.Now.ToString("yyMdHmss")}";
                             }
 
                             try
                             {
                                 //CREAR ESTRUCTURA DE ARCHIVOS
-                                UtilHelper.buildStructure(rutaF);
+                                //UtilHelper.buildStructure(rutaF);
                                 FilesPacksTos = TransferFileJenkinsHelper.JenkinsTransferFile(pathFound.Path, rutaF, pathFound.Branch);
                             
                             
@@ -403,6 +414,14 @@ namespace AutoDischange.ViewModel
                     else if (dischangePathList[i].Path.Contains("customer-operation-services.xml") && dischangePathList[i].Path.Contains("Alojables"))
                     {
                         ExtraerBranchTFS2(dischangePathList[i].Path, item);
+                        if (!PathGU.Contains(ListComponent))
+                        {
+                            PathGU.Add(ListComponent);
+                        }
+                    }
+                    else if (dischangePathList[i].Path.Contains("customer-operation-services.Fenix.xml"))
+                    {
+                        ExtraerBranchTFS2(dischangePathList[i].Path.Replace("customer-operation-services.Fenix.xml", "customer-operation-services.Fenix.deploy.xml"), item);
                         if (!PathGU.Contains(ListComponent))
                         {
                             PathGU.Add(ListComponent);

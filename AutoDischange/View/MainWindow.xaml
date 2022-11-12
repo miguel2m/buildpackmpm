@@ -8,7 +8,7 @@
         xmlns:cc="clr-namespace:AutoDischange.View.CustomControl"
         mc:Ignorable="d"
         WindowStartupLocation="CenterScreen"
-        Title="Automatización de Paquetes" Height="482" Width="897" Icon="/AutoDischange;component/img/protoIco.ico">
+        Title="Automatización de Paquetes" Height="482" Width="968.333" Icon="/AutoDischange;component/img/protoIco.ico">
     <Window.Resources>
         <vm:DischangeVM x:Key="vm" />
     </Window.Resources>
@@ -102,11 +102,11 @@
 
                             
 
-                            <TextBlock FontSize="14"  FontFamily="Century Gothic" Width="85" FontWeight="Bold" Text="Changeset:" HorizontalAlignment="Left" UseLayoutRounding="False"/>
-                            <TextBox Text="{Binding Changeset}" IsReadOnly="True"/>
+                            <TextBlock FontSize="14"  FontFamily="Century Gothic" Width="85" FontWeight="Bold" Text="Changeset:" TextAlignment="Right" HorizontalAlignment="Left" UseLayoutRounding="False"/>
+                            <TextBox Text="{Binding Changeset}" IsReadOnly="True" Width="120"/>
 
-                            <TextBlock FontSize="14"  FontFamily="Century Gothic" Width="65" FontWeight="Bold" Text="Branch:"/>
-                            <TextBox Text="{Binding Branch}" IsReadOnly="True"/>
+                            <TextBlock FontSize="14"  FontFamily="Century Gothic" Width="65" FontWeight="Bold" Text="Branch:" TextAlignment="Right"/>
+                            <TextBox Text="{Binding Branch}" IsReadOnly="True" Width="120"/>
 
                         </StackPanel>
                     </ScrollViewer>
@@ -114,14 +114,14 @@
                     <ScrollViewer HorizontalScrollBarVisibility="Auto" Margin="0,0,0.333,10.333">
                     <StackPanel DataContext="{StaticResource vm}"
                                 Orientation="Horizontal"
-                                Margin="5">
-                        
-                            <TextBlock FontSize="14"  FontFamily="Century Gothic" Width="45" FontWeight="Bold" Text="Autor:"/>
-                            <TextBox Text="{Binding DisplayName , Mode=TwoWay }"  IsReadOnly="True"/>
-                            <TextBlock FontSize="14"  FontFamily="Century Gothic" Width="95" FontWeight="Bold" Text="Comentario:"/>
+                                Margin="5" Height="25">
+
+                            <TextBlock FontSize="14"  FontFamily="Century Gothic" Width="45" FontWeight="Bold" Text="Autor:" TextAlignment="Right"/>
+                            <TextBox Text="{Binding DisplayName , Mode=TwoWay }"  IsReadOnly="True" Width="120"/>
+                            <TextBlock FontSize="14"  FontFamily="Century Gothic" Width="95" FontWeight="Bold" Text="Comentario:" TextAlignment="Right"/>
                             <TextBox Text="{Binding CommentAuth , Mode=TwoWay}"  IsReadOnly="True"/>
-                            <TextBlock FontSize="14"  FontFamily="Century Gothic" Width="75" FontWeight="Bold" Text="Creado el:"/>
-                            <TextBox Text="{Binding ChangeCreated , Mode=TwoWay}" IsReadOnly="True"/>
+                            <TextBlock FontSize="14"  FontFamily="Century Gothic" Width="85" FontWeight="Bold" Text="Creado el:" TextAlignment="Right"/>
+                            <TextBox Text="{Binding ChangeCreated , Mode=TwoWay}" IsReadOnly="True" Width="130" Margin="0,0,0,0.333"/>
                         
                     </StackPanel>
                     </ScrollViewer>

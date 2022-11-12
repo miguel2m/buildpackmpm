@@ -70,10 +70,14 @@ namespace AutoDischange.ViewModel.Helpers
                 {
                     //NO SE ADMITE ARCHIVOS SIN EXTENSION O CON EXTENSION .CSPROJ
                     ext = Path.GetExtension(itemLocal.item.path);
-                    if ((ext != "") && (ext != ".csproj"))
+                    //if ((ext != "") && (ext != ".csproj"))
+                    //{
+                    //    tfsReponse.Add(itemLocal.item);
+                    //}
+                    if (ext != "")
                     {
                         tfsReponse.Add(itemLocal.item);
-                    }                  
+                    }
                 }
             }
             return tfsReponse;

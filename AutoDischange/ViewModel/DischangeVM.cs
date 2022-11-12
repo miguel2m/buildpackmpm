@@ -170,7 +170,7 @@ namespace AutoDischange.ViewModel
 
                     DisplayName = author.author.displayName;
                     CommentAuth = author.comment;
-                    ChangeCreated = author.createdDate.ToShortDateString();
+                    ChangeCreated = author.createdDate.ToString();
                     if (!string.IsNullOrEmpty(SelectedChangeset.Branch))
                     {
                         allItem = allItem.FindAll((item)=> item.path.Contains(SelectedChangeset.Branch));
@@ -198,9 +198,6 @@ namespace AutoDischange.ViewModel
                         DischangeStatus = $"El changeset {SelectedChangeset.Changeset} en el branch {SelectedChangeset.Branch} no posee componentes.";
                         MessageBox.Show($"El changeset {SelectedChangeset.Changeset} en el branch {SelectedChangeset.Branch} no posee componentes.", $"El changeset {SelectedChangeset.Changeset} en el branch {SelectedChangeset.Branch} no posee componentes.", MessageBoxButton.OK, MessageBoxImage.Warning);
                     }
-                    
-                    
-                    
                 }
                 catch (Exception ex)
                 {
@@ -314,6 +311,11 @@ namespace AutoDischange.ViewModel
                                     ComponentList.Add(itemLocal);
                                 }
                             }
+                            else if (itemLocal.Path.Contains("customer-operation-services.Fenix.xml"))
+                            {
+                                dischangePath.Path = itemLocal.Path.Replace("customer-operation-services.Fenix.xml", "customer-operation-services.Fenix.deploy.xml");
+                                ComponentList.Add(dischangePath);
+                            }
                             else
                             {
                                 ComponentList.Add(itemLocal);
@@ -373,7 +375,7 @@ namespace AutoDischange.ViewModel
                         dischangePath.Path = $@"\Alojables\DIS\Batch\Mappings\Partials\General\{valueString}";
                         ComponentList.Add(dischangePath);
                     }
-                    if (valueString == "mpm.eClient.ecPortal.Web.dll")
+                    if (valueString == "mpm.eClient.ecPortal.Web.dll" || valueString == "mpm.eClient.Common.Mvc.dll")
                     {
                         dischangePath.Path = $@"\Alojables\DIS\eClient\bin\{valueString}";
                         ComponentList.Add(dischangePath);

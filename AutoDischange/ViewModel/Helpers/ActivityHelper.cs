@@ -492,17 +492,23 @@ namespace AutoDischange.ViewModel.Helpers
                         //DischangePathList.Add(dischangePathListTemp.First().Path);
                         foreach (DischangePath itemTemp in dischangePathListTemp)
                         {
-                            ActivityComponentListAlojables.DischangeComponentName.Add(itemTemp.Path);
+                            if (!itemTemp.Path.Contains("Upgrade"))
+                            {
+                                ActivityComponentListAlojables.DischangeComponentName.Add(itemTemp.Path);
+                                _contador++;
+                            }
+
 
                         }
                     }
                     else
                     {
                         ActivityComponentListAlojables.DischangeComponentName.Add(item);
+                        _contador++;
                     }
 
                     ActivityComponentListAlojablesListTask.Add(ActivityComponentListAlojables);
-                    _contador++;
+                   
                 }
 
                 return ActivityComponentListAlojablesListTask;

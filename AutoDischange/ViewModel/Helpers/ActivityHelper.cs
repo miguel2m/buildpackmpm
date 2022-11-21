@@ -79,6 +79,13 @@ namespace AutoDischange.ViewModel.Helpers
                    
                 }
             }
+            else
+            {
+                MemoryStream msPassTemp = new MemoryStream();
+                ExcelHelper.ListadoAlojables(msPass, ActivityComponentListAlojablesList).WriteTo(msPassTemp);
+                msPass = new MemoryStream();
+                msPassTemp.WriteTo(msPass);
+            }
 
             //Listado de Configurables
             if (Directory.Exists(pathConfigurables))
@@ -95,6 +102,13 @@ namespace AutoDischange.ViewModel.Helpers
                     msPassTemp.WriteTo(msPass);
                 }
             }
+            else
+            {
+                MemoryStream msPassTemp = new MemoryStream();
+                ExcelHelper.ListadoConfigurables(msPass, ActivityComponentListConfigurablesList).WriteTo(msPassTemp);
+                msPass = new MemoryStream();
+                msPassTemp.WriteTo(msPass);
+            }
 
             //Listado de Script para la hoja de lista
             if (Directory.Exists(pathScript))
@@ -110,6 +124,13 @@ namespace AutoDischange.ViewModel.Helpers
                     msPass = new MemoryStream();
                     msPassTemp.WriteTo(msPass);
                 }
+            }
+            else
+            {
+                MemoryStream msPassTemp = new MemoryStream();
+                ExcelHelper.ListadoScript(msPass, ActivityComponentListScriptList).WriteTo(msPassTemp);
+                msPass = new MemoryStream();
+                msPassTemp.WriteTo(msPass);
             }
 
             //Listado de Actividades para despliegue ActividadesParaDesplegarPre  ActividadesParaDesplegarPro
@@ -504,7 +525,7 @@ namespace AutoDischange.ViewModel.Helpers
                     else
                     {
                         ActivityComponentListAlojables.DischangeComponentName.Add(item);
-                        _contador++;
+                         _contador++;
                     }
 
                     ActivityComponentListAlojablesListTask.Add(ActivityComponentListAlojables);

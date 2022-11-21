@@ -374,7 +374,7 @@ namespace AutoDischange.ViewModel.Helpers
             msPass.Position = 0;
             MemoryStream msPassTemp = new MemoryStream();
             SLDocument sl = new SLDocument(msPass);
-            sl.SelectWorksheet(listData.First().Workbook);
+            sl.SelectWorksheet("ListadoAlojables");
             int _index = 2;
             int _contador = 1;
             List<string> ListListadoAlojables = new List<string>();
@@ -432,7 +432,7 @@ namespace AutoDischange.ViewModel.Helpers
             msPass.Position = 0;
             MemoryStream msPassTemp = new MemoryStream();
             SLDocument sl = new SLDocument(msPass);
-            sl.SelectWorksheet(listData.First().Workbook);
+            sl.SelectWorksheet("ListadoConfigurables");
             int _index = 2;
             int _contador = 1;
             List<string> ListListadoConfigurables = new List<string>();
@@ -465,7 +465,7 @@ namespace AutoDischange.ViewModel.Helpers
             else
             {
                 sl.SetCellValue(_index, 1, _contador);
-                sl.SetCellValue(_index, 2, "El paquete no genera listado de alojables");
+                sl.SetCellValue(_index, 2, "El paquete no genera listado de configurables");
                 _index++;
                 _contador++;
             }
@@ -482,23 +482,35 @@ namespace AutoDischange.ViewModel.Helpers
             msPass.Position = 0;
             MemoryStream msPassTemp = new MemoryStream();
             SLDocument sl = new SLDocument(msPass);
-            sl.SelectWorksheet(listData.First().Workbook);
+            sl.SelectWorksheet("ListadoScripts");
             int _index = 2;
             int _contador = 1;
-            foreach (ActivityComponentListScript item in listData)
+            if (listData.Any())
             {
-                int _indexComponet = _index;
-                foreach (string itemComponent in item.DischangeComponentName)
+                foreach (ActivityComponentListScript item in listData)
                 {
-                    sl.SetCellValue(_index, 1, _contador);
-                    sl.SetCellValue(_index, 2, itemComponent);
-                    sl.SetCellValue(_index, 3, item.TypeScript);
-                    _index++;
-                    _contador++;
-                }
+                    int _indexComponet = _index;
+                    foreach (string itemComponent in item.DischangeComponentName)
+                    {
+                        sl.SetCellValue(_index, 1, _contador);
+                        sl.SetCellValue(_index, 2, itemComponent);
+                        sl.SetCellValue(_index, 3, item.TypeScript);
+                        _index++;
+                        _contador++;
+                    }
 
-               
+
+                }
             }
+            else
+            {
+                sl.SetCellValue(_index, 1, _contador);
+                sl.SetCellValue(_index, 2, "El paquete no genera listado de scripts");
+                _index++;
+                _contador++;
+            }
+            
+            
             //char backSlash = Path.DirectorySeparatorChar;
             sl.SaveAs(msPassTemp);
 

@@ -111,8 +111,8 @@ namespace AutoDischange.ViewModel
             }
         }
 
-        private bool branchJenkinsView;
-        public bool BranchJenkinsView
+        private string branchJenkinsView;
+        public string BranchJenkinsView
         {
             get { return branchJenkinsView; }
             set
@@ -133,6 +133,14 @@ namespace AutoDischange.ViewModel
 
 
             PathComponent =Environment.GetFolderPath(Environment.SpecialFolder.UserProfile);
+
+            List<DischangeChangeset> changesetList = DatabaseHelper.Read<DischangeChangeset>().Where(n => !string.IsNullOrEmpty(n.BranchJenkins) )
+                .OrderBy(x => x.BranchJenkins).ToList();
+
+            foreach (DischangeChangeset item in changesetList)
+            {
+                BranchJenkinsView += item.BranchJenkins + " , ";
+            }
 
         }
 

@@ -517,7 +517,7 @@ namespace AutoDischange.ViewModel.Helpers
                         //DischangePathList.Add(dischangePathListTemp.First().Path);
                         foreach (DischangePath itemTemp in dischangePathListTemp)
                         {
-                            if (!itemTemp.Path.Contains("Upgrade"))
+                            if (!itemTemp.Path.Contains("Upgrade") || !itemTemp.Path.Contains(".deploy"))
                             {
                                 ActivityComponentListAlojables.DischangeComponentName.Add(itemTemp.Path);
                                 _contador++;

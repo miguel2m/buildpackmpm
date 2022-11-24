@@ -79,6 +79,13 @@ namespace AutoDischange.ViewModel.Helpers
                    
                 }
             }
+            else
+            {
+                MemoryStream msPassTemp = new MemoryStream();
+                ExcelHelper.ListadoAlojables(msPass, ActivityComponentListAlojablesList).WriteTo(msPassTemp);
+                msPass = new MemoryStream();
+                msPassTemp.WriteTo(msPass);
+            }
 
             //Listado de Configurables
             if (Directory.Exists(pathConfigurables))
@@ -95,6 +102,13 @@ namespace AutoDischange.ViewModel.Helpers
                     msPassTemp.WriteTo(msPass);
                 }
             }
+            else
+            {
+                MemoryStream msPassTemp = new MemoryStream();
+                ExcelHelper.ListadoConfigurables(msPass, ActivityComponentListConfigurablesList).WriteTo(msPassTemp);
+                msPass = new MemoryStream();
+                msPassTemp.WriteTo(msPass);
+            }
 
             //Listado de Script para la hoja de lista
             if (Directory.Exists(pathScript))
@@ -110,6 +124,13 @@ namespace AutoDischange.ViewModel.Helpers
                     msPass = new MemoryStream();
                     msPassTemp.WriteTo(msPass);
                 }
+            }
+            else
+            {
+                MemoryStream msPassTemp = new MemoryStream();
+                ExcelHelper.ListadoScript(msPass, ActivityComponentListScriptList).WriteTo(msPassTemp);
+                msPass = new MemoryStream();
+                msPassTemp.WriteTo(msPass);
             }
 
             //Listado de Actividades para despliegue ActividadesParaDesplegarPre  ActividadesParaDesplegarPro
@@ -492,17 +513,23 @@ namespace AutoDischange.ViewModel.Helpers
                         //DischangePathList.Add(dischangePathListTemp.First().Path);
                         foreach (DischangePath itemTemp in dischangePathListTemp)
                         {
-                            ActivityComponentListAlojables.DischangeComponentName.Add(itemTemp.Path);
+                            if (!itemTemp.Path.Contains("Upgrade"))
+                            {
+                                ActivityComponentListAlojables.DischangeComponentName.Add(itemTemp.Path);
+                                _contador++;
+                            }
+
 
                         }
                     }
                     else
                     {
                         ActivityComponentListAlojables.DischangeComponentName.Add(item);
+                         _contador++;
                     }
 
                     ActivityComponentListAlojablesListTask.Add(ActivityComponentListAlojables);
-                    _contador++;
+                   
                 }
 
                 return ActivityComponentListAlojablesListTask;

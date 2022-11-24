@@ -25,8 +25,6 @@ namespace AutoDischange.ViewModel
         public List<ListComponent> PathGU = new List<ListComponent>();
 
         public FilesPacksToUpdates filesPacksToUpdates;
-        public List<FilesPacksToUpdates> FilesPacksTos = new List<FilesPacksToUpdates>();
-
 
         List<string> listaBranchs = new List<string>();
 
@@ -167,10 +165,12 @@ namespace AutoDischange.ViewModel
         public async Task CopyToJenkinsAsync()
         {
             //VARIABLES
+            List<FilesPacksToUpdates> FilesPacksTos = new List<FilesPacksToUpdates>();
             string result = string.Empty, rutaPack = string.Empty, rutaF = string.Empty, branchFound = string.Empty;
             string valueString = String.Empty, ext = string.Empty, nameFile2 = String.Empty, nameBranch2 = string.Empty, cad = string.Empty;
             List<DischangePath> DischangePathList = new List<DischangePath>();
             PathGU.Clear();
+            FilesPacksTos.Clear();
             try
             {
                 //CARGAMOS LA LISTA DE BRANCHES SELECCIONADAS
@@ -193,7 +193,6 @@ namespace AutoDischange.ViewModel
                             branchFound = BranchSeleccionado(_branchUses, item);
                             if (branchFound.Contains("Error"))
                             {
-                                MessageBox.Show(branchFound);
                                 ListComponentStatus = branchFound;
                                 return;
                             }
@@ -243,12 +242,12 @@ namespace AutoDischange.ViewModel
                         }
                     }
 
+                    FilesPacksTos.Clear();
                     ///////////////////////// CARGAMOS EN EL JENKINS /////////////////////////////////////////////////////////////
                     string rutaCont = PathComponent + "\\";
                     if (PathGU.Count > 0)
                     {
                         ListComponentStatus = $"Transfiriendo archivos de Jenkins.";
-                        FilesPacksTos.Clear();
                         foreach (var pathFound in PathGU)
                         {
                             if (!rutaF.Contains(pathFound.Branch))
@@ -259,48 +258,23 @@ namespace AutoDischange.ViewModel
 
                             try
                             {
-                                //CREAR ESTRUCTURA DE ARCHIVOS
-                                //UtilHelper.buildStructure(rutaF);
-                                FilesPacksTos = TransferFileJenkinsHelper.JenkinsTransferFile(pathFound.Path, rutaF, pathFound.Branch);
-                            
-                            
-                            
+                                FilesPacksTos = TransferFileJenkinsHelper.JenkinsTransferFile(pathFound.Path, rutaF, pathFound.Branch, pathFound.changeset);
                             }
                             catch (Exception ex)
                             {
                                 Log4net.log.Error(ex.Message);
-                                MessageBox.Show("Error al ejecutar transferencia de paquetes Jenkins: " + ex.Message, "Error al ejecutar transferencia de paquetes Jenkins", MessageBoxButton.OK, MessageBoxImage.Error);
                             }
                         }
                         //METODO PARA LA HOMOLOGACION DE LOS ARCHIVOS
                         if (FilesPacksTos.Count > 0)
                         {
-
-                            var GroupedByFiles = FilesPacksTos.GroupBy(user => user.nameFile);
-                            foreach (var nameFileKey in GroupedByFiles)
-                            {
-                                int cantFiles = FilesPacksTos.Where(x => x.nameFile == nameFileKey.Key).Count();
-                                if (cantFiles > 1)
-                                {
-                                    var mostCurrentFile = FilesPacksTos.Where(x => x.nameFile == nameFileKey.Key).OrderByDescending(y => y.dateTimeFile).FirstOrDefault();
-                                    
-                                    //ruta inicial
-                                    string mostCurrentPathFile = mostCurrentFile.pathFile;
-                                    DateTime mostCurrentDateTimeFile = mostCurrentFile.dateTimeFile;
-                                    foreach (var item in nameFileKey)
-                                    {
-                                        if (mostCurrentPathFile != item.pathFile && mostCurrentDateTimeFile != item.dateTimeFile)
-                                        {
-                                            if (File.Exists(item.pathFile))
-                                            {
-                                                File.SetAttributes(item.pathFile, FileAttributes.Normal);
-                                                File.Delete(item.pathFile);
-                                            }
-                                            File.Copy(mostCurrentPathFile, item.pathFile);
-                                        }
-                                    }
-                                }
-                            }
+                            HomologarArchivos(FilesPacksTos);
+                            //VAMOS A CREAR EL CSV
+                            DetallarResultadoPack(rutaF, FilesPacksTos);
+                        }
+                        else
+                        {
+                            ListComponentStatus = $"Error: Los componentes no fueron cargados.";
                         }
 
 
@@ -323,6 +297,48 @@ namespace AutoDischange.ViewModel
                 Log4net.log.Error(e.Message);
                 string exc = e.Message;
                 ListComponentStatus = $"Exception:{exc}";
+            }
+        }
+
+        private void DetallarResultadoPack(string rutaF, List<FilesPacksToUpdates> filesPacksTos)
+        {
+            string pathend = $@"{rutaF}\Resultado_Pack_Creado.csv";
+            string separador = ",";
+            StringBuilder salida = new StringBuilder();
+            foreach (FilesPacksToUpdates item in filesPacksTos)
+            {
+                string cadena = $@"{item.branchUse},{item.changeset},{item.nameFile},{item.pathFile.Replace(rutaF, "")}";
+                _ = salida.AppendLine(string.Join(separador, cadena));
+            }
+            File.AppendAllText(pathend, salida.ToString());
+        }
+
+        private void HomologarArchivos(List<FilesPacksToUpdates> filesPacksTos)
+        {
+            IEnumerable<IGrouping<string, FilesPacksToUpdates>> GroupedByFiles = filesPacksTos.GroupBy(user => user.nameFile);
+            foreach (IGrouping<string, FilesPacksToUpdates> nameFileKey in GroupedByFiles)
+            {
+                int cantFiles = filesPacksTos.Where(x => x.nameFile == nameFileKey.Key).Count();
+                if (cantFiles > 1)
+                {
+                    FilesPacksToUpdates mostCurrentFile = filesPacksTos.Where(x => x.nameFile == nameFileKey.Key).OrderByDescending(y => y.dateTimeFile).FirstOrDefault();
+
+                    //ruta inicial
+                    string mostCurrentPathFile = mostCurrentFile.pathFile;
+                    DateTime mostCurrentDateTimeFile = mostCurrentFile.dateTimeFile;
+                    foreach (FilesPacksToUpdates item in nameFileKey)
+                    {
+                        if (mostCurrentPathFile != item.pathFile && mostCurrentDateTimeFile != item.dateTimeFile)
+                        {
+                            if (File.Exists(item.pathFile))
+                            {
+                                File.SetAttributes(item.pathFile, FileAttributes.Normal);
+                                File.Delete(item.pathFile);
+                            }
+                            File.Copy(mostCurrentPathFile, item.pathFile);
+                        }
+                    }
+                }
             }
         }
 
@@ -483,17 +499,13 @@ namespace AutoDischange.ViewModel
 
         private void NoGuiaUbicaciones(List<DischangePath> dischangePathList, string valueString, TfsItem item, string rutaConf, List<BranchUse> branchUses, string cad, string ext)
         {
-            if (dischangePathList.Count() == 0)
+            if (dischangePathList.Count() == 0 && !item.path.Contains("BSM Robot"))
             {
                 if (valueString.Count() > 0)
                 {
                     if (item.path.Contains("/Mappings/General/"))
                     {
                         rutaConf = $@"\Batch\Mappings\Partials\General\{valueString}";
-                    }
-                    if (valueString == "mpm.eClient.ecPortal.Web.dll")
-                    {
-                        rutaConf = $@"\eClient\bin\mpm.eClient.Web.dll";
                     }
                     if (rutaConf != null)
                     {
@@ -516,6 +528,10 @@ namespace AutoDischange.ViewModel
             }
             else
             {
+                if (item.path.Contains("BSM Robot"))
+                {
+                    Log4net.log.Error($@"No es parte de los componentes --> {item.path}");
+                }
                 if (valueString == "mpm.seg.Customers.DataRecovers.dll" || valueString == "mpm.seg.Customers.DataRecovers.Ahorro.dll")
                 {
                     if (dischangePathList.Where(n => n.Path.Contains("\\CalculusServices\\")).Count() == 0)
@@ -632,6 +648,7 @@ namespace AutoDischange.ViewModel
         {
             ListComponent = new ListComponent();
             ListComponent.Path = rutaConf;
+            ListComponent.changeset = item.version.ToString();
             foreach (BranchUse item2 in _branchUses)
             {
                 if (item2.UseBranch)

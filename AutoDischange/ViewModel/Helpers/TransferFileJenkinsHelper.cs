@@ -16,7 +16,7 @@ namespace AutoDischange.ViewModel.Helpers
 
         public static FilesPacksToUpdates filesPacksToUpdates;
         public static List<FilesPacksToUpdates> FilesPacksTos = new List<FilesPacksToUpdates>();
-        public static List<FilesPacksToUpdates> JenkinsTransferFile(string rutaUbicFile, string rutaUsr, string branch)
+        public static List<FilesPacksToUpdates> JenkinsTransferFile(string rutaUbicFile, string rutaUsr, string branch, string changeset)
         {
             string ext = Path.GetExtension(rutaUbicFile);
             string rutaServer = string.Empty, rutaDisChanges = string.Empty, fileExamp = string.Empty;
@@ -68,48 +68,50 @@ namespace AutoDischange.ViewModel.Helpers
 
 
             //verifico que el directorio de busqueda exista
-            if (!Directory.Exists(rutaI))
+            if (Directory.Exists(rutaI) && File.Exists($"{rutaI}{fileExamp}"))
             {
-                Log4net.log.Error($@"El directorio {rutaI} donde quiere acceder no existe");
-                MessageBox.Show($@"El directorio {rutaI} donde quiere acceder no existe");
-            }
+                string pathFileStart = $"{rutaI}{fileExamp}";
+                string pathFileEnd = rutaF + fileExamp;
+                //Verifico que el directorio de destino exista
+                if (!Directory.Exists(rutaF))
+                {
+                    //Crear el directorio
+                    Directory.CreateDirectory(rutaF);
+                }
 
-            string pathFileStart = $"{rutaI}{fileExamp}";
-            string pathFileEnd = rutaF + fileExamp;
+                //Verifico que el archivo en directorio destino exista o no
+                if (File.Exists(pathFileEnd))
+                {
+                    File.SetAttributes(pathFileEnd, FileAttributes.Normal);
+                    File.Delete(pathFileEnd);
+                }
+                //SI EXISTE EL ARCHIVO EN EL JENKINS
+                if (File.Exists(pathFileStart))
+                {
+                    //Copiar archivo
+                    File.Copy(pathFileStart, pathFileEnd, true);
 
-            //Verifico que el directorio de destino exista
-            if (!Directory.Exists(rutaF))
-            {
-                //Crear el directorio
-                Directory.CreateDirectory(rutaF);
-            }
-
-            //Verifico que el archivo en directorio destino exista o no
-            if (File.Exists(pathFileEnd))
-            {
-                File.SetAttributes(pathFileEnd, FileAttributes.Normal);
-                File.Delete(pathFileEnd);
-            }
-            //SI EXISTE EL ARCHIVO EN EL JENKINS
-            if (File.Exists(pathFileStart))
-            {
-                //Copiar archivo
-                File.Copy(pathFileStart, pathFileEnd, true);
-
-                //TENGO UNA 
-                //CREAMOS UNA LISTA PARA GUARDAR TODAS LAS RUTAS CON SU PESO Y FECHA DE CREACION
-                filesPacksToUpdates = new FilesPacksToUpdates();
-                filesPacksToUpdates.pathFile = pathFileEnd;
-                filesPacksToUpdates.nameFile = fileExamp;
-                FileInfo fileInfo = new FileInfo(pathFileStart);
-                filesPacksToUpdates.dateTimeFile = fileInfo.LastWriteTime;
-                filesPacksToUpdates.weightFile = (int)fileInfo.Length;
-                FilesPacksTos.Add(filesPacksToUpdates);
+                    //TENGO UNA 
+                    //CREAMOS UNA LISTA PARA GUARDAR TODAS LAS RUTAS CON SU PESO Y FECHA DE CREACION
+                    filesPacksToUpdates = new FilesPacksToUpdates();
+                    filesPacksToUpdates.pathFile = pathFileEnd;
+                    filesPacksToUpdates.nameFile = fileExamp;
+                    FileInfo fileInfo = new FileInfo(pathFileStart);
+                    filesPacksToUpdates.dateTimeFile = fileInfo.LastWriteTime;
+                    filesPacksToUpdates.weightFile = (int)fileInfo.Length;
+                    filesPacksToUpdates.changeset = changeset;
+                    filesPacksToUpdates.branchUse = branch;
+                    filesPacksToUpdates.Confirm = true;
+                    FilesPacksTos.Add(filesPacksToUpdates);
+                }
+                else
+                {
+                    Log4net.log.Error($@"El archivo {fileExamp} no esta en la ruta {rutaI}");
+                }
             }
             else
             {
-                Log4net.log.Error($@"El archivo {fileExamp} no esta en la ruta {rutaI}");
-                MessageBox.Show($@"El archivo {fileExamp} no esta en la ruta {rutaI}");
+                Log4net.log.Error($@"El directorio {rutaI} donde quiere acceder no existe");
             }
             return FilesPacksTos;
         }
@@ -175,9 +177,12 @@ namespace AutoDischange.ViewModel.Helpers
 
     public class FilesPacksToUpdates
     {
+        public string changeset { get; set; }
+        public string branchUse { get; set; }
         public string pathFile { get; set; }
         public string nameFile { get; set; }
         public DateTime dateTimeFile { get; set; }
         public int weightFile { get; set; }
+        public bool Confirm { get; set; } = false;
     }
 }

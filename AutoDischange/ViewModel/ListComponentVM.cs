@@ -109,6 +109,17 @@ namespace AutoDischange.ViewModel
             }
         }
 
+        private bool branchJenkinsView;
+        public bool BranchJenkinsView
+        {
+            get { return branchJenkinsView; }
+            set
+            {
+                branchJenkinsView = value;
+                OnPropertyChanged("Hogar2");
+            }
+        }
+
         public List<BranchUse> _branchUses = new List<BranchUse>();
 
         public ListComponentVM()

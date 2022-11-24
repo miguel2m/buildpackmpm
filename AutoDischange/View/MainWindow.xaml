@@ -45,7 +45,7 @@
         </StatusBar>
         <ToolBarTray DockPanel.Dock="Top">
             <ToolBar>
-                <Button Content="Abrir Excel"
+                <Button Content="Abrir Csv"
                     HorizontalAlignment="Center"
                     Command="{Binding DischangeCommand}"/>
                 <Separator/>

@@ -127,6 +127,7 @@ namespace AutoDischange.ViewModel
             }
             catch (Exception ex)
             {
+                Console.WriteLine(ex);
                 Log4net.log.Error(ex.Message);
                 DiffVisible = true;
                 DiffStatus = $"Error al ejecutar comparación de paquetes: { ex.Message}.";

@@ -178,7 +178,7 @@ namespace AutoDischange.ViewModel.Helpers
                     await task1;
                     if (diffCompareModelListIguales.Any())
                     {
-                        diffCompareModelList.AddRange(diffCompareModelListIguales.OrderBy(o => o.PathA).ToList());
+                        diffCompareModelList.AddRange(diffCompareModelListIguales.OrderBy(o => o.UbicacionA).ToList());
                     }
                 }
 
@@ -275,7 +275,7 @@ namespace AutoDischange.ViewModel.Helpers
 
                     if (diffCompareModelListDiferentes.Any())
                     {
-                        diffCompareModelList.AddRange(diffCompareModelListDiferentes.OrderBy(o => o.PathA).ToList());
+                        diffCompareModelList.AddRange(diffCompareModelListDiferentes.OrderBy(o => o.UbicacionA).ToList());
                     }
                 }
 
@@ -321,7 +321,7 @@ namespace AutoDischange.ViewModel.Helpers
 
                     if (diffCompareModelListHuerfanos.Any())
                     {
-                        diffCompareModelList.AddRange(diffCompareModelListHuerfanos.OrderBy(o => o.PathA).ToList());
+                        diffCompareModelList.AddRange(diffCompareModelListHuerfanos.OrderBy(o => o.UbicacionA).ToList());
                     }
                 }
 

@@ -111,16 +111,16 @@ namespace AutoDischange.ViewModel
             }
         }
 
-        private string branchJenkinsView;
-        public string BranchJenkinsView
-        {
-            get { return branchJenkinsView; }
-            set
-            {
-                branchJenkinsView = value;
-                OnPropertyChanged("Hogar2");
-            }
-        }
+        //private string branchJenkinsView;
+        //public string BranchJenkinsView
+        //{
+        //    get { return branchJenkinsView; }
+        //    set
+        //    {
+        //        branchJenkinsView = value;
+        //        OnPropertyChanged("Hogar2");
+        //    }
+        //}
 
         public List<BranchUse> _branchUses = new List<BranchUse>();
 
@@ -134,13 +134,13 @@ namespace AutoDischange.ViewModel
 
             PathComponent =Environment.GetFolderPath(Environment.SpecialFolder.UserProfile);
 
-            List<BranchJenkinsExcel> changesetList = DatabaseHelper.Read<BranchJenkinsExcel>()
-                .OrderBy(x => x.Name).ToList();
+            //List<BranchJenkinsExcel> changesetList = DatabaseHelper.Read<BranchJenkinsExcel>()
+            //    .OrderBy(x => x.Name).ToList();
 
-            foreach (BranchJenkinsExcel item in changesetList)
-            {
-                BranchJenkinsView += item.Name + " , ";
-            }
+            //foreach (BranchJenkinsExcel item in changesetList)
+            //{
+            //    BranchJenkinsView += item.Name + " , ";
+            //}
 
         }
 

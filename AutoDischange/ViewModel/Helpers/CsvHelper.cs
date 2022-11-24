@@ -54,6 +54,46 @@ namespace AutoDischange.ViewModel.Helpers
 
 
         }
+
+        //READ Local DIS_Changes
+        public static async Task<List<DischangeChangeset>> ReadCSVChangeset(string filePath)
+        {
+            //string rtfFile = System.IO.Path.Combine(Environment.CurrentDirectory, "DIS_Changes.xlsx");
+
+            List<DischangeChangeset> DischangeChangesets = new List<DischangeChangeset>();
+            //List<DischangePath> DischangeChangesets = new List<DischangePath>();
+
+            var engine = new FileHelperEngine<ChangesetData>();
+
+            // To Read Use:
+            var result = engine.ReadFile(filePath);
+            int count = 0;
+            foreach (ChangesetData item in result)
+            {
+                DischangeChangeset DischangeChangeset = new DischangeChangeset
+                {
+                    Id = count,
+                    Changeset = item.Changeset,
+                    Branch = item.Branch,
+                };
+
+
+                if(await DatabaseHelper.InsertReplaceChangeset(DischangeChangeset))
+                {
+                    DischangeChangesets.Add(DischangeChangeset);
+                }
+            }
+
+
+
+
+
+
+
+            return DischangeChangesets;
+
+
+        }
     }
 
     [DelimitedRecord(";")]
@@ -66,5 +106,20 @@ namespace AutoDischange.ViewModel.Helpers
         public string SizeData;
         
 
+    };
+
+    [DelimitedRecord(",")]
+    public class ChangesetData
+    {
+        public string Changeset;
+
+        public string Branch;
+
+
     }
+
+
 }
+
+
+

@@ -121,9 +121,10 @@ namespace AutoDischange.ViewModel.Helpers
 
             SLDocument sl = new SLDocument();
             sl.RenameWorksheet(SLDocument.DefaultFirstSheetName, "Comparación");
-
-            sl.SetCellValue("B1", "PAQUETE 1");
-            sl.SetCellValue("H1", "PAQUETE 2");
+            //string pathA = Path.GetDirectoryName(diffCompareModelList.First().PathA);
+            //string pathB = Path.GetDirectoryName(diffCompareModelList.First().PathB);
+            sl.SetCellValue("B1", "PAQUETE 1 ");
+            sl.SetCellValue("H1", "PAQUETE 2 ");
             sl.SetCellValue("N1", "Evaluaciones");
             // merge all cells in the cell range B2:G8
             sl.MergeWorksheetCells("B1", "G1");
@@ -350,14 +351,40 @@ namespace AutoDischange.ViewModel.Helpers
 
             sl.AddWorksheet("Resumen");
             sl.SetCellValue(1, 1, "Total de componentes comparados");
+
             sl.SetCellValue(2, 1, "Total de componentes iguales");
-            sl.SetCellValue(3, 1, "Total de componentes con diferencias");
-            sl.SetCellValue(4, 1, "Total de componentes huérfanos");
+            sl.SetCellValue(3, 1, "Total de componentes Alojables iguales");
+            sl.SetCellValue(4, 1, "Total de componentes Configurables iguales");
+            sl.SetCellValue(5, 1, "Total de componentes Script iguales");
+
+            sl.SetCellValue(6, 1, "Total de componentes con diferencias");
+            sl.SetCellValue(7, 1, "Total de componentes Alojables con diferencias");
+            sl.SetCellValue(8, 1, "Total de componentes Configurables con diferencias");
+            sl.SetCellValue(9, 1, "Total de componentes Script con diferencias");
+
+            sl.SetCellValue(10, 1, "Total de componentes huérfanos");
+            sl.SetCellValue(11, 1, "Total de componentes Alojables huérfanos");
+            sl.SetCellValue(12, 1, "Total de componentes Configurables huérfanos");
+            sl.SetCellValue(13, 1, "Total de componentes Script huérfanos");
 
             sl.SetCellValue(1, 2, diffCompareModelList.Count());
+
             sl.SetCellValue(2, 2, diffCompareModelListIguales.Count());
-            sl.SetCellValue(3, 2, diffCompareModelListDiferentes.Count());
-            sl.SetCellValue(4, 2, diffCompareModelListHuerfanos.Count());
+            sl.SetCellValue(3, 2, diffCompareModelListIguales.Where((i) => i.PathA.Contains(@"\Alojables") || i.PathA.Contains(@"\alojables")).Count());
+            sl.SetCellValue(4, 2, diffCompareModelListIguales.Where((i) => i.PathA.Contains(@"\Configurables") || i.PathA.Contains(@"\configurables")).Count());
+            sl.SetCellValue(5, 2, diffCompareModelListIguales.Where((i) => i.PathA.Contains(@"\Scripts") || i.PathA.Contains(@"\scripts")).Count());
+
+            sl.SetCellValue(6, 2, diffCompareModelListDiferentes.Count());
+            sl.SetCellValue(7, 2, diffCompareModelListDiferentes.Where((i) => i.PathA.Contains(@"\Alojables") || i.PathA.Contains("alojables")).Count());
+            sl.SetCellValue(8, 2, diffCompareModelListDiferentes.Where((i) => i.PathA.Contains(@"\Configurables") || i.PathA.Contains("configurables")).Count());
+            sl.SetCellValue(9, 2, diffCompareModelListDiferentes.Where((i) => i.PathA.Contains(@"\Scripts") || i.PathA.Contains("scripts")).Count());
+
+            
+            sl.SetCellValue(10, 2, diffCompareModelListHuerfanos.Count());
+            sl.SetCellValue(11, 2, diffCompareModelListHuerfanos.Where((i) => i.PathA.Contains(@"\Alojables") || i.PathA.Contains(@"\alojables")).Count());
+            sl.SetCellValue(12, 2, diffCompareModelListHuerfanos.Where((i) => i.PathA.Contains(@"\Configurables") || i.PathA.Contains(@"\configurables")).Count());
+            sl.SetCellValue(13, 2, diffCompareModelListHuerfanos.Where((i) => i.PathA.Contains(@"\Scripts") || i.PathA.Contains(@"\scripts")).Count());
+
 
             //styleColor.Alignment.JustifyLastLine = true;
             //styleColor.Alignment.ReadingOrder = SLAlignmentReadingOrderValues.RightToLeft;
@@ -365,10 +392,30 @@ namespace AutoDischange.ViewModel.Helpers
             //styleColor.SetVerticalAlignment(VerticalAlignmentValues.Center);
             styleColor.Font.FontColor = System.Drawing.Color.Black;
             sl.SetRowStyle(2, styleColor);
-            styleColor.Font.FontColor = System.Drawing.Color.Red;
+            styleColor.Font.FontColor = System.Drawing.Color.Black;
             sl.SetRowStyle(3, styleColor);
-            styleColor.Font.FontColor = System.Drawing.Color.Blue;
+            styleColor.Font.FontColor = System.Drawing.Color.Black;
             sl.SetRowStyle(4, styleColor);
+            styleColor.Font.FontColor = System.Drawing.Color.Black;
+            sl.SetRowStyle(5, styleColor);
+
+            styleColor.Font.FontColor = System.Drawing.Color.Red;
+            sl.SetRowStyle(6, styleColor);
+            styleColor.Font.FontColor = System.Drawing.Color.Red;
+            sl.SetRowStyle(7, styleColor);
+            styleColor.Font.FontColor = System.Drawing.Color.Red;
+            sl.SetRowStyle(8, styleColor);
+            styleColor.Font.FontColor = System.Drawing.Color.Red;
+            sl.SetRowStyle(9, styleColor);
+
+            styleColor.Font.FontColor = System.Drawing.Color.Blue;
+            sl.SetRowStyle(10, styleColor);
+            styleColor.Font.FontColor = System.Drawing.Color.Blue;
+            sl.SetRowStyle(11, styleColor);
+            styleColor.Font.FontColor = System.Drawing.Color.Blue;
+            sl.SetRowStyle(12, styleColor);
+            styleColor.Font.FontColor = System.Drawing.Color.Blue;
+            sl.SetRowStyle(13, styleColor);
 
             sl.SaveAs($"{rtfFile}");
             //return result;

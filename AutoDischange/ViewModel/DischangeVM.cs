@@ -149,6 +149,42 @@ namespace AutoDischange.ViewModel
             
         }
 
+        public async void GetCsv(string fileName)
+        {
+            try
+            {
+                string noData = string.Empty;
+                DischangeChangesets.Clear();
+                foreach (DischangeChangeset changeset in await CsvHelper.ReadCSVChangeset(fileName))
+                {
+                    if (changeset.Branch != "" && changeset.Changeset != "")
+                    {
+                        DischangeChangesets.Add(changeset);
+                    }
+                    else
+                    {
+                        noData += changeset.Changeset + " | ";
+                    }
+                }
+                if (noData != "")
+                {
+                    DischangeStatus = $"Indicar Branch en los siguientes changeset: {noData}";
+                    DischangeStatus += "| Lista de changesets cargada.";
+                }
+                else
+                {
+                    DischangeStatus = "Lista de changesets cargada.";
+                }
+            }
+            catch (Exception ex)
+            {
+                Log4net.log.Error(ex.Message);
+                DischangeStatus = $"Error en Csv: { ex.Message}.";
+                MessageBox.Show("Error en Csv: " + ex.Message, "Error en Csv", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+
+        }
+
         public async void GetChangeset()
         {
             if (SelectedChangeset == null)

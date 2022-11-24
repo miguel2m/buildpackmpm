@@ -31,6 +31,7 @@ namespace AutoDischange.Model
         public string Path { get; set; }
         public string Branch { get; set; }
         public string changeset { get; set; }
+        public bool Confirm { get; set; } = false;
     }
 
     public class DiffComponent

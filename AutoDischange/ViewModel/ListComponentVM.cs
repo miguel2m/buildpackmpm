@@ -25,6 +25,8 @@ namespace AutoDischange.ViewModel
         public List<ListComponent> PathGU = new List<ListComponent>();
 
         public FilesPacksToUpdates filesPacksToUpdates;
+        public List<FilesPacksToUpdates> FilesPacksTos = new List<FilesPacksToUpdates>();
+        
 
         List<string> listaBranchs = new List<string>();
 
@@ -165,12 +167,14 @@ namespace AutoDischange.ViewModel
         public async Task CopyToJenkinsAsync()
         {
             //VARIABLES
-            List<FilesPacksToUpdates> FilesPacksTos = new List<FilesPacksToUpdates>();
             string result = string.Empty, rutaPack = string.Empty, rutaF = string.Empty, branchFound = string.Empty;
             string valueString = String.Empty, ext = string.Empty, nameFile2 = String.Empty, nameBranch2 = string.Empty, cad = string.Empty;
             List<DischangePath> DischangePathList = new List<DischangePath>();
+            List<TfsItem> TodosItmTfs2 = new List<TfsItem>();
             PathGU.Clear();
             FilesPacksTos.Clear();
+            TodosItemTfs.Clear();
+            TodosItmTfs2.Clear();
             try
             {
                 //CARGAMOS LA LISTA DE BRANCHES SELECCIONADAS
@@ -203,7 +207,7 @@ namespace AutoDischange.ViewModel
                                     listaBranchs.Add(branchFound);
                                 }
                                 ////////////////////////////////////////// TFS //////////////////////////////////////////////
-                                List<TfsItem> TodosItmTfs2 = await TFSRequest.GetChangeset(item.Changeset);
+                                TodosItmTfs2 = await TFSRequest.GetChangeset(item.Changeset);
                                 CargarTodosItemTfs(TodosItmTfs2, branchFound);
                             }
                         }
@@ -268,28 +272,32 @@ namespace AutoDischange.ViewModel
                         //METODO PARA LA HOMOLOGACION DE LOS ARCHIVOS
                         if (FilesPacksTos.Count > 0)
                         {
-                            HomologarArchivos(FilesPacksTos);
+                            HomologarArchivos();
                             //VAMOS A CREAR EL CSV
-                            DetallarResultadoPack(rutaF, FilesPacksTos);
+                            DetallarResultadoPack(rutaF);
+                            ListComponentStatus = $"Transferencia de archivos culminado.";
+                            Log4net.log.Info($"Transferencia de archivos culminado.");
+                            MessageBox.Show("Transferencia de archivos culminado. ", "Transferencia de archivos culminado.", MessageBoxButton.OK, MessageBoxImage.Information);
                         }
                         else
                         {
-                            ListComponentStatus = $"Error: Los componentes no fueron cargados.";
+                            foreach (ListComponent item in PathGU)
+                            {
+                                Log4net.log.Warn($"Warn: Los componentes no fueron cargados: {item.Branch}, {item.changeset}, {item.Path}");
+                            }
+                            ListComponentStatus = $"Warn: Los componentes no fueron cargados.";
                         }
-
-
-                        ListComponentStatus = $"Transferencia de archivos culminado.";
-                        MessageBox.Show("Transferencia de archivos culminado. ", "Transferencia de archivos culminado.", MessageBoxButton.OK, MessageBoxImage.Information);
                     }
                     else
                     {
                         ListComponentStatus = $"No hay archivos para transferir.";
+                        Log4net.log.Warn($"No hay archivos para transferir");
                     }
-
                 }
                 else
                 {
-                    MessageBox.Show("Debe seleccionar al menos un branch para continuar");
+                    ListComponentStatus = "Debe seleccionar al menos un branch para continuar";
+                    Log4net.log.Warn($"Debe seleccionar al menos un branch para continuar");
                 }
             }
             catch (Exception e)
@@ -300,28 +308,31 @@ namespace AutoDischange.ViewModel
             }
         }
 
-        private void DetallarResultadoPack(string rutaF, List<FilesPacksToUpdates> filesPacksTos)
+        private void DetallarResultadoPack(string rutaF)
         {
+            //Random random = new Random();
             string pathend = $@"{rutaF}\Resultado_Pack_Creado.csv";
             string separador = ",";
             StringBuilder salida = new StringBuilder();
-            foreach (FilesPacksToUpdates item in filesPacksTos)
+            foreach (FilesPacksToUpdates item in FilesPacksTos)
             {
                 string cadena = $@"{item.branchUse},{item.changeset},{item.nameFile},{item.pathFile.Replace(rutaF, "")}";
                 _ = salida.AppendLine(string.Join(separador, cadena));
             }
             File.AppendAllText(pathend, salida.ToString());
+            salida.Clear();
+            FilesPacksTos.Clear();
         }
 
-        private void HomologarArchivos(List<FilesPacksToUpdates> filesPacksTos)
+        private void HomologarArchivos()
         {
-            IEnumerable<IGrouping<string, FilesPacksToUpdates>> GroupedByFiles = filesPacksTos.GroupBy(user => user.nameFile);
+            IEnumerable<IGrouping<string, FilesPacksToUpdates>> GroupedByFiles = FilesPacksTos.GroupBy(user => user.nameFile);
             foreach (IGrouping<string, FilesPacksToUpdates> nameFileKey in GroupedByFiles)
             {
-                int cantFiles = filesPacksTos.Where(x => x.nameFile == nameFileKey.Key).Count();
+                int cantFiles = FilesPacksTos.Where(x => x.nameFile == nameFileKey.Key).Count();
                 if (cantFiles > 1)
                 {
-                    FilesPacksToUpdates mostCurrentFile = filesPacksTos.Where(x => x.nameFile == nameFileKey.Key).OrderByDescending(y => y.dateTimeFile).FirstOrDefault();
+                    FilesPacksToUpdates mostCurrentFile = FilesPacksTos.Where(x => x.nameFile == nameFileKey.Key).OrderByDescending(y => y.dateTimeFile).FirstOrDefault();
 
                     //ruta inicial
                     string mostCurrentPathFile = mostCurrentFile.pathFile;

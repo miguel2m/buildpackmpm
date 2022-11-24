@@ -68,41 +68,48 @@ namespace AutoDischange.ViewModel.Helpers
 
 
             //verifico que el directorio de busqueda exista
-            if (Directory.Exists(rutaI) && File.Exists($"{rutaI}{fileExamp}"))
+            if (Directory.Exists(rutaI))
             {
-                string pathFileStart = $"{rutaI}{fileExamp}";
-                string pathFileEnd = rutaF + fileExamp;
-                //Verifico que el directorio de destino exista
-                if (!Directory.Exists(rutaF))
+                if (File.Exists($"{rutaI}{fileExamp}"))
                 {
-                    //Crear el directorio
-                    Directory.CreateDirectory(rutaF);
-                }
+                    string pathFileStart = $"{rutaI}{fileExamp}";
+                    string pathFileEnd = rutaF + fileExamp;
+                    //Verifico que el directorio de destino exista
+                    if (!Directory.Exists(rutaF))
+                    {
+                        //Crear el directorio
+                        Directory.CreateDirectory(rutaF);
+                    }
 
-                //Verifico que el archivo en directorio destino exista o no
-                if (File.Exists(pathFileEnd))
-                {
-                    File.SetAttributes(pathFileEnd, FileAttributes.Normal);
-                    File.Delete(pathFileEnd);
-                }
-                //SI EXISTE EL ARCHIVO EN EL JENKINS
-                if (File.Exists(pathFileStart))
-                {
-                    //Copiar archivo
-                    File.Copy(pathFileStart, pathFileEnd, true);
+                    //Verifico que el archivo en directorio destino exista o no
+                    if (File.Exists(pathFileEnd))
+                    {
+                        File.SetAttributes(pathFileEnd, FileAttributes.Normal);
+                        File.Delete(pathFileEnd);
+                    }
+                    //SI EXISTE EL ARCHIVO EN EL JENKINS
+                    if (File.Exists(pathFileStart))
+                    {
+                        //Copiar archivo
+                        File.Copy(pathFileStart, pathFileEnd, true);
 
-                    //TENGO UNA 
-                    //CREAMOS UNA LISTA PARA GUARDAR TODAS LAS RUTAS CON SU PESO Y FECHA DE CREACION
-                    filesPacksToUpdates = new FilesPacksToUpdates();
-                    filesPacksToUpdates.pathFile = pathFileEnd;
-                    filesPacksToUpdates.nameFile = fileExamp;
-                    FileInfo fileInfo = new FileInfo(pathFileStart);
-                    filesPacksToUpdates.dateTimeFile = fileInfo.LastWriteTime;
-                    filesPacksToUpdates.weightFile = (int)fileInfo.Length;
-                    filesPacksToUpdates.changeset = changeset;
-                    filesPacksToUpdates.branchUse = branch;
-                    filesPacksToUpdates.Confirm = true;
-                    FilesPacksTos.Add(filesPacksToUpdates);
+                        //TENGO UNA 
+                        //CREAMOS UNA LISTA PARA GUARDAR TODAS LAS RUTAS CON SU PESO Y FECHA DE CREACION
+                        filesPacksToUpdates = new FilesPacksToUpdates();
+                        filesPacksToUpdates.pathFile = pathFileEnd;
+                        filesPacksToUpdates.nameFile = fileExamp;
+                        FileInfo fileInfo = new FileInfo(pathFileStart);
+                        filesPacksToUpdates.dateTimeFile = fileInfo.LastWriteTime;
+                        filesPacksToUpdates.weightFile = (int)fileInfo.Length;
+                        filesPacksToUpdates.changeset = changeset;
+                        filesPacksToUpdates.branchUse = branch;
+                        filesPacksToUpdates.Confirm = true;
+                        FilesPacksTos.Add(filesPacksToUpdates);
+                    }
+                    else
+                    {
+                        Log4net.log.Error($@"El archivo {fileExamp} no esta en la ruta {rutaI}");
+                    }
                 }
                 else
                 {

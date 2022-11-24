@@ -312,9 +312,22 @@ namespace AutoDischange.ViewModel
                                     ComponentList.Add(itemLocal);
                                 }
                             }
+                            else if (ext == ".js" && DischangePathList.Count > 1)
+                            {
+                                ObtenerSoloModificado(itemLocal, TfsSelected.path);
+                            }
                             else
                             {
                                 ComponentList.Add(itemLocal);
+                            }
+
+                            //EN CASO DE QUE EL COMPONENTE POSEA UN CHANGETYPE DE TIPO delete, merge DEBE IMPRIMIR UN MENSAJE
+                            if (TfsSelected.changetype.Contains("delete, merge"))
+                            {
+                                foreach (DischangePath item in ComponentList)
+                                {
+                                    item.Path += " [Fusionar mediante combinación, eliminar]";
+                                }
                             }
                         }
                     }
@@ -328,6 +341,16 @@ namespace AutoDischange.ViewModel
 
             }
 
+        }
+
+        private void ObtenerSoloModificado(DischangePath itemLocal, string path2)
+        {
+            //EXTRAIGO UNA PARTE DE LA RUTA 
+            string cutPath = itemLocal.Path.Replace(@"\Alojables\DIS\eClient\", "").Replace(@"\", "/");
+            if (path2.Contains(cutPath))
+            {
+                ComponentList.Add(itemLocal);
+            }
         }
 
         private void ConfigurableNoDesa(List<DischangePath> dischangePathList, string rutaConf, DischangePath dischangePath)

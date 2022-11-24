@@ -451,6 +451,14 @@ namespace AutoDischange.ViewModel
                             PathGU.Add(ListComponent);
                         }
                     }
+                    else if (ext == ".js" && dischangePathList.Count > 1)
+                    {
+                        ObtenerSoloModificado(dischangePathList[i].Path, item);
+                        if (!PathGU.Contains(ListComponent))
+                        {
+                            PathGU.Add(ListComponent);
+                        }
+                    }
                     else
                     {
                         ExtraerBranchTFS2(dischangePathList[i].Path, item);
@@ -460,6 +468,16 @@ namespace AutoDischange.ViewModel
                         }
                     }
                 }
+            }
+        }
+
+        private void ObtenerSoloModificado(string path1, TfsItem item)
+        {
+            //EXTRAIGO UNA PARTE DE LA RUTA 
+            string cutPath = path1.Replace(@"\Alojables\DIS\eClient\", "").Replace(@"\", "/");
+            if (item.path.Contains(cutPath))
+            {
+                ExtraerBranchTFS2(path1, item);
             }
         }
 

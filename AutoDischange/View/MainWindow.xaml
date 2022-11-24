@@ -8,7 +8,7 @@
         xmlns:cc="clr-namespace:AutoDischange.View.CustomControl"
         mc:Ignorable="d"
         WindowStartupLocation="CenterScreen"
-        Title="Automatización de Paquetes" Height="482" Width="968.333" Icon="/AutoDischange;component/img/protoIco.ico">
+        Title="Automatización de Paquetes " Height="482" Width="968.333" Icon="/AutoDischange;component/img/protoIco.ico">
     <Window.Resources>
         <vm:DischangeVM x:Key="vm" />
     </Window.Resources>
@@ -37,7 +37,10 @@
         </Menu>
         <StatusBar DockPanel.Dock="Bottom">
             <StatusBarItem>
-                <TextBlock  Text="{Binding DischangeStatus}"/>
+                <TextBlock  Text="{Binding DischangeStatus}" Width="764"/>
+            </StatusBarItem>
+            <StatusBarItem Width="130">
+                <TextBlock  Text="Version 3.0" Width="143" FontWeight="Bold"/>
             </StatusBarItem>
         </StatusBar>
         <ToolBarTray DockPanel.Dock="Top">

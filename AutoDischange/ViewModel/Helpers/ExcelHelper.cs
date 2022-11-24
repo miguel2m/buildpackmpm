@@ -20,15 +20,33 @@ namespace AutoDischange.ViewModel.Helpers
         public static async Task<List<DischangeChangeset>> ReadExcel (string path) 
         {
             List<DischangeChangeset> DischangeChangesets = new List<DischangeChangeset>();
-           
-               
+
+
             SLDocument sl = new SLDocument(path);
 
             //borramos la tabla para que al consultarla no tenga registros antiguos 
             await DatabaseHelper.Delete();
 
             int iRow = 2;
-            if (string.IsNullOrEmpty(sl.GetCellValueAsString(iRow, 3)))
+            int iRowJenkins = 2;
+            if (!string.IsNullOrEmpty(sl.GetCellValueAsString(iRowJenkins, 3)))
+            {
+                while (!string.IsNullOrEmpty(sl.GetCellValueAsString(iRowJenkins, 3)))
+                {
+
+                    BranchJenkinsExcel BranchJenkin = new BranchJenkinsExcel
+                    {
+                        Id = iRowJenkins,
+                  
+                        Name = sl.GetCellValueAsString(iRowJenkins, 3),
+                    };
+                    
+                    await DatabaseHelper.InsertReplaceBranchJenkinsExcel(BranchJenkin);
+                    iRowJenkins++;
+
+                }
+            }
+            else
             {
                 throw new Exception("Debe indicar el branch donde ubicar los componenetes del jenkis");
             }
@@ -40,7 +58,6 @@ namespace AutoDischange.ViewModel.Helpers
                     Id = iRow,
                     Changeset = sl.GetCellValueAsString(iRow, 1),
                     Branch = sl.GetCellValueAsString(iRow, 2),
-                    BranchJenkins = sl.GetCellValueAsString(iRow, 3),
                 };
 
                 DischangeChangesets.Add(DischangeChangeset);

@@ -13,7 +13,13 @@ namespace AutoDischange.Model
         public int Id { get; set; }
         public string Changeset { get; set; }
         public string Branch { get; set; }
-        public string BranchJenkins { get; set; }
+    }
+
+    public class BranchJenkinsExcel
+    {
+        [PrimaryKey, AutoIncrement]
+        public int Id { get; set; }
+        public string Name { get; set; }
     }
 
     public class DischangePath

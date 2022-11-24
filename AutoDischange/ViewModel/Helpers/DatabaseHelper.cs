@@ -77,6 +77,20 @@ namespace AutoDischange.ViewModel.Helpers
             return result;
         }
 
+        //INSERT INTO Branch Jenkins
+        public static async Task<bool> InsertReplaceBranchJenkinsExcel(BranchJenkinsExcel item)
+        {
+            bool result = false;
+            //CreateDBFolder();
+            var db = new SQLiteAsyncConnection(dbFile, dbFlag, true);
+
+            await db.CreateTableAsync<BranchJenkinsExcel>();
+            int rows = await db.InsertOrReplaceAsync(item);
+            if (rows > 0)
+                result = true;
+            return result;
+        }
+
         //INSERT INTO
         public static  bool Insert<T>(T item)
         {

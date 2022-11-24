@@ -134,12 +134,12 @@ namespace AutoDischange.ViewModel
 
             PathComponent =Environment.GetFolderPath(Environment.SpecialFolder.UserProfile);
 
-            List<DischangeChangeset> changesetList = DatabaseHelper.Read<DischangeChangeset>().Where(n => !string.IsNullOrEmpty(n.BranchJenkins) )
-                .OrderBy(x => x.BranchJenkins).ToList();
+            List<BranchJenkinsExcel> changesetList = DatabaseHelper.Read<BranchJenkinsExcel>()
+                .OrderBy(x => x.Name).ToList();
 
-            foreach (DischangeChangeset item in changesetList)
+            foreach (BranchJenkinsExcel item in changesetList)
             {
-                BranchJenkinsView += item.BranchJenkins + " , ";
+                BranchJenkinsView += item.Name + " , ";
             }
 
         }

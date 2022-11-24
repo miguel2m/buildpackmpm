@@ -219,11 +219,13 @@ namespace AutoDischange.ViewModel.Helpers
                 //PRE
                 if (ActivityProcessImportListPre.Any())
                 {
-                    ActivityPoolListPre = await ListPoolManager(0, $"{ActivityResultListPre.Count()}");
+                    //ActivityPoolListPre = await ListPoolManager(0, $"{ActivityResultListPre.Count()}");
+                    ActivityPoolListPre = await ListPoolManager2(0, ActivityComponentListAlojablesList.Any(), ActivityComponentListConfigurablesList.Any(), $"{ActivityResultListPre.Count()}");
                 }
                 else
                 {
-                    ActivityPoolListPre = await ListPoolManager(0, "0");
+                    //ActivityPoolListPre = await ListPoolManager(0, "0");
+                    ActivityPoolListPre = await ListPoolManager2(0, ActivityComponentListAlojablesList.Any(), ActivityComponentListConfigurablesList.Any(), "0");
                 }
 
                 if (ActivityPoolListPre.Any())
@@ -242,11 +244,13 @@ namespace AutoDischange.ViewModel.Helpers
                 //PRO
                 if (ActivityProcessImportListPro.Any())
                 {
-                    ActivityPoolListPro = await ListPoolManager(1, $"{ActivityResultListPro.Count()}");
+                    //ActivityPoolListPro = await ListPoolManager(1, $"{ActivityResultListPro.Count()}");
+                    ActivityPoolListPro = await ListPoolManager2(1, ActivityComponentListAlojablesList.Any(), ActivityComponentListConfigurablesList.Any(), $"{ActivityResultListPro.Count()}");
                 }
                 else
                 {
-                    ActivityPoolListPro = await ListPoolManager(1, "0");
+                    //ActivityPoolListPro = await ListPoolManager(1, "0");
+                    ActivityPoolListPro = await ListPoolManager2(1, ActivityComponentListAlojablesList.Any(), ActivityComponentListConfigurablesList.Any(), "0");
                 }
 
                 if (ActivityPoolListPro.Any())
@@ -1114,6 +1118,159 @@ namespace AutoDischange.ViewModel.Helpers
                     ActivityComponentPrePro.rst.AppendText($@"de todos los servidores.{ System.Environment.NewLine}");
                     //ActivityComponentPrePro.Activity = $@"<b>Prender pools</b> de todos los servidores.";
                     ActivityComponentPreProList.Add(ActivityComponentPrePro);
+                }
+
+                return ActivityComponentPreProList;
+            });
+            task0.Start();
+
+
+            return await task0;
+        }
+
+        //
+        private static async Task<List<ActivityComponentPrePro>> ListPoolManager2(int _env,bool alojables,bool configurables, string _pendingActivity)
+        {
+
+            Task<List<ActivityComponentPrePro>> task0 = new Task<List<ActivityComponentPrePro>>(() =>
+            {
+                List<ActivityComponentPrePro> ActivityComponentPreProList = new List<ActivityComponentPrePro>();
+                ActivityComponentPrePro ActivityComponentPrePro = new ActivityComponentPrePro();
+                ActivityComponentPrePro.font = new SLFont();
+                ActivityComponentPrePro.font.Bold = true;
+                //int _contador = 1;
+                if (_env == 0) //0 Pre 1 Pro
+                {   //PRE
+
+                    //ActivityComponentPrePro.PendindActivity = !string.IsNullOrEmpty(_pendingActivity) ? _pendingActivity : "Ninguna"; ;
+                    ActivityComponentPrePro.PendindActivity = !string.IsNullOrEmpty(_pendingActivity) ? "Ninguna" : "Ninguna";
+                    ActivityComponentPrePro.TypeActivity = "Despliegue";
+                    ActivityComponentPrePro.rst.AppendText($"Bajar pools ", ActivityComponentPrePro.font);
+                    ActivityComponentPrePro.rst.AppendText($"de todos los servidores.");
+                    //ActivityComponentPrePro.Activity = $@"<b>Bajar pools</b> de todos los servidores.";
+                    ActivityComponentPreProList.Add(ActivityComponentPrePro);
+
+                    ActivityComponentPrePro = new ActivityComponentPrePro();
+                    ActivityComponentPrePro.font = new SLFont();
+                    ActivityComponentPrePro.font.Bold = true;
+                    if (int.Parse(_pendingActivity) > 0)
+                        ActivityComponentPrePro.PendindActivity = $"{_pendingActivity} y {int.Parse(_pendingActivity) + 1 }";
+                    else
+                        ActivityComponentPrePro.PendindActivity = $" {int.Parse(_pendingActivity) + 1 }";
+                    ActivityComponentPrePro.TypeActivity = "Despliegue";
+                    ActivityComponentPrePro.rst.AppendText($@"Desplegar las siguientes CRs:{ System.Environment.NewLine}");
+                    if(alojables)
+                        ActivityComponentPrePro.rst.AppendText($"Alojables", ActivityComponentPrePro.font);
+                    ActivityComponentPrePro.rst.AppendText($@"{ System.Environment.NewLine}");
+                    if (configurables)
+                        ActivityComponentPrePro.rst.AppendText($"Configurables", ActivityComponentPrePro.font);
+                    //ActivityComponentPrePro.Activity = $@"Desplegar las siguientes CRs:{ System.Environment.NewLine}";
+                    //ActivityComponentPrePro.Activity += $@"<b>Alojables</b>{ System.Environment.NewLine}";
+                    //ActivityComponentPrePro.Activity += $@"<b>Configurables</b>{ System.Environment.NewLine}";
+                    ActivityComponentPreProList.Add(ActivityComponentPrePro);
+                    int _actividadPending;
+                    if (!string.IsNullOrEmpty(_pendingActivity))
+                    {
+                        _actividadPending = int.Parse(_pendingActivity) + ActivityComponentPreProList.Count();
+                    }
+                    else
+                    {
+                        _actividadPending = ActivityComponentPreProList.Count();
+                    }
+
+                    ActivityComponentPrePro = new ActivityComponentPrePro();
+                    ActivityComponentPrePro.font = new SLFont();
+                    ActivityComponentPrePro.font.Bold = true;
+
+                    ActivityComponentPrePro.PendindActivity = $"{_actividadPending.ToString()}";
+                    ActivityComponentPrePro.TypeActivity = "Despliegue";
+                    ActivityComponentPrePro.rst.AppendText($@"WEBNEUIVWMX03 - 180.181.105.137 - dir /s *.* /o:-d > webn03_caida.txt { System.Environment.NewLine}");
+                    ActivityComponentPrePro.rst.AppendText($@"WEBNEUIVWMX04 - 180.181.105.136 - dir /s *.* /o:-d > webn04_caida.txt { System.Environment.NewLine}");
+                    ActivityComponentPrePro.rst.AppendText($@"SRVNEUIVWMX01 - 180.181.105.139 - dir /s *.* /o:-d > srvn01_caida.txt { System.Environment.NewLine}");
+                    ActivityComponentPrePro.rst.AppendText($@"SRVNEUIVWMX02 - 180.181.105.138 - dir /s *.* /o:-d > srvn02_caida.txt { System.Environment.NewLine}");
+
+                    ActivityComponentPrePro.rst.AppendText($@"SRVNEUIVWMX03 - 180.181.105.141 - dir /s *.* /o:-d > srvn03_caida.txt { System.Environment.NewLine}");
+                    ActivityComponentPrePro.rst.AppendText($@"SRVNEUIVWMX04 - 180.181.105.140 - dir /s *.* /o:-d > srvn04_caida.txt { System.Environment.NewLine}");
+
+                    ActivityComponentPrePro.rst.AppendText($@"SRNEUIWM1MXR305 - 180.228.64.211 - dir /s *.* /o:-d > srn305_caida.txt{ System.Environment.NewLine}");
+                    ActivityComponentPrePro.rst.AppendText($@"SRNEUIWM2MXR306 - 180.228.64.210 - dir /s *.* /o:-d > srn306_caida.txt { System.Environment.NewLine}");
+
+                    ActivityComponentPrePro.rst.AppendText($@"SRNEUIWM1MXR307 - 180.228.64.206 - dir /s *.* /o:-d > srn307_caida.txt { System.Environment.NewLine}");
+                    ActivityComponentPrePro.rst.AppendText($@"SRNEUIWM2MXR308 - 180.228.64.205 - dir /s *.* /o:-d > srn308_caida.txt { System.Environment.NewLine}");
+
+                    ActivityComponentPrePro.rst.AppendText($@"SRNEUIWM1MXR309 - 180.228.64.204 - dir /s *.* /o:-d > srn309_caida.txt { System.Environment.NewLine}");
+
+                    ActivityComponentPreProList.Add(ActivityComponentPrePro);
+
+                   
+                }
+                else
+                {   //PRO
+
+                    ActivityComponentPrePro.PendindActivity = "Ninguna";
+                    ActivityComponentPrePro.TypeActivity = "Despliegue";
+                    ActivityComponentPrePro.rst.AppendText($"Bajar pools ", ActivityComponentPrePro.font);
+                    ActivityComponentPrePro.rst.AppendText($"de todos los servidores.");
+                    //ActivityComponentPrePro.Activity = $@"<b>Bajar pools</b> de todos los servidores.";
+                    ActivityComponentPreProList.Add(ActivityComponentPrePro);
+
+                    ActivityComponentPrePro = new ActivityComponentPrePro();
+                    ActivityComponentPrePro.font = new SLFont();
+                    ActivityComponentPrePro.font.Bold = true;
+
+                    //ActivityComponentPrePro.PendindActivity = $"{_pendingActivity} y {int.Parse(_pendingActivity) + 1 }";
+                    if (int.Parse(_pendingActivity) > 0)
+                        ActivityComponentPrePro.PendindActivity = $"{_pendingActivity} y {int.Parse(_pendingActivity) + 1 }";
+                    else
+                        ActivityComponentPrePro.PendindActivity = $" {int.Parse(_pendingActivity) + 1 }";
+                    ActivityComponentPrePro.TypeActivity = "Despliegue";
+                    ActivityComponentPrePro.rst.AppendText($@"Desplegar las siguientes CRs:{ System.Environment.NewLine}");
+                    if (alojables)
+                        ActivityComponentPrePro.rst.AppendText($"Alojables", ActivityComponentPrePro.font);
+                    ActivityComponentPrePro.rst.AppendText($@"{ System.Environment.NewLine}");
+                    if (configurables)
+                        ActivityComponentPrePro.rst.AppendText($"Configurables", ActivityComponentPrePro.font);
+                    //ActivityComponentPrePro.Activity = $@"Desplegar las siguientes CRs:{ System.Environment.NewLine}";
+                    //ActivityComponentPrePro.Activity += $@"<b>Alojables</b>{ System.Environment.NewLine}";
+                    //ActivityComponentPrePro.Activity += $@"<b>Configurables</b>{ System.Environment.NewLine}";
+                    ActivityComponentPreProList.Add(ActivityComponentPrePro);
+                    int _actividadPending;
+                    if (!string.IsNullOrEmpty(_pendingActivity))
+                    {
+                        _actividadPending = int.Parse(_pendingActivity) + ActivityComponentPreProList.Count();
+                    }
+                    else
+                    {
+                        _actividadPending = ActivityComponentPreProList.Count();
+                    }
+                    ActivityComponentPrePro = new ActivityComponentPrePro();
+                    ActivityComponentPrePro.font = new SLFont();
+                    ActivityComponentPrePro.font.Bold = true;
+
+                    ActivityComponentPrePro.PendindActivity = $"{_actividadPending.ToString()}";
+                    ActivityComponentPrePro.TypeActivity = "Despliegue";
+                    ActivityComponentPrePro.rst.AppendText($@"WEBNEUPVWMX04 - 180.181.165.97 - dir /s *.* /o:-d > webn04_caida.txt { System.Environment.NewLine}");
+                    ActivityComponentPrePro.rst.AppendText($@"WEBNEUPVWMX03 - 180.181.165.93 - dir /s *.* /o:-d > webn03_caida.txt { System.Environment.NewLine}");
+                    ActivityComponentPrePro.rst.AppendText($@"SRVNEUPVWMX01 - 180.181.167.51 - dir /s *.* /o:-d > srvn01_caida.txt { System.Environment.NewLine}");
+                    ActivityComponentPrePro.rst.AppendText($@"SRVNEUPVWMX02 - 180.181.167.42 - dir /s *.* /o:-d > srvn02_caida.txt { System.Environment.NewLine}");
+
+                    ActivityComponentPrePro.rst.AppendText($@"SRVNEUPVWMX03 - 180.181.167.53 - dir /s *.* /o:-d > srvn03_caida.txt { System.Environment.NewLine}");
+                    ActivityComponentPrePro.rst.AppendText($@"SRVNEUPVWMX04 - 180.181.167.40 - dir /s *.* /o:-d > srvn04_caida.txt { System.Environment.NewLine}");
+
+                    ActivityComponentPrePro.rst.AppendText($@"SRVNEUPVWMX05 - 180.181.167.55 - dir /s *.* /o:-d > srvn05_caida.txt { System.Environment.NewLine}");
+                    ActivityComponentPrePro.rst.AppendText($@"SRVNEUPVWMX06 - 180.181.167.46 - dir /s *.* /o:-d > srvn06_caida.txt { System.Environment.NewLine}");
+
+                    ActivityComponentPrePro.rst.AppendText($@"SRVNEUPVWMX07 - 180.181.167.57 - dir /s *.* /o:-d > srvn07_caida.txt { System.Environment.NewLine}");
+                    ActivityComponentPrePro.rst.AppendText($@"SRVNEUPVWMX08 - 180.181.167.44 - dir /s *.* /o:-d > srvn08_caida.txt { System.Environment.NewLine}");
+
+                    ActivityComponentPrePro.rst.AppendText($@"SRVNEUPVWMX09 - 180.181.167.59 - dir /s *.* /o:-d > srvn09_caida.txt { System.Environment.NewLine}");
+                    //ActivityComponentPrePro.Activity = $@"En el servidor WEBNEUPVWMX03 con dirección ip 180.181.165.93, abrir la línea de comandos y dirigirse a D:\MPM\DIS para ejecutar el comando:{ System.Environment.NewLine}";
+                    //ActivityComponentPrePro.Activity += $@"<b>dir /s *.* /o:-d > webn03_caida.txt</b>{ System.Environment.NewLine}";
+                    //ActivityComponentPrePro.Activity += $@"Entregar al Gestor del cambio el archivo webn03_caida.txt.{ System.Environment.NewLine}";
+                    //ActivityComponentPrePro.Activity += $@"Esperar validación para continuar con la siguiente actividad.{ System.Environment.NewLine}";
+                    ActivityComponentPreProList.Add(ActivityComponentPrePro);
+
+                    
                 }
 
                 return ActivityComponentPreProList;

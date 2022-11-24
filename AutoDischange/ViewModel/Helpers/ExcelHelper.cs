@@ -28,6 +28,10 @@ namespace AutoDischange.ViewModel.Helpers
             await DatabaseHelper.Delete();
 
             int iRow = 2;
+            if (string.IsNullOrEmpty(sl.GetCellValueAsString(iRow, 3)))
+            {
+                throw new Exception("Debe indicar el branch donde ubicar los componenetes del jenkis");
+            }
             while (!string.IsNullOrEmpty(sl.GetCellValueAsString(iRow, 1)))
             {
 
@@ -36,6 +40,7 @@ namespace AutoDischange.ViewModel.Helpers
                     Id = iRow,
                     Changeset = sl.GetCellValueAsString(iRow, 1),
                     Branch = sl.GetCellValueAsString(iRow, 2),
+                    BranchJenkins = sl.GetCellValueAsString(iRow, 3),
                 };
 
                 DischangeChangesets.Add(DischangeChangeset);

@@ -13,6 +13,7 @@ namespace AutoDischange.Model
         public int Id { get; set; }
         public string Changeset { get; set; }
         public string Branch { get; set; }
+        public string BranchJenkins { get; set; }
     }
 
     public class DischangePath
@@ -47,5 +48,6 @@ namespace AutoDischange.Model
     {
         public bool UseBranch { get; set; }
         public string NameBranch { get; set; }
-    }   
+    }
+
 }

@@ -44,9 +44,9 @@ namespace AutoDischange.ViewModel.Commands
             return true;
         }
 
-        public void Execute(object parameter)
+        public async void Execute(object parameter)
         {
-            ViewModel.CopyToJenkinsAsync();
+            await ViewModel.CopyToJenkinsAsync();
         }
     }
 }

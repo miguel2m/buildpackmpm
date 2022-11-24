@@ -45,14 +45,14 @@
                  DisplayMemberPath="Branch"
                  />-->
             
-            <Label FontWeight="Bold">Application Options</Label>
-            
+            <Label FontWeight="Bold">¿DE QUÉ BRANCH TOMAR EL COMPONENTE?</Label>
+            <TextBox Text="{Binding BranchJenkinsView, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
             <!--<CheckBox IsThreeState="True" Name="cbAllFeatures" Checked="cbAllFeatures_CheckedChanged" Unchecked="cbAllFeatures_CheckedChanged">Seleccionar todo</CheckBox>-->
 
-            <CheckBox IsChecked="{Binding Hogar1}" Content="20211118_ HOG"/>
+            <!--<CheckBox IsChecked="{Binding Hogar1}" Content="20211118_ HOG"/>
             <CheckBox IsChecked="{Binding CuatroUno}" Content="20211118_ P4.1"/>
             <CheckBox IsChecked="{Binding Prod}" Content="20220222_ PRO"/>
-            <CheckBox IsChecked="{Binding Hogar2}" Content="202211118_ HOG"/>
+            <CheckBox IsChecked="{Binding Hogar2}" Content="202211118_ HOG"/>-->
 
             <Button Command="{Binding ListComponentCommand}"
                     CommandParameter="{Binding ListComponent}"

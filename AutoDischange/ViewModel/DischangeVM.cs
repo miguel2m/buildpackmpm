@@ -311,11 +311,6 @@ namespace AutoDischange.ViewModel
                                     ComponentList.Add(itemLocal);
                                 }
                             }
-                            else if (itemLocal.Path.Contains("customer-operation-services.Fenix.xml"))
-                            {
-                                dischangePath.Path = itemLocal.Path.Replace("customer-operation-services.Fenix.xml", "customer-operation-services.Fenix.deploy.xml");
-                                ComponentList.Add(dischangePath);
-                            }
                             else
                             {
                                 ComponentList.Add(itemLocal);

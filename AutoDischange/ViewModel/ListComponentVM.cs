@@ -419,14 +419,6 @@ namespace AutoDischange.ViewModel
                             PathGU.Add(ListComponent);
                         }
                     }
-                    else if (dischangePathList[i].Path.Contains("customer-operation-services.Fenix.xml"))
-                    {
-                        ExtraerBranchTFS2(dischangePathList[i].Path.Replace("customer-operation-services.Fenix.xml", "customer-operation-services.Fenix.deploy.xml"), item);
-                        if (!PathGU.Contains(ListComponent))
-                        {
-                            PathGU.Add(ListComponent);
-                        }
-                    }
                     else if (ext == ".config" || ext == ".cmd")
                     {
                         foreach (var item2 in _branchUses)

@@ -242,6 +242,7 @@ namespace AutoDischange.ViewModel
                         else if (listValue.Where(n => n.Contains("mpm.eClient")).Count() > 0)
                         {
                             valueString = listValue.First(i => i.Contains("mpm.eClient")) + ".dll";
+                            valueString = valueString.Contains("mpm.eClient.ecPortal.Web.dll") ? "mpm.eClient.Web.dll" : valueString;
                         }
                         else
                         {

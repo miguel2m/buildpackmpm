@@ -106,7 +106,7 @@ namespace AutoDischange.ViewModel.Helpers
                 string jsonDetail = await responseDetail.Content.ReadAsStringAsync();
                 TfsModelDetail tfsReponseVarDetail = (JsonConvert.DeserializeObject<TfsModelDetail>(jsonDetail));
 
-                Console.WriteLine(tfsReponseVarDetail);
+                //Console.WriteLine(tfsReponseVarDetail);
                 tfsReponse = tfsReponseVarDetail;
             }
             return tfsReponse;

@@ -201,6 +201,9 @@ namespace AutoDischange.ViewModel
                     ComponentList.Clear();
                     JenkinsListPath.Clear();
                     DischangeStatus = "Obteniendo Path del TFS.";
+                    DisplayName = "";
+                    CommentAuth = "";
+                    ChangeCreated = "";
                     List<TfsItem> allItem = await TFSRequest.GetChangeset(SelectedChangeset.Changeset);
                     TfsModelDetail author = await TFSRequest.GetChangesetAuthor(SelectedChangeset.Changeset);
 

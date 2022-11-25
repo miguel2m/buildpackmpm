@@ -8,7 +8,7 @@
         xmlns:cc="clr-namespace:AutoDischange.View.CustomControl"
         mc:Ignorable="d"
         WindowStartupLocation="CenterScreen"
-        Title="Automatización de Paquetes " Height="482" Width="968.333" Icon="/AutoDischange;component/img/protoIco.ico">
+        Title="Automatización de Paquetes v3.0" Height="482" Width="968.333" Icon="/AutoDischange;component/img/protoIco.ico">
     <Window.Resources>
         <vm:DischangeVM x:Key="vm" />
     </Window.Resources>
@@ -31,17 +31,25 @@
                 <MenuItem  Header="Base de datos"
                            Click="ToolItem_Click"
                 />
+                <MenuItem Header="Branchs Utiles" Click="Button_Click"></MenuItem>
 
             </MenuItem>
 
         </Menu>
         <StatusBar DockPanel.Dock="Bottom">
             <StatusBarItem>
-                <TextBlock  Text="{Binding DischangeStatus}" Width="764"/>
+                <TextBlock  Text="{Binding DischangeStatus}" Width="948" Foreground="Red" RenderTransformOrigin="0.5,0.5">
+                    <TextBlock.RenderTransform>
+                        <TransformGroup>
+                            <ScaleTransform/>
+                            <SkewTransform/>
+                            <RotateTransform Angle="-0.006"/>
+                            <TranslateTransform/>
+                        </TransformGroup>
+                    </TextBlock.RenderTransform>
+                </TextBlock>
             </StatusBarItem>
-            <StatusBarItem Width="130">
-                <TextBlock  Text="Version 3.0" Width="143" FontWeight="Bold"/>
-            </StatusBarItem>
+            <StatusBarItem Width="130"/>
         </StatusBar>
         <ToolBarTray DockPanel.Dock="Top">
             <ToolBar>
@@ -49,14 +57,12 @@
                     HorizontalAlignment="Center"
                     Command="{Binding DischangeCommand}"/>
                 <Separator/>
-                <!--<Button Content="Exportar lista de componentes"
-                    HorizontalAlignment="Center"
-                    Command="{Binding PackageCommand}"/>-->
                 <Button Content="Exportar lista de componentes"
                     HorizontalAlignment="Center"
                     Click="ListComponentItem_Click"
                     Command="{Binding PackageCommand}"
                     CommandParameter="{Binding SelectedChangeset}"/>
+                <Separator/>                
             </ToolBar>
         </ToolBarTray>
         <ListView DockPanel.Dock="Left"

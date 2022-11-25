@@ -81,6 +81,7 @@ namespace AutoDischange.ViewModel
         }
 
         public ObservableCollection<TfsItem> TfsList{ get; set; }
+
       
 
         private TfsItem tfsSelected;
@@ -119,6 +120,7 @@ namespace AutoDischange.ViewModel
             {
                 string noData = string.Empty;
                 DischangeChangesets.Clear();
+
                 foreach (var changeset in await ExcelHelper.ReadExcel(fileName))
                 {
                     if (changeset.Branch != "" && changeset.Changeset != "")
@@ -155,9 +157,6 @@ namespace AutoDischange.ViewModel
             {
                 string noData = string.Empty;
                 DischangeChangesets.Clear();
-                DisplayName = "";
-                CommentAuth = "";
-                ChangeCreated = "";
                 foreach (DischangeChangeset changeset in await CsvHelper.ReadCSVChangeset(fileName))
                 {
                     if (changeset.Branch != "" && changeset.Changeset != "")
@@ -182,8 +181,7 @@ namespace AutoDischange.ViewModel
             catch (Exception ex)
             {
                 Log4net.log.Error(ex.Message);
-                DischangeStatus = $"Error en Csv: { ex.Message}.";
-                MessageBox.Show("Error en Csv: " + ex.Message, "Error en Csv", MessageBoxButton.OK, MessageBoxImage.Error);
+                DischangeStatus = $"Error en CSV: { ex.Message}.";
             }
 
         }

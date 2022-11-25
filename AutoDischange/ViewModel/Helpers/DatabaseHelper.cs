@@ -37,6 +37,34 @@ namespace AutoDischange.ViewModel.Helpers
             return result;
         }
 
+        public static async Task<bool> InsertChangeset(DischangeChangeset item)
+        {
+
+            bool result = false;
+            ////CreateDBFolder();
+            var db = new SQLiteAsyncConnection(dbFile, dbFlag, true);
+
+            await db.CreateTableAsync<DischangeChangeset>();
+            int rows = await db.InsertAsync(item);
+            if (rows > 0)
+                result = true;
+            return result;
+        }
+
+        public static async Task<bool> InsertBranchUtil(BranchJenkinsExcel item)
+        {
+
+            bool result = false;
+            ////CreateDBFolder();
+            var db = new SQLiteAsyncConnection(dbFile, dbFlag, true);
+
+            await db.CreateTableAsync<BranchJenkinsExcel>();
+            int rows = await db.InsertAsync(item);
+            if (rows > 0)
+                result = true;
+            return result;
+        }
+
         public static async Task Delete()
         {
             //CreateDBFolder();
@@ -57,6 +85,19 @@ namespace AutoDischange.ViewModel.Helpers
             var db = new SQLiteAsyncConnection(dbFile, dbFlag, true);
 
             await db.CreateTableAsync<DischangePath>();
+            int rows = await db.InsertOrReplaceAsync(item);
+            if (rows > 0)
+                result = true;
+            return result;
+        }
+        public static async Task<bool> InsertReplaceBranchUtil(BranchJenkinsExcel item)
+        {
+
+            bool result = false;
+            //CreateDBFolder();
+            var db = new SQLiteAsyncConnection(dbFile, dbFlag, true);
+
+            await db.CreateTableAsync<BranchJenkinsExcel>();
             int rows = await db.InsertOrReplaceAsync(item);
             if (rows > 0)
                 result = true;

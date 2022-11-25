@@ -15,12 +15,7 @@
         </ResourceDictionary>
     </Window.Resources>
     <!--<DockPanel DataContext="{StaticResource vm}">-->
-    <DockPanel DataContext="{StaticResource vm}">
-        <!--<StatusBar DockPanel.Dock="Bottom">
-            <StatusBarItem>
-                <TextBlock  Text="{Binding StatusExcel}"/>
-            </StatusBarItem>
-        </StatusBar>-->
+    <DockPanel DataContext="{StaticResource vm}">        
         <StatusBar DockPanel.Dock="Bottom">
             <StatusBarItem>
                 <TextBlock  Text="{Binding ListComponentStatus}"/>
@@ -36,24 +31,7 @@
                     Content="Abrir carpeta"
                     Click="PickupFolder_Click">
             </Button>
-            <!--<TextBlock Text="Branch:"/>-->
-            <!--<TextBox Text="{Binding Branch, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>-->
-            <!--<ComboBox 
-                 ItemsSource="{Binding ListComponentObjs}"
-                 SelectedValue="{Binding SelectedBranch, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                 SelectedValuePath="Branch"
-                 DisplayMemberPath="Branch"
-                 />-->
             
-            <!--<Label FontWeight="Bold">¿DE QUÉ BRANCH TOMAR EL COMPONENTE?</Label>
-            <TextBox Text="{Binding BranchJenkinsView, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>-->
-            <!--<CheckBox IsThreeState="True" Name="cbAllFeatures" Checked="cbAllFeatures_CheckedChanged" Unchecked="cbAllFeatures_CheckedChanged">Seleccionar todo</CheckBox>-->
-
-            <!--<CheckBox IsChecked="{Binding Hogar1}" Content="20211118_ HOG"/>
-            <CheckBox IsChecked="{Binding CuatroUno}" Content="20211118_ P4.1"/>
-            <CheckBox IsChecked="{Binding Prod}" Content="20220222_ PRO"/>
-            <CheckBox IsChecked="{Binding Hogar2}" Content="202211118_ HOG"/>-->
-
             <Button Command="{Binding ListComponentCommand}"
                     CommandParameter="{Binding ListComponent}"
                     Margin="0,5"

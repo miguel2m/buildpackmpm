@@ -13,6 +13,7 @@ namespace AutoDischange.ViewModel.Commands
     public class ListComponentCommand : ICommand
     {
         public ListComponentVM ViewModel { get; set; }
+
         public event EventHandler CanExecuteChanged
         {
             add { CommandManager.RequerySuggested += value; }

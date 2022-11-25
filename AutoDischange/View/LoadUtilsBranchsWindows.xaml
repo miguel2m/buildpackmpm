@@ -1,35 +1,36 @@
-﻿<Window x:Class="AutoDischange.View.ToolWindow"
+﻿<Window x:Class="AutoDischange.View.LoadUtilsBranchsWindows"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:AutoDischange.View"
         mc:Ignorable="d"
+        Title="Cargar Branchs Utiles" 
+        Height="300" Width="300"
         xmlns:vm="clr-namespace:AutoDischange.ViewModel"
-        Title="Sincronizar BD" Height="300" Width="300"
-         WindowStartupLocation="CenterScreen" Icon="/AutoDischange;component/img/sincronizar.ico">
+        WindowStartupLocation="CenterScreen">
     <Window.Resources>
         <ResourceDictionary>
-            <vm:SettingVM x:Key="vm"/>
+            <vm:BranchsUtilsComponentVM x:Key="vm"/>
         </ResourceDictionary>
     </Window.Resources>
     <DockPanel DataContext="{StaticResource vm}">
         <StatusBar DockPanel.Dock="Bottom">
             <StatusBarItem>
-                <TextBlock  Text="{Binding StatusExcel}"/>
+                <TextBlock Text="{Binding StatusExcel}"/>
             </StatusBarItem>
         </StatusBar>
-        <StackPanel DockPanel.Dock="Top" Margin="10">
-            <TextBlock Text="Sincronizar Base de datos de DIS-Changes.xlsx"/>
-            <Button IsEnabled="{Binding SyncStatus}"
-                    Command="{Binding SettingCommand}"
-                    CommandParameter="{Binding SyncStatus}"
+        <StackPanel DockPanel.Dock="Top" Margin="10,10,10.333,10" Height="250">
+            <TextBlock Text="Cargar Branchs Utiles"/>
+            <Button IsEnabled="{Binding BranchUtilsComponentStatus}"
+                    Command="{Binding UtilsComponentCommand}"
+                    CommandParameter="{Binding BranchUtilsComponentStatus}"
                     Margin="0,5"
                     Width="100"
-                    Content="Sincronizar">
-
+                    Content="Cargar Branch">
+                
             </Button>
-
+            
         </StackPanel>
     </DockPanel>
 </Window>

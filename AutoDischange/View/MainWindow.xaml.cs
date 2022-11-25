@@ -2,6 +2,7 @@
 using AutoDischange.Model;
 using AutoDischange.View.CustomControl;
 using AutoDischange.ViewModel.Helpers;
+using Microsoft.Win32;
 using System;
 using System.Collections.Generic;
 using System.Configuration;
@@ -73,6 +74,17 @@ namespace AutoDischange.View
             //var selected = sidebar.SelectedItem as CustomControl.NavButton;
 
             //navframe.Navigate(selected.Navlink);
+
+        }
+
+        private void Button_Click(object sender, RoutedEventArgs e)
+        {
+            LoadUtilsBranchsWindows loadUtilsBranchsWindows = new LoadUtilsBranchsWindows();
+            loadUtilsBranchsWindows.ShowDialog();
+        }
+
+        private void MenuItem_Click_1(object sender, RoutedEventArgs e)
+        {
 
         }
     }

@@ -19,6 +19,7 @@ namespace AutoDischange.ViewModel
         public ObservableCollection<ListComponent> ListComponentObjs { get; set; }
         public ObservableCollection<DischangePath> ComponentList { get; set; }
         public ListComponentCommand ListComponentCommand { get; set; }
+
         private ListComponent listComponent;
 
         public List<TfsItem> TodosItemTfs = new List<TfsItem>();
@@ -26,7 +27,8 @@ namespace AutoDischange.ViewModel
 
         public FilesPacksToUpdates filesPacksToUpdates;
         public List<FilesPacksToUpdates> FilesPacksTos = new List<FilesPacksToUpdates>();
-        
+
+        public List<BranchJenkins> BranchJenkins = new List<BranchJenkins>();
 
         List<string> listaBranchs = new List<string>();
 
@@ -111,17 +113,6 @@ namespace AutoDischange.ViewModel
             }
         }
 
-        //private string branchJenkinsView;
-        //public string BranchJenkinsView
-        //{
-        //    get { return branchJenkinsView; }
-        //    set
-        //    {
-        //        branchJenkinsView = value;
-        //        OnPropertyChanged("Hogar2");
-        //    }
-        //}
-
         public List<BranchUse> _branchUses = new List<BranchUse>();
 
         public ListComponentVM()
@@ -134,53 +125,59 @@ namespace AutoDischange.ViewModel
 
             PathComponent =Environment.GetFolderPath(Environment.SpecialFolder.UserProfile);
 
-            //List<BranchJenkinsExcel> changesetList = DatabaseHelper.Read<BranchJenkinsExcel>()
-            //    .OrderBy(x => x.Name).ToList();
-
-            //foreach (BranchJenkinsExcel item in changesetList)
-            //{
-            //    BranchJenkinsView += item.Name + " , ";
-            //}
+            List<BranchJenkinsExcel> changesetList = DatabaseHelper.Read<BranchJenkinsExcel>()
+                .OrderBy(x => x.Name).ToList();
 
         }
 
         public void LoadBranch()
         {
             _branchUses.Clear();
-            bool _hogar1_branch = Hogar1;
-            bool _cuatroUno_branch = CuatroUno;
-            bool _prod_branch = Prod;
-            bool _hogar2_branch = Hogar2;
+            List<BranchJenkinsExcel> BranchesList = DatabaseHelper.Read<BranchJenkinsExcel>()
+                .OrderBy(x => x.Name).ToList();
+            foreach (BranchJenkinsExcel item in BranchesList)
+            {
+                _branchUses.Add(new BranchUse()
+                {
+                    NameBranch = item.Name,
+                    UseBranch = true
+                });
+            }
+
+            //bool _hogar1_branch = Hogar1;
+            //bool _cuatroUno_branch = CuatroUno;
+            //bool _prod_branch = Prod;
+            //bool _hogar2_branch = Hogar2;
             
-            //MEJORAR ESTO
-            if (_hogar1_branch)
-            {
-                BranchUse branchUses1 = new BranchUse();
-                branchUses1.UseBranch = _hogar1_branch;
-                branchUses1.NameBranch = "20211118_HOG";
-                _branchUses.Add(branchUses1);
-            }
-            if (_cuatroUno_branch)
-            {
-                BranchUse branchUses2 = new BranchUse();
-                branchUses2.UseBranch = _cuatroUno_branch;
-                branchUses2.NameBranch = "20211118_P4.1";
-                _branchUses.Add(branchUses2);
-            }
-            if (_prod_branch)
-            {
-                BranchUse branchUses3 = new BranchUse();
-                branchUses3.UseBranch = _prod_branch;
-                branchUses3.NameBranch = "20220222_PRO";
-                _branchUses.Add(branchUses3);
-            }
-            if (_hogar2_branch)
-            {
-                BranchUse branchUses4 = new BranchUse();
-                branchUses4.UseBranch = _hogar2_branch;
-                branchUses4.NameBranch = "202211118_HOG";
-                _branchUses.Add(branchUses4);
-            }
+            ////MEJORAR ESTO
+            //if (_hogar1_branch)
+            //{
+            //    BranchUse branchUses1 = new BranchUse();
+            //    branchUses1.UseBranch = _hogar1_branch;
+            //    branchUses1.NameBranch = "20211118_HOG";
+            //    _branchUses.Add(branchUses1);
+            //}
+            //if (_cuatroUno_branch)
+            //{
+            //    BranchUse branchUses2 = new BranchUse();
+            //    branchUses2.UseBranch = _cuatroUno_branch;
+            //    branchUses2.NameBranch = "20211118_P4.1";
+            //    _branchUses.Add(branchUses2);
+            //}
+            //if (_prod_branch)
+            //{
+            //    BranchUse branchUses3 = new BranchUse();
+            //    branchUses3.UseBranch = _prod_branch;
+            //    branchUses3.NameBranch = "20220222_PRO";
+            //    _branchUses.Add(branchUses3);
+            //}
+            //if (_hogar2_branch)
+            //{
+            //    BranchUse branchUses4 = new BranchUse();
+            //    branchUses4.UseBranch = _hogar2_branch;
+            //    branchUses4.NameBranch = "202211118_HOG";
+            //    _branchUses.Add(branchUses4);
+            //}
         }
 
         public async Task CopyToJenkinsAsync()

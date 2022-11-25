@@ -10,6 +10,37 @@ namespace AutoDischange.ViewModel.Helpers
 {
     public class CsvHelper
     {
+        //READ Local Branches Utiles
+
+        public static async Task<bool> ReadCSVBranch_Utiles(string filePath)
+        {
+            bool resultMethod = false;
+
+            FileHelperEngine<BranchUtilData> engine = new FileHelperEngine<BranchUtilData>();
+
+            //To read use
+            var result = engine.ReadFile(filePath);
+            foreach (BranchUtilData item in result)
+            {
+                BranchJenkinsExcel branchUtilData = new BranchJenkinsExcel
+                {
+                    Name = item.Branch
+                };
+                List<BranchJenkinsExcel> notebooks = DatabaseHelper.Read<BranchJenkinsExcel>().Where(n => n.Name == branchUtilData.Name).ToList();
+
+                if (notebooks.Count() == 0)
+                {
+                    resultMethod = await DatabaseHelper.InsertBranchUtil(branchUtilData);
+                }
+                else
+                {
+                    branchUtilData.Id = notebooks[0].Id;
+                    resultMethod = await DatabaseHelper.InsertReplaceBranchUtil(branchUtilData);
+                }
+            }
+
+            return resultMethod;
+        }
 
         //READ Local DIS_Changes
         public static async Task<bool> ReadCSVDIS_Changes(string filePath)
@@ -43,31 +74,29 @@ namespace AutoDischange.ViewModel.Helpers
                     resultMethod = await DatabaseHelper.InsertReplaceDischange(DischangeChangeset);
                 }
             }
-
-      
-
-               
-            
-            
-
             return resultMethod;
-
-
         }
 
         //READ Local DIS_Changes
         public static async Task<List<DischangeChangeset>> ReadCSVChangeset(string filePath)
         {
             //string rtfFile = System.IO.Path.Combine(Environment.CurrentDirectory, "DIS_Changes.xlsx");
-
+            bool resultMethod = false;
             List<DischangeChangeset> DischangeChangesets = new List<DischangeChangeset>();
             //List<DischangePath> DischangeChangesets = new List<DischangePath>();
 
             var engine = new FileHelperEngine<ChangesetData>();
-
             // To Read Use:
             var result = engine.ReadFile(filePath);
             int count = 0;
+            var notexbooks = DatabaseHelper.Read<DischangeChangeset>();
+            if (notexbooks.Count() > 0)
+            {
+                for (int i = 0; i < notexbooks.Count; i++)
+                {
+                    DatabaseHelper.Delete<DischangeChangeset>(notexbooks[i]);
+                }
+            }
             foreach (ChangesetData item in result)
             {
                 DischangeChangeset DischangeChangeset = new DischangeChangeset
@@ -77,19 +106,25 @@ namespace AutoDischange.ViewModel.Helpers
                     Branch = item.Branch,
                 };
 
+                var notebooks = (DatabaseHelper.Read<DischangeChangeset>()).Where(n => n.Changeset == DischangeChangeset.Changeset).ToList();
 
-                if(await DatabaseHelper.InsertReplaceChangeset(DischangeChangeset))
+                if (notebooks.Count() == 0)
                 {
-                    DischangeChangesets.Add(DischangeChangeset);
+                    resultMethod = await DatabaseHelper.InsertChangeset(DischangeChangeset);
                 }
+                else
+                {
+                    DischangeChangeset.Id = notebooks[0].Id;
+                    resultMethod = await DatabaseHelper.InsertReplaceChangeset(DischangeChangeset);
+                }
+
+                DischangeChangesets.Add(DischangeChangeset);
+
+                //if (await DatabaseHelper.InsertReplaceChangeset(DischangeChangeset))
+                //{
+                //    DischangeChangesets.Add(DischangeChangeset);
+                //}
             }
-
-
-
-
-
-
-
             return DischangeChangesets;
 
 
@@ -114,11 +149,15 @@ namespace AutoDischange.ViewModel.Helpers
         public string Changeset;
 
         public string Branch;
-
-
     }
 
+    [DelimitedRecord(",")]
+    public class BranchUtilData
+    {
+        public string Branch;
 
+        public bool Util;
+    }
 }
 
 

@@ -41,6 +41,11 @@ namespace AutoDischange.View
             }
         }
 
+        private void tbPathComponent_TextChanged(object sender, TextChangedEventArgs e)
+        {
+
+        }
+
         //private void cbAllFeatures_CheckedChanged(object sender, RoutedEventArgs e)
         //{
         //    bool newVal = (cbAllFeatures.IsChecked == true);

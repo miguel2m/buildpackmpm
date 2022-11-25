@@ -26,17 +26,6 @@ namespace AutoDischange.ViewModel.Helpers
         //API GET Changeset autor - comments
         private static string URL_GET_DETAIL = "_apis/tfvc/changesets/{0}"; //{0} changeset ID
 
-
-        //GET Changeset
-        //public static TfsModel GetChangeset(string changeset)
-        //{
-        //    TfsModel tfsReponse = new TfsModel();
-
-        //    string url = BASE_URL + String.Format(URL_GET_CHANGESET, changeset)+ URL_GET_CHANGESET;
-
-        //    return tfsReponse;
-        //}
-
         //GET Changeset
         public static async Task<List<TfsItem>> GetChangeset(string changeset)
         {

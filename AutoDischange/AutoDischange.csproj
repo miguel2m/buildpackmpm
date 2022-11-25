@@ -226,7 +226,9 @@
     <Compile Include="Model\TaxonomyNotFoundException .cs" />
     <Compile Include="Model\TfsModel.cs" />
     <Compile Include="ViewModel\ActivityComponentVM.cs" />
+    <Compile Include="ViewModel\BranchsUtilsComponentVM.cs" />
     <Compile Include="ViewModel\Commands\ActivityComponentCommand.cs" />
+    <Compile Include="ViewModel\Commands\BranchUtilsComponentCommand.cs" />
     <Compile Include="ViewModel\Commands\DischangeCommand.cs" />
     <Compile Include="ViewModel\Commands\ListComponentCommand.cs" />
     <Compile Include="ViewModel\Commands\DiffComponentCommand.cs" />
@@ -257,6 +259,9 @@
     <Compile Include="View\ListComponentWindow.xaml.cs">
       <DependentUpon>ListComponentWindow.xaml</DependentUpon>
     </Compile>
+    <Compile Include="View\LoadUtilsBranchsWindows.xaml.cs">
+      <DependentUpon>LoadUtilsBranchsWindows.xaml</DependentUpon>
+    </Compile>
     <Compile Include="View\Pages\DischangeComponent.xaml.cs">
       <DependentUpon>DischangeComponent.xaml</DependentUpon>
     </Compile>
@@ -279,6 +284,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="View\ListComponentWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="View\LoadUtilsBranchsWindows.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

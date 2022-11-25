@@ -325,9 +325,60 @@ namespace AutoDischange.ViewModel.Helpers
                     }
                 }
 
-                
+            Task<IEnumerable<System.IO.FileInfo>> task19 = new Task<IEnumerable<System.IO.FileInfo>>(() =>
+            {
+                //Los que estan solo en B (huerfanos B)
+                return (from file in list2 select file).Except( list1, myFileNameCompare);
+            });
+            task19.Start();
+            IEnumerable<System.IO.FileInfo> queryNameList2Only = await task19;
+            if (queryNameList2Only.Count() > 0)
+            {
+                Task task7 = new Task(() =>
+                {
+                    //Los que estan solo en A
+                    foreach (var v in queryNameList2Only)
+                    {
+                        s = $"{v.Name}{v.Length}{v.LastWriteTime.ToString()}";
+                        //sHash = s.GetHashCode().ToString();
+                        sHash = MD5_Compare.CreateMD5(s);
+                        //sizeAll = CompareFile.GetSizeByte(v);
+                        sizeAll = v.Length.ToString();
+                        diffCompareModel = new DiffCompareModel();
+                        diffCompareModel.Id = count;
+                        //PathA
+                        //diffCompareModel.UbicacionA = v.FullName;
+                        diffCompareModel.UbicacionB = v.FullName.Contains("CR") ? v.FullName.Contains("CRs") ? v.FullName.Split(new[] { "CRs" }, StringSplitOptions.None)[1] : v.FullName.Split(new[] { "CR" }, StringSplitOptions.None)[1] : v.FullName;
+                        diffCompareModel.PathB = v.Name;
+                        diffCompareModel.HashB = sHash;
+                        diffCompareModel.FechaB = v.LastWriteTime;
+                        diffCompareModel.LenghtB = sizeAll;
+                        //PathB
+                        diffCompareModel.UbicacionA = String.Empty;
+                        diffCompareModel.PathA = String.Empty;
+                        diffCompareModel.HashA = String.Empty;
+                        //diffCompareModel.FechaB = null;
+                        diffCompareModel.LenghtA = String.Empty;
+                        //Result
+                        diffCompareModel.HashResult = 6;
+                        diffCompareModel.FechaResult = 6;
+                        diffCompareModel.LenghtResult = 6;
 
-                ExcelHelper.CreateExcelDiffComapre(diffCompareModelList,
+                        //diffCompareModelList.Add(diffCompareModel);
+                        diffCompareModelListHuerfanos.Add(diffCompareModel);
+                        count++;
+                    }
+                });
+                task7.Start();
+                await task7;
+
+                if (diffCompareModelListHuerfanos.Any())
+                {
+                    diffCompareModelList.AddRange(diffCompareModelListHuerfanos.OrderBy(o => o.UbicacionB).ToList());
+                }
+            }
+
+            ExcelHelper.CreateExcelDiffComapre(diffCompareModelList,
                     diffCompareModelListIguales,
                     diffCompareModelListDiferentes,
                     diffCompareModelListHuerfanos,

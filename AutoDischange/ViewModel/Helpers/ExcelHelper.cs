@@ -121,10 +121,21 @@ namespace AutoDischange.ViewModel.Helpers
 
             SLDocument sl = new SLDocument();
             sl.RenameWorksheet(SLDocument.DefaultFirstSheetName, "Comparación");
-            //string pathA = Path.GetDirectoryName(diffCompareModelList.First().PathA);
-            //string pathB = Path.GetDirectoryName(diffCompareModelList.First().PathB);
-            sl.SetCellValue("B1", "PAQUETE 1 ");
-            sl.SetCellValue("H1", "PAQUETE 2 ");
+            string pathA="";
+            string pathB="";
+            if (!string.IsNullOrEmpty(diffCompareModelList.First().UbicacionA))
+            {
+                string test01 = diffCompareModelList.First().UbicacionA.Contains("CR") ? diffCompareModelList.First().UbicacionA.Contains("CRs") ? diffCompareModelList.First().UbicacionA.Split(new[] { "CRs" }, StringSplitOptions.None)[0] : diffCompareModelList.First().UbicacionA.Split(new[] { "CR" }, StringSplitOptions.None)[0] : diffCompareModelList.First().UbicacionA;
+                pathA = Path.GetDirectoryName(test01);
+            }
+               
+            if (!string.IsNullOrEmpty(diffCompareModelList.First().UbicacionB))
+            {
+                string test02 = diffCompareModelList.First().UbicacionB.Contains("CR") ? diffCompareModelList.First().UbicacionB.Contains("CRs") ? diffCompareModelList.First().UbicacionB.Split(new[] { "CRs" }, StringSplitOptions.None)[0] : diffCompareModelList.First().UbicacionB.Split(new[] { "CR" }, StringSplitOptions.None)[0] : diffCompareModelList.First().UbicacionB;
+                pathB = Path.GetDirectoryName(test02);
+            }
+            sl.SetCellValue("B1", "PAQUETE 1 "+ pathA);
+            sl.SetCellValue("H1", "PAQUETE 2 "+ pathB);
             sl.SetCellValue("N1", "Evaluaciones");
             // merge all cells in the cell range B2:G8
             sl.MergeWorksheetCells("B1", "G1");
@@ -209,7 +220,7 @@ namespace AutoDischange.ViewModel.Helpers
                     sl.SetCellStyle(_index, 5, styleFecha);
                     sl.SetCellStyle(_index, 6, styleHora);
                 }
-                if (item.LenghtA != null)
+                if (!string.IsNullOrEmpty(item.LenghtA))
                 {
                     sl.SetCellValue(_index, 7, int.Parse(item.LenghtA));
                 }
@@ -227,7 +238,7 @@ namespace AutoDischange.ViewModel.Helpers
                     sl.SetCellStyle(_index, 11, styleFecha);
                     sl.SetCellStyle(_index, 12, styleHora);
                 }
-                if (item.LenghtB != null)
+                if (!string.IsNullOrEmpty(item.LenghtB) )
                 {
                     sl.SetCellValue(_index, 13, int.Parse(item.LenghtB));
                 }

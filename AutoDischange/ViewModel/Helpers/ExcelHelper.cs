@@ -407,10 +407,10 @@ namespace AutoDischange.ViewModel.Helpers
             sl.SetCellValue(12, 1, "Total de componentes Configurables huérfanos paquete A");
             sl.SetCellValue(13, 1, "Total de componentes Script huérfanos paquete A");
 
-            sl.SetCellValue(14, 1, "Total de componentes huérfanos");
-            sl.SetCellValue(15, 1, "Total de componentes Alojables huérfanos paquete B");
-            sl.SetCellValue(16, 1, "Total de componentes Configurables huérfanos paquete B");
-            sl.SetCellValue(17, 1, "Total de componentes Script huérfanos paquete B");
+            
+            sl.SetCellValue(14, 1, "Total de componentes Alojables huérfanos paquete B");
+            sl.SetCellValue(15, 1, "Total de componentes Configurables huérfanos paquete B");
+            sl.SetCellValue(16, 1, "Total de componentes Script huérfanos paquete B");
 
             sl.SetCellValue(1, 2, diffCompareModelList.Count());
 
@@ -430,10 +430,10 @@ namespace AutoDischange.ViewModel.Helpers
             sl.SetCellValue(12, 2, diffCompareModelListHuerfanos.Where((i) => i.UbicacionA.Contains(@"\Configurables") || i.UbicacionA.Contains(@"\configurables")).Count());
             sl.SetCellValue(13, 2, diffCompareModelListHuerfanos.Where((i) => i.UbicacionA.Contains(@"\Scripts") || i.UbicacionA.Contains(@"\scripts")).Count());
 
-            sl.SetCellValue(14, 2, diffCompareModelListHuerfanos.Count());
-            sl.SetCellValue(15, 2, diffCompareModelListHuerfanos.Where((i) => i.UbicacionB.Contains(@"\Alojables") || i.UbicacionB.Contains(@"\alojables")).Count());
-            sl.SetCellValue(16, 2, diffCompareModelListHuerfanos.Where((i) => i.UbicacionB.Contains(@"\Configurables") || i.UbicacionB.Contains(@"\configurables")).Count());
-            sl.SetCellValue(17, 2, diffCompareModelListHuerfanos.Where((i) => i.UbicacionB.Contains(@"\Scripts") || i.UbicacionB.Contains(@"\scripts")).Count());
+           
+            sl.SetCellValue(14, 2, diffCompareModelListHuerfanos.Where((i) => i.UbicacionB.Contains(@"\Alojables") || i.UbicacionB.Contains(@"\alojables")).Count());
+            sl.SetCellValue(15, 2, diffCompareModelListHuerfanos.Where((i) => i.UbicacionB.Contains(@"\Configurables") || i.UbicacionB.Contains(@"\configurables")).Count());
+            sl.SetCellValue(16, 2, diffCompareModelListHuerfanos.Where((i) => i.UbicacionB.Contains(@"\Scripts") || i.UbicacionB.Contains(@"\scripts")).Count());
 
 
             //styleColor.Alignment.JustifyLastLine = true;
@@ -473,8 +473,6 @@ namespace AutoDischange.ViewModel.Helpers
             sl.SetRowStyle(15, styleColor);
             styleColor.Font.FontColor = System.Drawing.Color.Blue;
             sl.SetRowStyle(16, styleColor);
-            styleColor.Font.FontColor = System.Drawing.Color.Blue;
-            sl.SetRowStyle(17, styleColor);
 
             sl.SaveAs($"{rtfFile}");
             //return result;

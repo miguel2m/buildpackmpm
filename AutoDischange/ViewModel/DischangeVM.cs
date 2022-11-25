@@ -155,6 +155,9 @@ namespace AutoDischange.ViewModel
             {
                 string noData = string.Empty;
                 DischangeChangesets.Clear();
+                DisplayName = "";
+                CommentAuth = "";
+                ChangeCreated = "";
                 foreach (DischangeChangeset changeset in await CsvHelper.ReadCSVChangeset(fileName))
                 {
                     if (changeset.Branch != "" && changeset.Changeset != "")
@@ -192,6 +195,9 @@ namespace AutoDischange.ViewModel
                 TfsList.Clear();
                 ComponentList.Clear();
                 JenkinsListPath.Clear();
+                DisplayName = "";
+                CommentAuth = "";
+                ChangeCreated = "";
             }
             else
             {

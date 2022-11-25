@@ -117,6 +117,7 @@ namespace AutoDischange.ViewModel.Helpers
                 List<DiffCompareModel> diffCompareModelListIguales = new List<DiffCompareModel>();
                 List<DiffCompareModel> diffCompareModelListDiferentes = new List<DiffCompareModel>();
                 List<DiffCompareModel> diffCompareModelListHuerfanos = new List<DiffCompareModel>();
+                List<DiffCompareModel> diffCompareModelListHuerfanosB = new List<DiffCompareModel>();
             DiffCompareModel diffCompareModel;
                 string s;
                 string sHash;
@@ -186,7 +187,7 @@ namespace AutoDischange.ViewModel.Helpers
                 Task<IEnumerable<System.IO.FileInfo>> task2 = new Task<IEnumerable<System.IO.FileInfo>>(() =>
                 {
                     //Los que estan solo en A
-                    return (from file in list1 select file).Except(list2, myFileCompare);
+                    return (from file in list1 select file).Except(list2, myFileNameCompare);
                 });
                 task2.Start();
                 IEnumerable<System.IO.FileInfo> queryNameList1Only = await task2;
@@ -336,7 +337,7 @@ namespace AutoDischange.ViewModel.Helpers
             {
                 Task task7 = new Task(() =>
                 {
-                    //Los que estan solo en B
+                    //Los que estan solo en A
                     foreach (var v in queryNameList2Only)
                     {
                         s = $"{v.Name}{v.Length}{v.LastWriteTime.ToString()}";
@@ -365,16 +366,18 @@ namespace AutoDischange.ViewModel.Helpers
                         diffCompareModel.LenghtResult = 6;
 
                         //diffCompareModelList.Add(diffCompareModel);
-                        diffCompareModelListHuerfanos.Add(diffCompareModel);
+                        diffCompareModelListHuerfanosB.Add(diffCompareModel);
+                        
                         count++;
                     }
                 });
                 task7.Start();
                 await task7;
 
-                if (diffCompareModelListHuerfanos.Any())
+                if (diffCompareModelListHuerfanosB.Any())
                 {
-                    diffCompareModelList.AddRange(diffCompareModelListHuerfanos.OrderBy(o => o.UbicacionB).ToList());
+                    diffCompareModelList.AddRange(diffCompareModelListHuerfanosB.OrderBy(o => o.UbicacionB).ToList());
+                    diffCompareModelListHuerfanos.AddRange(diffCompareModelListHuerfanosB.OrderBy(o => o.UbicacionB).ToList());
                 }
             }
 

@@ -209,8 +209,11 @@ namespace AutoDischange.ViewModel.Helpers
                     sl.SetCellStyle(_index, 5, styleFecha);
                     sl.SetCellStyle(_index, 6, styleHora);
                 }
-
-                sl.SetCellValue(_index, 7, item.LenghtA);
+                if (item.LenghtA != null)
+                {
+                    sl.SetCellValue(_index, 7, int.Parse(item.LenghtA));
+                }
+                
                 //SET Header Paquete B
                 sl.SetCellValue(_index, 8, item.UbicacionB);
                 sl.SetCellValue(_index, 9, item.PathB);
@@ -224,7 +227,11 @@ namespace AutoDischange.ViewModel.Helpers
                     sl.SetCellStyle(_index, 11, styleFecha);
                     sl.SetCellStyle(_index, 12, styleHora);
                 }
-                sl.SetCellValue(_index, 13, item.LenghtB);
+                if (item.LenghtB != null)
+                {
+                    sl.SetCellValue(_index, 13, int.Parse(item.LenghtB));
+                }
+                
                 //SET Header Evaluaciones
                 
                 switch (item.HashResult)
@@ -370,20 +377,20 @@ namespace AutoDischange.ViewModel.Helpers
             sl.SetCellValue(1, 2, diffCompareModelList.Count());
 
             sl.SetCellValue(2, 2, diffCompareModelListIguales.Count());
-            sl.SetCellValue(3, 2, diffCompareModelListIguales.Where((i) => i.PathA.Contains(@"\Alojables") || i.PathA.Contains(@"\alojables")).Count());
-            sl.SetCellValue(4, 2, diffCompareModelListIguales.Where((i) => i.PathA.Contains(@"\Configurables") || i.PathA.Contains(@"\configurables")).Count());
-            sl.SetCellValue(5, 2, diffCompareModelListIguales.Where((i) => i.PathA.Contains(@"\Scripts") || i.PathA.Contains(@"\scripts")).Count());
+            sl.SetCellValue(3, 2, diffCompareModelListIguales.Where((i) => i.UbicacionA.Contains(@"\Alojables") || i.UbicacionA.Contains(@"\alojables")).Count());
+            sl.SetCellValue(4, 2, diffCompareModelListIguales.Where((i) => i.UbicacionA.Contains(@"\Configurables") || i.UbicacionA.Contains(@"\configurables")).Count());
+            sl.SetCellValue(5, 2, diffCompareModelListIguales.Where((i) => i.UbicacionA.Contains(@"\Scripts") || i.UbicacionA.Contains(@"\scripts")).Count());
 
             sl.SetCellValue(6, 2, diffCompareModelListDiferentes.Count());
-            sl.SetCellValue(7, 2, diffCompareModelListDiferentes.Where((i) => i.PathA.Contains(@"\Alojables") || i.PathA.Contains("alojables")).Count());
-            sl.SetCellValue(8, 2, diffCompareModelListDiferentes.Where((i) => i.PathA.Contains(@"\Configurables") || i.PathA.Contains("configurables")).Count());
-            sl.SetCellValue(9, 2, diffCompareModelListDiferentes.Where((i) => i.PathA.Contains(@"\Scripts") || i.PathA.Contains("scripts")).Count());
+            sl.SetCellValue(7, 2, diffCompareModelListDiferentes.Where((i) => i.UbicacionA.Contains(@"\Alojables") || i.UbicacionA.Contains("alojables")).Count());
+            sl.SetCellValue(8, 2, diffCompareModelListDiferentes.Where((i) => i.UbicacionA.Contains(@"\Configurables") || i.UbicacionA.Contains("configurables")).Count());
+            sl.SetCellValue(9, 2, diffCompareModelListDiferentes.Where((i) => i.UbicacionA.Contains(@"\Scripts") || i.UbicacionA.Contains("scripts")).Count());
 
             
             sl.SetCellValue(10, 2, diffCompareModelListHuerfanos.Count());
-            sl.SetCellValue(11, 2, diffCompareModelListHuerfanos.Where((i) => i.PathA.Contains(@"\Alojables") || i.PathA.Contains(@"\alojables")).Count());
-            sl.SetCellValue(12, 2, diffCompareModelListHuerfanos.Where((i) => i.PathA.Contains(@"\Configurables") || i.PathA.Contains(@"\configurables")).Count());
-            sl.SetCellValue(13, 2, diffCompareModelListHuerfanos.Where((i) => i.PathA.Contains(@"\Scripts") || i.PathA.Contains(@"\scripts")).Count());
+            sl.SetCellValue(11, 2, diffCompareModelListHuerfanos.Where((i) => i.UbicacionA.Contains(@"\Alojables") || i.UbicacionA.Contains(@"\alojables")).Count());
+            sl.SetCellValue(12, 2, diffCompareModelListHuerfanos.Where((i) => i.UbicacionA.Contains(@"\Configurables") || i.UbicacionA.Contains(@"\configurables")).Count());
+            sl.SetCellValue(13, 2, diffCompareModelListHuerfanos.Where((i) => i.UbicacionA.Contains(@"\Scripts") || i.UbicacionA.Contains(@"\scripts")).Count());
 
 
             //styleColor.Alignment.JustifyLastLine = true;

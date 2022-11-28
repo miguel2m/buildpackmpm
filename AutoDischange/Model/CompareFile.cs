@@ -80,7 +80,9 @@ namespace AutoDischange.Model
 
         public bool Equals(System.IO.FileInfo f1, System.IO.FileInfo f2)
         {
-            return (f1.FullName == f2.FullName);
+            return (f1.Name == f2.Name &&
+                    f1.Length == f2.Length
+                    );
         }
 
         // Return a hash that reflects the comparison criteria. According to the
@@ -90,7 +92,7 @@ namespace AutoDischange.Model
         // hash code.  
         public int GetHashCode(System.IO.FileInfo fi)
         {
-            string s = $"{fi.FullName}";
+            string s = $"{fi.Name}{fi.Length}";
             return s.GetHashCode();
         }
     }

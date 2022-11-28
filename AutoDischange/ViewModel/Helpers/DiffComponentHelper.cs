@@ -188,7 +188,7 @@ namespace AutoDischange.ViewModel.Helpers
                 Task<IEnumerable<System.IO.FileInfo>> task2 = new Task<IEnumerable<System.IO.FileInfo>>(() =>
                 {
                     //Los que estan solo en A
-                    return (from file in list1 select file).Except(list2, myFileFullNameCompare);
+                    return (from file in list1 select file).Except(list2, myFileCompare);
                 });
                 task2.Start();
                 IEnumerable<System.IO.FileInfo> queryNameList1Only = await task2;
@@ -330,7 +330,7 @@ namespace AutoDischange.ViewModel.Helpers
             Task<IEnumerable<System.IO.FileInfo>> task19 = new Task<IEnumerable<System.IO.FileInfo>>(() =>
             {
                 //Los que estan solo en B (huerfanos B)
-                return (from file in list2 select file).Except( list1, myFileFullNameCompare);
+                return (from file in list2 select file).Except( list1, myFileCompare);
             });
             task19.Start();
             IEnumerable<System.IO.FileInfo> queryNameList2Only = await task19;

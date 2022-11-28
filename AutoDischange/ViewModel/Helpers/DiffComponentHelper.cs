@@ -110,10 +110,11 @@ namespace AutoDischange.ViewModel.Helpers
                 //A custom file comparer defined below  
                 FileCompare myFileCompare = new FileCompare();
                 FileNameCompare myFileNameCompare = new FileNameCompare();
+            FileFullNameCompare myFileFullNameCompare = new FileFullNameCompare();
 
 
-                //Los que estan A y B
-                List<DiffCompareModel> diffCompareModelList = new List<DiffCompareModel>();
+            //Los que estan A y B
+            List<DiffCompareModel> diffCompareModelList = new List<DiffCompareModel>();
                 List<DiffCompareModel> diffCompareModelListIguales = new List<DiffCompareModel>();
                 List<DiffCompareModel> diffCompareModelListDiferentes = new List<DiffCompareModel>();
                 List<DiffCompareModel> diffCompareModelListHuerfanos = new List<DiffCompareModel>();
@@ -187,7 +188,7 @@ namespace AutoDischange.ViewModel.Helpers
                 Task<IEnumerable<System.IO.FileInfo>> task2 = new Task<IEnumerable<System.IO.FileInfo>>(() =>
                 {
                     //Los que estan solo en A
-                    return (from file in list1 select file).Except(list2, myFileNameCompare);
+                    return (from file in list1 select file).Except(list2, myFileFullNameCompare);
                 });
                 task2.Start();
                 IEnumerable<System.IO.FileInfo> queryNameList1Only = await task2;
@@ -329,7 +330,7 @@ namespace AutoDischange.ViewModel.Helpers
             Task<IEnumerable<System.IO.FileInfo>> task19 = new Task<IEnumerable<System.IO.FileInfo>>(() =>
             {
                 //Los que estan solo en B (huerfanos B)
-                return (from file in list2 select file).Except( list1, myFileCompare);
+                return (from file in list2 select file).Except( list1, myFileFullNameCompare);
             });
             task19.Start();
             IEnumerable<System.IO.FileInfo> queryNameList2Only = await task19;

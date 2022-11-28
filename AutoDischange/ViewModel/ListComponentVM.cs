@@ -27,6 +27,7 @@ namespace AutoDischange.ViewModel
 
         public FilesPacksToUpdates filesPacksToUpdates;
         public List<FilesPacksToUpdates> FilesPacksTos = new List<FilesPacksToUpdates>();
+        public List<FilesPacksToUpdates> FilesPacksTos2 = new List<FilesPacksToUpdates>();
 
         public List<BranchJenkins> BranchJenkins = new List<BranchJenkins>();
 
@@ -41,7 +42,7 @@ namespace AutoDischange.ViewModel
                 OnPropertyChanged("ListComponent");
             }
         }
-        
+
         private string listComponentStatus;
         public string ListComponentStatus
         {
@@ -68,7 +69,7 @@ namespace AutoDischange.ViewModel
                 OnPropertyChanged("PathComponent");
             }
         }
-        
+
         private bool hogar1;
         public bool Hogar1
         {
@@ -123,7 +124,7 @@ namespace AutoDischange.ViewModel
             ListComponent = new ListComponent();
 
 
-            PathComponent =Environment.GetFolderPath(Environment.SpecialFolder.UserProfile);
+            PathComponent = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile);
 
             List<BranchJenkinsExcel> changesetList = DatabaseHelper.Read<BranchJenkinsExcel>()
                 .OrderBy(x => x.Name).ToList();
@@ -148,7 +149,7 @@ namespace AutoDischange.ViewModel
             //bool _cuatroUno_branch = CuatroUno;
             //bool _prod_branch = Prod;
             //bool _hogar2_branch = Hogar2;
-            
+
             ////MEJORAR ESTO
             //if (_hogar1_branch)
             //{
@@ -238,13 +239,13 @@ namespace AutoDischange.ViewModel
                                 {
                                     TodosItemTfs.RemoveAt(i);
                                 }
-                            }                            
+                            }
                         }
 
                         if (TodosItemTfs.Count > 0)
                         {
                             ListComponentStatus = $"Cargando datos de TFS.";
-                            List<string> list = new List<string>();                            
+                            List<string> list = new List<string>();
                             foreach (TfsItem item in TodosItemTfs)
                             {
                                 ext = Path.GetExtension(item.path);
@@ -265,6 +266,7 @@ namespace AutoDischange.ViewModel
                     FilesPacksTos.Clear();
                     ///////////////////////// CARGAMOS EN EL JENKINS /////////////////////////////////////////////////////////////
                     string rutaCont = PathComponent + "\\";
+                    List<string> rutaCont2 = new List<string>();
                     if (PathGU.Count > 0)
                     {
                         ListComponentStatus = $"Transfiriendo archivos de Jenkins.";
@@ -274,6 +276,7 @@ namespace AutoDischange.ViewModel
                             {
                                 //voy agregar el directorio donde se va a agregar el paquete del Jenkins
                                 rutaF = $@"{rutaCont}{pathFound.Branch}_{DateTime.Now.ToString("yyMdHmss")}";
+                                rutaCont2.Add(rutaF);
                             }
 
                             try
@@ -285,12 +288,24 @@ namespace AutoDischange.ViewModel
                                 Log4net.log.Error(ex.Message);
                             }
                         }
-                        //METODO PARA LA HOMOLOGACION DE LOS ARCHIVOS
+
                         if (FilesPacksTos.Count > 0)
                         {
                             HomologarArchivos();
-                            //VAMOS A CREAR EL CSV
-                            DetallarResultadoPack(rutaF);
+
+                            //METODO PARA LA HOMOLOGACION DE LOS ARCHIVOS
+                            foreach (var item in _branchUses)
+                            {
+                                FilesPacksTos2 = FilesPacksTos.Where(n => n.branchUse == item.NameBranch).ToList();
+
+                                if (FilesPacksTos2.Count > 0)
+                                {
+                                    string rutaH = rutaCont2.Where(n => n.Contains(item.NameBranch)).FirstOrDefault();
+                                    DetallarResultadoPack(rutaH);
+                                }
+                            }
+
+                            FilesPacksTos.Clear();
                             ListComponentStatus = $"Transferencia de archivos culminado.";
                             Log4net.log.Info($"Transferencia de archivos culminado.");
                             MessageBox.Show("Transferencia de archivos culminado. ", "Transferencia de archivos culminado.", MessageBoxButton.OK, MessageBoxImage.Information);
@@ -330,14 +345,13 @@ namespace AutoDischange.ViewModel
             string pathend = $@"{rutaF}\Resultado_Pack_Creado.csv";
             string separador = ",";
             StringBuilder salida = new StringBuilder();
-            foreach (FilesPacksToUpdates item in FilesPacksTos)
+            foreach (FilesPacksToUpdates item in FilesPacksTos2)
             {
                 string cadena = $@"{item.branchUse},{item.changeset},{item.nameFile},{item.pathFile.Replace(rutaF, "")}";
                 _ = salida.AppendLine(string.Join(separador, cadena));
             }
             File.AppendAllText(pathend, salida.ToString());
             salida.Clear();
-            FilesPacksTos.Clear();
         }
 
         private void HomologarArchivos()

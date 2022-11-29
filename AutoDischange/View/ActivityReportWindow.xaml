@@ -59,9 +59,37 @@
                         Content="Generar">
 
                 </Button>
-            
-                
-           
+
+                <TextBlock Text="Detalle de lista de DIS-CHANGES"/>
+                <ListView
+                  Width="251"
+                  SelectionMode="Single"
+                  SelectedValue="{Binding SelectedChangeset, Mode=TwoWay}"
+                  ItemsSource="{Binding DischangeChangesets}" Margin="10">
+                    <ListView.ItemTemplate>
+                        <DataTemplate>
+                            <Border Name="border" BorderBrush="DarkBlue" BorderThickness="1" Padding="5" Margin="5">
+                                <Grid>
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition/>
+                                        <RowDefinition/>
+                                        <RowDefinition/>
+                                    </Grid.RowDefinitions>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition />
+                                        <ColumnDefinition />
+                                    </Grid.ColumnDefinitions>
+                                    <TextBlock Grid.Row="0" Grid.Column="0" Text="Changeset:"/>
+                                    <TextBlock Grid.Row="0" Grid.Column="1" Text="{Binding Path=Changeset}" />
+                                    <TextBlock Grid.Row="1" Grid.Column="0" Text="Branch:"/>
+                                    <TextBlock Grid.Row="1" Grid.Column="1" Text="{Binding Path=Branch}"/>
+                                </Grid>
+                            </Border>
+                        </DataTemplate>
+                    </ListView.ItemTemplate>
+                </ListView>
+
+
 
             </StackPanel>
         </ScrollViewer>

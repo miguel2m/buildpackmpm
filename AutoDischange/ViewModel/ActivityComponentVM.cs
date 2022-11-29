@@ -3,6 +3,7 @@ using AutoDischange.ViewModel.Commands;
 using AutoDischange.ViewModel.Helpers;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
 using System.Text;
@@ -94,13 +95,26 @@ namespace AutoDischange.ViewModel
             }
         }
 
+        public ObservableCollection<DischangeChangeset> DischangeChangesets { get; set; }
+
         public ActivityComponentVM()
         {
+            DischangeChangesets = new ObservableCollection<DischangeChangeset>();
             ActivityComponentCommand = new ActivityComponentCommand(this);
             activityComponent = new ActivityComponent();
             ActivityVisible = true;
             EnvEntrega = "PRE";
-            ActivityPathComponent = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile); 
+            ActivityPathComponent = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile);
+
+            List <DischangeChangeset> DischangeChangeset = (DatabaseHelper.Read<DischangeChangeset>()).ToList();
+            if (DischangeChangeset.Any())
+            {
+                foreach (DischangeChangeset item in DischangeChangeset)
+                {
+                    DischangeChangesets.Add(item);
+                }
+            }
+
         }
 
         public async void ExcuteActivityExport()

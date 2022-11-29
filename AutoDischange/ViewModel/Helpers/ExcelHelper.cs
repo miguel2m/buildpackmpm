@@ -697,6 +697,43 @@ namespace AutoDischange.ViewModel.Helpers
 
         }
 
+        //Set Lista de Changesets
+        public static MemoryStream ChangesetList(MemoryStream msPass, List<DischangeChangeset> listData, string _workbook)
+        {
+            msPass.Position = 0;
+            MemoryStream msPassTemp = new MemoryStream();
+            SLDocument sl = new SLDocument(msPass);
+            sl.SelectWorksheet(_workbook);
+            int _index = 2;
+            //int _contador = 1;
+            SLStyle style = sl.CreateStyle();
+            style.SetWrapText(true);
+            style.Alignment.JustifyLastLine = true;
+            //style.Font.FontSize = 14;
+            foreach (DischangeChangeset item in listData)
+            {
+
+                if (!string.IsNullOrEmpty(item.Changeset))
+                {
+                    sl.SetCellValue(_index, 11, int.Parse(item.Changeset));
+                }
+
+                //sl.SetCellValue(_index, 1, _contador);
+                //sl.SetCellValue(_index, 11, item.Changeset);
+                sl.SetCellValue(_index, 12, item.Branch);
+               
+                _index++;
+                //_contador++;
+
+
+            }
+            //char backSlash = Path.DirectorySeparatorChar;
+            sl.SaveAs(msPassTemp);
+
+            return msPassTemp;
+
+        }
+
         //SAVE EXCEL ACTIVITY
         public static void SaveExcelEntrega (MemoryStream msPass, string filePath)
         {

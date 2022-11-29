@@ -176,6 +176,17 @@ namespace AutoDischange.ViewModel.Helpers
                 
             }
 
+            List<DischangeChangeset> DischangeChangeset = (DatabaseHelper.Read<DischangeChangeset>()).ToList();
+            //Detalle de entre lista de changesets
+            if (DischangeChangeset.Any())
+            {
+
+                MemoryStream msPassTemp = new MemoryStream();
+                ExcelHelper.ChangesetList(msPass, DischangeChangeset, "DetalleEntrega").WriteTo(msPassTemp);
+                msPass = new MemoryStream();
+                msPassTemp.WriteTo(msPass);
+            }
+
             //Si traigo xml en ProcesosFull entonces debo ejecutar actividades de importación de procesos 
             //(importación de procesos)
             if (ActivityComponentListAlojablesList.Any())
@@ -326,7 +337,9 @@ namespace AutoDischange.ViewModel.Helpers
                 msPass = new MemoryStream();
                 msPassTemp.WriteTo(msPass);
             }
+
             
+
             //Guardar Excel
             if (msPass.CanRead)
                 ExcelHelper.SaveExcelEntrega(msPass, pathUser);

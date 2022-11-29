@@ -16,6 +16,8 @@ namespace AutoDischange.ViewModel
 
         public MainVM()
         {
+
+            
             //try
             //{
             //    DISChangeRequest.DischangeGraphClientAsync();

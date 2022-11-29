@@ -113,6 +113,15 @@ namespace AutoDischange.ViewModel
             PackageCommand = new PackageCommand(this);
             //SortPackDischange.SortPack(@"C:\Users\miguelangel.medina\Documents\pack\20211118_P4.1_20221007180020\");
 
+            List<DischangeChangeset> DischangeChangeset = (DatabaseHelper.Read<DischangeChangeset>()).ToList();
+            if (DischangeChangeset.Any())
+            {
+                foreach (DischangeChangeset item in DischangeChangeset)
+                {
+                    DatabaseHelper.Delete(item);
+                }
+            }
+
         }
         public async void GetExcel(string fileName)
         {

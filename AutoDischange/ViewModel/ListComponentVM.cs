@@ -302,6 +302,7 @@ namespace AutoDischange.ViewModel
                                 {
                                     string rutaH = rutaCont2.Where(n => n.Contains(item.NameBranch)).FirstOrDefault();
                                     DetallarResultadoPack(rutaH);
+                                    FilesPacksTos2.Clear();
                                 }
                             }
 

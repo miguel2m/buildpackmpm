@@ -50,7 +50,7 @@
                         Click="PickupFolder_Click"
                     >
                 </Button>
-                
+
                 <Button IsEnabled="{Binding ActivityVisible}"
                         Command="{Binding ActivityComponentCommand}" 
                         CommandParameter="{Binding ActivityComponent}"
@@ -59,6 +59,34 @@
                         Content="Generar">
 
                 </Button>
+
+                <TextBlock Text="Detalle de Lista de changesets:" Margin="10"/>
+                <ListView
+                  SelectionMode="Single"
+                  ItemsSource="{Binding DischangeChangesets}">
+                    <ListView.ItemTemplate>
+                        <DataTemplate>
+                            <Border Name="border" BorderBrush="DarkBlue" BorderThickness="1" Padding="1" Margin="1">
+                                <Grid>
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition/>
+                                        <RowDefinition/>
+                                        <RowDefinition/>
+                                    </Grid.RowDefinitions>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition />
+                                        <ColumnDefinition />
+                                    </Grid.ColumnDefinitions>
+                                    <TextBlock Grid.Row="0" Grid.Column="0" Text="Changeset:"/>
+                                    <TextBlock Grid.Row="0" Grid.Column="1" Text="{Binding Path=Changeset}" />
+                                    <TextBlock Grid.Row="1" Grid.Column="0" Text="Branch:"/>
+                                    <TextBlock Grid.Row="1" Grid.Column="1" Text="{Binding Path=Branch}"/>
+                                </Grid>
+                            </Border>
+                        </DataTemplate>
+                    </ListView.ItemTemplate>
+                </ListView>
+                
             
                 
            

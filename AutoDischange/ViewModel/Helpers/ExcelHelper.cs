@@ -507,10 +507,18 @@ namespace AutoDischange.ViewModel.Helpers
             foreach (ActivityComponentListAlojables item in listData)
             {
 
-                
+
                 //sl.SetCellValue(_index, 1, item.Id);
-                
-                ListListadoAlojables.AddRange(item.DischangeComponentName);
+                foreach (string item2 in item.DischangeComponentName)
+                {
+                    if (!ListListadoAlojables.Any(a => a == item2))
+                    {
+                        ListListadoAlojables.Add(item2);
+
+                    }
+                    
+                }
+                    
                 //int _indexComponet = _index;
                 //foreach (string itemComponent in item.DischangeComponentName)
                 //{
@@ -526,7 +534,7 @@ namespace AutoDischange.ViewModel.Helpers
             }
             if (ListListadoAlojables.Any())
             {
-                foreach (string itemComponent in ListListadoAlojables.OrderBy(o=>o))
+                foreach (string itemComponent in ListListadoAlojables.Select(x => x).Distinct().OrderBy(o=>o))
                 {
 
 
@@ -564,7 +572,16 @@ namespace AutoDischange.ViewModel.Helpers
             List<string> ListListadoConfigurables = new List<string>();
             foreach (ActivityComponentListConfigurables item in listData)
             {
-                ListListadoConfigurables.AddRange(item.DischangeComponentName);
+                foreach (string item2 in item.DischangeComponentName)
+                {
+                    if (!ListListadoConfigurables.Any(a => a == item2))
+                    {
+
+                        ListListadoConfigurables.Add(item2);
+
+                    }
+                }
+                
                 //foreach (string itemComponent in item.DischangeComponentName)
                 //{
                 //    sl.SetCellValue(_index, 1, _contador);
@@ -577,7 +594,7 @@ namespace AutoDischange.ViewModel.Helpers
             }
             if (ListListadoConfigurables.Any())
             {
-                foreach (string itemComponent in ListListadoConfigurables.OrderBy(o => o))
+                foreach (string itemComponent in ListListadoConfigurables.Select(x => x).Distinct().OrderBy(o => o))
                 {
 
 

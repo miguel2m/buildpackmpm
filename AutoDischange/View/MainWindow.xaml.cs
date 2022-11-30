@@ -31,6 +31,8 @@ namespace AutoDischange.View
         public MainWindow()
         {
             InitializeComponent();
+            //SE AGREGA EL NUMERO DE LA VERSION DE MODO DINAMICO
+            Title = ConfigurationManager.AppSettings["version"];
         }
         private void MenuItem_Click(object sender, RoutedEventArgs e)
         {

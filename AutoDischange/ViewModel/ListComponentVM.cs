@@ -444,27 +444,36 @@ namespace AutoDischange.ViewModel
                     }
                     else if (ext == ".config" || ext == ".cmd")
                     {
-                        foreach (var item2 in _branchUses)
+                        foreach (BranchUse item2 in _branchUses)
                         {
                             if (item.path.Contains(item2.NameBranch))
                             {
                                 cad = UtilHelper.extraerBranchTfs(dischangePathList[i].Path, '/', ext, item2.NameBranch);
                                 cad += dischangePathList[i].Path;
-                                if (cad.Contains("Des"))
+                                //CORRECCION DE NOMBRE DE ARCHIVOS DE LA GUIA DE UBICACION PARA LUEGO BUSCAR EN EL JENKINS
+                                if (cad.Contains(@"\Des\"))
                                 {
-                                    cad = cad.Replace("Des", "DESA");
+                                    cad = cad.Replace(@"\Des\", @"\DESA\");
                                 }
-                                else if (cad.Contains("Cer"))
+                                else if (cad.Contains(@"\Desa\"))
                                 {
-                                    cad = cad.Replace("Cer", "CERT");
+                                    cad = cad.Replace(@"\Desa\", @"\DESA\");
                                 }
-                                else if (cad.Contains("Pre"))
+                                else if (cad.Contains(@"\Cer\"))
                                 {
-                                    cad = cad.Replace("Pre", "PRE");
+                                    cad = cad.Replace(@"\Cer\", @"\CERT\");
                                 }
-                                else if (cad.Contains("Pro"))
+                                else if (cad.Contains(@"\Cert\"))
                                 {
-                                    cad = cad.Replace("Pro", "PRO");
+                                    cad = cad.Replace(@"\Cert\", @"\CERT\");
+                                }
+                                else if (cad.Contains(@"\Pre\"))
+                                {
+                                    cad = cad.Replace(@"\Pre\", @"\PRE\");
+                                }
+                                else if (cad.Contains(@"\Pro\"))
+                                {
+                                    cad = cad.Replace(@"\Pro\", @"\PRO\");
                                 }
                                 ExtraerBranchTFS2(cad, item);
                             }

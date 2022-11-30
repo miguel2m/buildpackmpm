@@ -144,41 +144,6 @@ namespace AutoDischange.ViewModel
                     UseBranch = true
                 });
             }
-
-            //bool _hogar1_branch = Hogar1;
-            //bool _cuatroUno_branch = CuatroUno;
-            //bool _prod_branch = Prod;
-            //bool _hogar2_branch = Hogar2;
-
-            ////MEJORAR ESTO
-            //if (_hogar1_branch)
-            //{
-            //    BranchUse branchUses1 = new BranchUse();
-            //    branchUses1.UseBranch = _hogar1_branch;
-            //    branchUses1.NameBranch = "20211118_HOG";
-            //    _branchUses.Add(branchUses1);
-            //}
-            //if (_cuatroUno_branch)
-            //{
-            //    BranchUse branchUses2 = new BranchUse();
-            //    branchUses2.UseBranch = _cuatroUno_branch;
-            //    branchUses2.NameBranch = "20211118_P4.1";
-            //    _branchUses.Add(branchUses2);
-            //}
-            //if (_prod_branch)
-            //{
-            //    BranchUse branchUses3 = new BranchUse();
-            //    branchUses3.UseBranch = _prod_branch;
-            //    branchUses3.NameBranch = "20220222_PRO";
-            //    _branchUses.Add(branchUses3);
-            //}
-            //if (_hogar2_branch)
-            //{
-            //    BranchUse branchUses4 = new BranchUse();
-            //    branchUses4.UseBranch = _hogar2_branch;
-            //    branchUses4.NameBranch = "202211118_HOG";
-            //    _branchUses.Add(branchUses4);
-            //}
         }
 
         public async Task CopyToJenkinsAsync()

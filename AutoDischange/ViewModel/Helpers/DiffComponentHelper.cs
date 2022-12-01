@@ -261,8 +261,8 @@ namespace AutoDischange.ViewModel.Helpers
                                 diffCompareModel.FechaResult = DateTime.Compare(diffCompareModel.FechaA, diffCompareModel.FechaB) > 0 ?
                                     DateTime.Compare(diffCompareModel.FechaA, diffCompareModel.FechaB) == 0 ? 2 : 3
                                     : 4; // 2= Iguales , 3= A es mayor B y 4= B es mayor A
-                                diffCompareModel.LenghtResult = diffCompareModel.HashA.CompareTo(diffCompareModel.LenghtA) > 0 ?
-                                    diffCompareModel.HashA.CompareTo(diffCompareModel.LenghtB) == 0 ? 2 : 3
+                                diffCompareModel.LenghtResult = diffCompareModel.LenghtA.CompareTo(diffCompareModel.LenghtB) > 0 ?
+                                    diffCompareModel.LenghtA.CompareTo(diffCompareModel.LenghtB) == 0 ? 2 : 3
                                     : 4; // 2= Iguales , 3= A es mayor B y 4= B es mayor A
 
                                 //diffCompareModelList.Add(diffCompareModel);

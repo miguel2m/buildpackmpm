@@ -180,9 +180,30 @@ namespace AutoDischange.ViewModel.Helpers
             //Detalle de entre lista de changesets
             if (DischangeChangeset.Any())
             {
+                List<DischangeChangeset2> DischangeChangeset2 = new List<DischangeChangeset2>();
+                foreach (DischangeChangeset item in DischangeChangeset)
+                {
+                    DischangeChangeset2 obj = new DischangeChangeset2();
+
+                    TfsModelDetail author = await TFSRequest.GetChangesetAuthor(item.Changeset);
+                    obj.Id = item.Id;
+                    obj.Changeset = item.Changeset;
+                    obj.Branch = item.Branch;
+                    if (author!= null)
+                    {
+                        obj.author = author.author;
+                        obj.comment = author.comment;
+                        obj.createdDate = author.createdDate;
+                    }
+
+                   DischangeChangeset2.Add(obj);
+
+
+                }
 
                 MemoryStream msPassTemp = new MemoryStream();
-                ExcelHelper.ChangesetList(msPass, DischangeChangeset, "DetalleEntrega").WriteTo(msPassTemp);
+                //TfsModelDetail author = await TFSRequest.GetChangesetAuthor(item.Changeset);
+                ExcelHelper.ChangesetList(msPass, DischangeChangeset2, "DetalleEntrega").WriteTo(msPassTemp);
                 msPass = new MemoryStream();
                 msPassTemp.WriteTo(msPass);
             }
@@ -1352,7 +1373,12 @@ namespace AutoDischange.ViewModel.Helpers
 
                     ActivityComponentPreProList.Add(ActivityComponentPrePro);
 
-                   
+                    ActivityComponentPrePro.PendindActivity = $" {int.Parse(_pendingActivity) + 1 }";
+                    ActivityComponentPrePro.rst.AppendText($"Prender pools  ", ActivityComponentPrePro.font);
+                    ActivityComponentPrePro.rst.AppendText($"de todos los servidores.");
+                    //ActivityComponentPrePro.Activity = $@"<b>Bajar pools</b> de todos los servidores.";
+                    ActivityComponentPreProList.Add(ActivityComponentPrePro);
+
                 }
                 else
                 {   //PRO
@@ -1420,7 +1446,12 @@ namespace AutoDischange.ViewModel.Helpers
                     //ActivityComponentPrePro.Activity += $@"Esperar validación para continuar con la siguiente actividad.{ System.Environment.NewLine}";
                     ActivityComponentPreProList.Add(ActivityComponentPrePro);
 
-                    
+                    ActivityComponentPrePro.PendindActivity = $" {int.Parse(_pendingActivity) + 1 }";
+                    ActivityComponentPrePro.rst.AppendText($"Prender pools  ", ActivityComponentPrePro.font);
+                    ActivityComponentPrePro.rst.AppendText($"de todos los servidores.");
+                    //ActivityComponentPrePro.Activity = $@"<b>Bajar pools</b> de todos los servidores.";
+                    ActivityComponentPreProList.Add(ActivityComponentPrePro);
+
                 }
 
                 return ActivityComponentPreProList;

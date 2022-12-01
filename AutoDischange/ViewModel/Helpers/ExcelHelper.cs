@@ -564,7 +564,7 @@ namespace AutoDischange.ViewModel.Helpers
             else
             {
                 sl.SetCellValue(_index, 1, _contador);
-                sl.SetCellValue(_index, 2, "El paquete no genera listado de alojables");
+                sl.SetCellValue(_index, 2, "Esta entrega no contiene listado de alojables.");
                 _index++;
                 _contador++;
             }
@@ -624,7 +624,7 @@ namespace AutoDischange.ViewModel.Helpers
             else
             {
                 sl.SetCellValue(_index, 1, _contador);
-                sl.SetCellValue(_index, 2, "El paquete no genera listado de configurables");
+                sl.SetCellValue(_index, 2, "Esta entrega no contiene listado de configurables");
                 _index++;
                 _contador++;
             }
@@ -664,7 +664,7 @@ namespace AutoDischange.ViewModel.Helpers
             else
             {
                 sl.SetCellValue(_index, 1, _contador);
-                sl.SetCellValue(_index, 2, "El paquete no genera listado de scripts");
+                sl.SetCellValue(_index, 2, "Esta entrega no contiene listado de scripts");
                 _index++;
                 _contador++;
             }
@@ -714,7 +714,7 @@ namespace AutoDischange.ViewModel.Helpers
         }
 
         //Set Lista de Changesets
-        public static MemoryStream ChangesetList(MemoryStream msPass, List<DischangeChangeset> listData, string _workbook)
+        public static MemoryStream ChangesetList(MemoryStream msPass, List<DischangeChangeset2> listData, string _workbook)
         {
             msPass.Position = 0;
             MemoryStream msPassTemp = new MemoryStream();
@@ -726,9 +726,9 @@ namespace AutoDischange.ViewModel.Helpers
             style.SetWrapText(true);
             style.Alignment.JustifyLastLine = true;
             //style.Font.FontSize = 14;
-            foreach (DischangeChangeset item in listData)
+            foreach (DischangeChangeset2 item in listData)
             {
-
+               
                 if (!string.IsNullOrEmpty(item.Changeset))
                 {
                     sl.SetCellValue(_index, 11, int.Parse(item.Changeset));
@@ -737,6 +737,13 @@ namespace AutoDischange.ViewModel.Helpers
                 //sl.SetCellValue(_index, 1, _contador);
                 //sl.SetCellValue(_index, 11, item.Changeset);
                 sl.SetCellValue(_index, 12, item.Branch);
+
+                if (item.author != null)
+                {
+                    sl.SetCellValue(_index, 13, item.author.displayName);
+                    sl.SetCellValue(_index, 14, item.comment);
+                    sl.SetCellValue(_index, 15, item.createdDate.ToString());
+                }
                
                 _index++;
                 //_contador++;

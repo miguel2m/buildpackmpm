@@ -295,41 +295,47 @@ namespace AutoDischange.ViewModel.Helpers
                         //Los que estan solo en A
                         foreach (var v in queryNameList1Only)
                         {
-                            s = $"{v.Name}{v.Length}{v.LastWriteTime.ToString()}";
-                            //sHash = s.GetHashCode().ToString();
-                            sHash = MD5_Compare.CreateMD5(s);
-                            //sizeAll = CompareFile.GetSizeByte(v);
-                            sizeAll = v.Length.ToString();
-                            diffCompareModel = new DiffCompareModel();
-                            diffCompareModel.Id = count;
-                            //PathA
-                            //diffCompareModel.UbicacionA = v.FullName;
-                            diffCompareModel.UbicacionA = v.FullName.Contains("CR") ? v.FullName.Contains("CRs") ? v.FullName.Split(new[] { "CRs" }, StringSplitOptions.None)[1] : v.FullName.Split(new[] { "CR" }, StringSplitOptions.None)[1] : v.FullName;
-                            diffCompareModel.PathA = v.Name;
-                            diffCompareModel.HashA = sHash;
-                            diffCompareModel.FechaA = v.LastWriteTime;
-                            diffCompareModel.LenghtA = sizeAll;
-                            //PathB
-                            diffCompareModel.UbicacionB = String.Empty;
-                            diffCompareModel.PathB = String.Empty;
-                            diffCompareModel.HashB = String.Empty;
-                            //diffCompareModel.FechaB = null;
-                            diffCompareModel.LenghtB = String.Empty;
-                            //Result
-                            diffCompareModel.HashResult = 5;
-                            diffCompareModel.FechaResult = 5;
-                            diffCompareModel.LenghtResult = 5;
+                            if (!diffCompareModelListDiferentes.Exists(e => e.UbicacionA.Equals(v.FullName)) )
+                            {
+                                s = $"{v.Name}{v.Length}{v.LastWriteTime.ToString()}";
+                                //sHash = s.GetHashCode().ToString();
+                                sHash = MD5_Compare.CreateMD5(s);
+                                //sizeAll = CompareFile.GetSizeByte(v);
+                                sizeAll = v.Length.ToString();
+                                diffCompareModel = new DiffCompareModel();
+                                diffCompareModel.Id = count;
+                                //PathA
+                                //diffCompareModel.UbicacionA = v.FullName;
+                                diffCompareModel.UbicacionA = v.FullName.Contains("CR") ? v.FullName.Contains("CRs") ? v.FullName.Split(new[] { "CRs" }, StringSplitOptions.None)[1] : v.FullName.Split(new[] { "CR" }, StringSplitOptions.None)[1] : v.FullName;
+                                diffCompareModel.PathA = v.Name;
+                                diffCompareModel.HashA = sHash;
+                                diffCompareModel.FechaA = v.LastWriteTime;
+                                diffCompareModel.LenghtA = sizeAll;
+                                //PathB
+                                diffCompareModel.UbicacionB = String.Empty;
+                                diffCompareModel.PathB = String.Empty;
+                                diffCompareModel.HashB = String.Empty;
+                                //diffCompareModel.FechaB = null;
+                                diffCompareModel.LenghtB = String.Empty;
+                                //Result
+                                diffCompareModel.HashResult = 5;
+                                diffCompareModel.FechaResult = 5;
+                                diffCompareModel.LenghtResult = 5;
 
-                            //diffCompareModelList.Add(diffCompareModel);
-                            diffCompareModelListHuerfanos.Add(diffCompareModel);
-                            count++;
+                                //diffCompareModelList.Add(diffCompareModel);
+                                diffCompareModelListHuerfanos.Add(diffCompareModel);
+                                count++;
+                            }
                         }
+                            
                     });
                     task6.Start();
                     await task6;
 
                     if (diffCompareModelListHuerfanos.Any())
                     {
+
+                        
                         diffCompareModelList.AddRange(diffCompareModelListHuerfanos.OrderBy(o => o.UbicacionA).ToList());
                     }
                 }
@@ -341,6 +347,7 @@ namespace AutoDischange.ViewModel.Helpers
             });
             task19.Start();
             IEnumerable<System.IO.FileInfo> queryNameList2Only = await task19;
+            
             if (queryNameList2Only.Count() > 0)
             {
                 Task task7 = new Task(() =>
@@ -348,35 +355,39 @@ namespace AutoDischange.ViewModel.Helpers
                     //Los que estan solo en A
                     foreach (var v in queryNameList2Only)
                     {
-                        s = $"{v.Name}{v.Length}{v.LastWriteTime.ToString()}";
-                        //sHash = s.GetHashCode().ToString();
-                        sHash = MD5_Compare.CreateMD5(s);
-                        //sizeAll = CompareFile.GetSizeByte(v);
-                        sizeAll = v.Length.ToString();
-                        diffCompareModel = new DiffCompareModel();
-                        diffCompareModel.Id = count;
-                        //PathA
-                        //diffCompareModel.UbicacionA = v.FullName;
-                        diffCompareModel.UbicacionB = v.FullName.Contains("CR") ? v.FullName.Contains("CRs") ? v.FullName.Split(new[] { "CRs" }, StringSplitOptions.None)[1] : v.FullName.Split(new[] { "CR" }, StringSplitOptions.None)[1] : v.FullName;
-                        diffCompareModel.PathB = v.Name;
-                        diffCompareModel.HashB = sHash;
-                        diffCompareModel.FechaB = v.LastWriteTime;
-                        diffCompareModel.LenghtB = sizeAll;
-                        //PathB
-                        diffCompareModel.UbicacionA = String.Empty;
-                        diffCompareModel.PathA = String.Empty;
-                        diffCompareModel.HashA = String.Empty;
-                        //diffCompareModel.FechaB = null;
-                        diffCompareModel.LenghtA = String.Empty;
-                        //Result
-                        diffCompareModel.HashResult = 6;
-                        diffCompareModel.FechaResult = 6;
-                        diffCompareModel.LenghtResult = 6;
+                        if (!diffCompareModelListDiferentes.Exists(e => e.UbicacionB.Equals(v.FullName)))
+                        {
+                            s = $"{v.Name}{v.Length}{v.LastWriteTime.ToString()}";
+                            //sHash = s.GetHashCode().ToString();
+                            sHash = MD5_Compare.CreateMD5(s);
+                            //sizeAll = CompareFile.GetSizeByte(v);
+                            sizeAll = v.Length.ToString();
+                            diffCompareModel = new DiffCompareModel();
+                            diffCompareModel.Id = count;
+                            //PathA
+                            //diffCompareModel.UbicacionA = v.FullName;
+                            diffCompareModel.UbicacionB = v.FullName.Contains("CR") ? v.FullName.Contains("CRs") ? v.FullName.Split(new[] { "CRs" }, StringSplitOptions.None)[1] : v.FullName.Split(new[] { "CR" }, StringSplitOptions.None)[1] : v.FullName;
+                            diffCompareModel.PathB = v.Name;
+                            diffCompareModel.HashB = sHash;
+                            diffCompareModel.FechaB = v.LastWriteTime;
+                            diffCompareModel.LenghtB = sizeAll;
+                            //PathB
+                            diffCompareModel.UbicacionA = String.Empty;
+                            diffCompareModel.PathA = String.Empty;
+                            diffCompareModel.HashA = String.Empty;
+                            //diffCompareModel.FechaB = null;
+                            diffCompareModel.LenghtA = String.Empty;
+                            //Result
+                            diffCompareModel.HashResult = 6;
+                            diffCompareModel.FechaResult = 6;
+                            diffCompareModel.LenghtResult = 6;
 
-                        //diffCompareModelList.Add(diffCompareModel);
-                        diffCompareModelListHuerfanosB.Add(diffCompareModel);
+                            //diffCompareModelList.Add(diffCompareModel);
+                            diffCompareModelListHuerfanosB.Add(diffCompareModel);
+
+                            count++;
+                        }
                         
-                        count++;
                     }
                 });
                 task7.Start();
@@ -384,6 +395,7 @@ namespace AutoDischange.ViewModel.Helpers
 
                 if (diffCompareModelListHuerfanosB.Any())
                 {
+                    
                     diffCompareModelList.AddRange(diffCompareModelListHuerfanosB.OrderBy(o => o.UbicacionB).ToList());
                     diffCompareModelListHuerfanos.AddRange(diffCompareModelListHuerfanosB.OrderBy(o => o.UbicacionB).ToList());
                 }

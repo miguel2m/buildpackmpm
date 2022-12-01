@@ -295,7 +295,7 @@ namespace AutoDischange.ViewModel.Helpers
                         //Los que estan solo en A
                         foreach (var v in queryNameList1Only)
                         {
-                            if (!diffCompareModelListDiferentes.Exists(e => e.UbicacionA.Equals(v.FullName)) )
+                            if (!diffCompareModelListDiferentes.Exists(e => e.PathA.Equals(v.Name)) )
                             {
                                 s = $"{v.Name}{v.Length}{v.LastWriteTime.ToString()}";
                                 //sHash = s.GetHashCode().ToString();
@@ -355,7 +355,7 @@ namespace AutoDischange.ViewModel.Helpers
                     //Los que estan solo en A
                     foreach (var v in queryNameList2Only)
                     {
-                        if (!diffCompareModelListDiferentes.Exists(e => e.UbicacionB.Equals(v.FullName)))
+                        if (!diffCompareModelListDiferentes.Exists(e => e.PathB.Equals(v.Name)))
                         {
                             s = $"{v.Name}{v.Length}{v.LastWriteTime.ToString()}";
                             //sHash = s.GetHashCode().ToString();

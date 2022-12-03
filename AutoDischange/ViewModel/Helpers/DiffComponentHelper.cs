@@ -188,7 +188,7 @@ namespace AutoDischange.ViewModel.Helpers
                 Task<IEnumerable<System.IO.FileInfo>> task2 = new Task<IEnumerable<System.IO.FileInfo>>(() =>
                 {
                     //Los que estan solo en A
-                    return (from file in list1 select file).Intersect(list2, myFileNameCompare);
+                    return (from file in list1 select file).Intersect(list2, myFileFullNameCompare);
                 });
                 task2.Start();
                 IEnumerable<System.IO.FileInfo> queryNameList1Only = await task2;

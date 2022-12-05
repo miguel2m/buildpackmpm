@@ -7,7 +7,9 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AutoDischange", "AutoDischa
 EndProject
 Project("{54435603-DBB4-11D2-8724-00A0C9A8B90C}") = "AutpPackInstaller2.0", "AutpPackInstaller2.0\AutpPackInstaller2.0.vdproj", "{A2D62501-BEC5-4774-8CD1-5E8D6C2D1EA3}"
 EndProject
-Project("{54435603-DBB4-11D2-8724-00A0C9A8B90C}") = "AutpPackInstaller3.0", "AutpPackInstaller3.0\AutpPackInstaller3.0.vdproj", "{E4EBCD49-581C-4E89-8E5C-DDA13536CD68}"
+Project("{54435603-DBB4-11D2-8724-00A0C9A8B90C}") = "AutpPackInstaller3.5", "AutpPackInstaller3.0\AutpPackInstaller3.0.vdproj", "{E4EBCD49-581C-4E89-8E5C-DDA13536CD68}"
+EndProject
+Project("{54435603-DBB4-11D2-8724-00A0C9A8B90C}") = "AutpPackInstaller3.8", "AutpPackInstaller3.8\AutpPackInstaller3.8.vdproj", "{EE1ECB57-08D2-4F7B-8679-FF7DFC908D96}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -23,6 +25,8 @@ Global
 		{A2D62501-BEC5-4774-8CD1-5E8D6C2D1EA3}.Release|Any CPU.ActiveCfg = Release
 		{E4EBCD49-581C-4E89-8E5C-DDA13536CD68}.Debug|Any CPU.ActiveCfg = Debug
 		{E4EBCD49-581C-4E89-8E5C-DDA13536CD68}.Release|Any CPU.ActiveCfg = Release
+		{EE1ECB57-08D2-4F7B-8679-FF7DFC908D96}.Debug|Any CPU.ActiveCfg = Debug
+		{EE1ECB57-08D2-4F7B-8679-FF7DFC908D96}.Release|Any CPU.ActiveCfg = Release
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

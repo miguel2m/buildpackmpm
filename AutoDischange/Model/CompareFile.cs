@@ -73,11 +73,25 @@ namespace AutoDischange.Model
         // also be equal. Because equality as defined here is a simple value equality, not  
         // reference identity, it is possible that two or more objects will produce the same  
         // hash code.  
-        public int GetHashCode(System.IO.FileInfo fi)
+        public int GetHashCode(System.IO.FileInfo f1)
         {
 
-            string s = $"{fi.Name}{fi.Length}{fi.LastWriteTime.ToString()}";
-            return s.GetHashCode();
+            //string s = $"{fi.Name}{fi.Length}{fi.LastWriteTime.ToString()}";
+            //return s.GetHashCode();
+            string f1Path = f1.Name;
+            if (f1.FullName.Contains(@"\Alojables"))
+            {
+                f1Path = f1.FullName.Split(new[] { @"\Alojables" }, StringSplitOptions.None)[1];
+            }
+            if (f1.FullName.Contains(@"\Configurables"))
+            {
+                f1Path = f1.FullName.Split(new[] { @"\Configurables" }, StringSplitOptions.None)[1];
+            }
+            if (f1.FullName.Contains(@"\Script"))
+            {
+                f1Path = f1.FullName.Split(new[] { @"\Script" }, StringSplitOptions.None)[1];
+            }
+            return f1Path.GetHashCode();
         }
     }
 

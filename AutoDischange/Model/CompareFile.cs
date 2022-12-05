@@ -35,7 +35,34 @@ namespace AutoDischange.Model
 
         public bool Equals(System.IO.FileInfo f1, System.IO.FileInfo f2)
         {
-            return (f1.Name == f2.Name &&
+            string f1Path = f1.Name;
+            if (f1.FullName.Contains(@"\Alojables"))
+            {
+                f1Path = f1.FullName.Split(new[] { @"\Alojables" }, StringSplitOptions.None)[1];
+            }
+            if (f1.FullName.Contains(@"\Configurables"))
+            {
+                f1Path = f1.FullName.Split(new[] { @"\Configurables" }, StringSplitOptions.None)[1];
+            }
+            if (f1.FullName.Contains(@"\Script"))
+            {
+                f1Path = f1.FullName.Split(new[] { @"\Script" }, StringSplitOptions.None)[1];
+            }
+            string f2Path = f2.Name;
+            if (f2.FullName.Contains(@"\Alojables"))
+            {
+                f2Path = f1.FullName.Split(new[] { @"\Alojables" }, StringSplitOptions.None)[1];
+            }
+            if (f2.FullName.Contains(@"\Configurables"))
+            {
+                f2Path = f1.FullName.Split(new[] { @"\Configurables" }, StringSplitOptions.None)[1];
+            }
+            if (f2.FullName.Contains(@"\Script"))
+            {
+                f2Path = f1.FullName.Split(new[] { @"\Script" }, StringSplitOptions.None)[1];
+            }
+            //return (f1Path == f2Path);
+            return (f1Path == f2Path &&
                     f1.Length == f2.Length &&
                     f1.LastWriteTime.ToString() == f2.LastWriteTime.ToString()
                     );
@@ -48,6 +75,7 @@ namespace AutoDischange.Model
         // hash code.  
         public int GetHashCode(System.IO.FileInfo fi)
         {
+
             string s = $"{fi.Name}{fi.Length}{fi.LastWriteTime.ToString()}";
             return s.GetHashCode();
         }
@@ -67,10 +95,23 @@ namespace AutoDischange.Model
         // also be equal. Because equality as defined here is a simple value equality, not  
         // reference identity, it is possible that two or more objects will produce the same  
         // hash code.  
-        public int GetHashCode(System.IO.FileInfo fi)
+        public int GetHashCode(System.IO.FileInfo f1)
         {
-            string s = $"{fi.Name}";
-            return s.GetHashCode();
+            //string s = $"{fi.Name}";
+            string f1Path = f1.Name;
+            if (f1.FullName.Contains(@"\Alojables"))
+            {
+                f1Path = f1.FullName.Split(new[] { @"\Alojables" }, StringSplitOptions.None)[1];
+            }
+            if (f1.FullName.Contains(@"\Configurables"))
+            {
+                f1Path = f1.FullName.Split(new[] { @"\Configurables" }, StringSplitOptions.None)[1];
+            }
+            if (f1.FullName.Contains(@"\Script"))
+            {
+                f1Path = f1.FullName.Split(new[] { @"\Script" }, StringSplitOptions.None)[1];
+            }
+            return f1Path.GetHashCode();
         }
     }
 

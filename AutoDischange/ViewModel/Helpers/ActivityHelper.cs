@@ -68,7 +68,7 @@ namespace AutoDischange.ViewModel.Helpers
             {
                 dirAlojables = new System.IO.DirectoryInfo(pathAlojables);
                 listAlojables = dirAlojables.GetFiles("*.*", System.IO.SearchOption.AllDirectories);
-                List<string> DischangePathList = await ListPathDischange(listAlojables);
+                List<string> DischangePathList = await ListPathDischangeAlojables2(listAlojables);
                 ActivityComponentListAlojablesList = await ListAlojables(DischangePathList);        
                 if (ActivityComponentListAlojablesList.Any())
                 {
@@ -92,7 +92,7 @@ namespace AutoDischange.ViewModel.Helpers
             {
                 dirConfigurables = new System.IO.DirectoryInfo(pathConfigurables);
                 listConfigurables = dirConfigurables.GetFiles("*.*", System.IO.SearchOption.AllDirectories);
-                List<string> DischangePathList = await ListPathDischange(listConfigurables);
+                List<string> DischangePathList = await ListPathDischangeConfigurables2(listConfigurables);
                 ActivityComponentListConfigurablesList = await ListConfigurables(DischangePathList, envExcel);
                 if (ActivityComponentListConfigurablesList.Any())
                 {
@@ -180,9 +180,30 @@ namespace AutoDischange.ViewModel.Helpers
             //Detalle de entre lista de changesets
             if (DischangeChangeset.Any())
             {
+                List<DischangeChangeset2> DischangeChangeset2 = new List<DischangeChangeset2>();
+                foreach (DischangeChangeset item in DischangeChangeset)
+                {
+                    DischangeChangeset2 obj = new DischangeChangeset2();
+
+                    TfsModelDetail author = await TFSRequest.GetChangesetAuthor(item.Changeset);
+                    obj.Id = item.Id;
+                    obj.Changeset = item.Changeset;
+                    obj.Branch = item.Branch;
+                    if (author!= null)
+                    {
+                        obj.author = author.author;
+                        obj.comment = author.comment;
+                        obj.createdDate = author.createdDate;
+                    }
+
+                   DischangeChangeset2.Add(obj);
+
+
+                }
 
                 MemoryStream msPassTemp = new MemoryStream();
-                ExcelHelper.ChangesetList(msPass, DischangeChangeset, "DetalleEntrega").WriteTo(msPassTemp);
+                //TfsModelDetail author = await TFSRequest.GetChangesetAuthor(item.Changeset);
+                ExcelHelper.ChangesetList(msPass, DischangeChangeset2, "DetalleEntrega").WriteTo(msPassTemp);
                 msPass = new MemoryStream();
                 msPassTemp.WriteTo(msPass);
             }
@@ -508,6 +529,43 @@ namespace AutoDischange.ViewModel.Helpers
             return (DischangePathList.Any())?DischangePathList.Distinct().ToList(): DischangePathList;
         }
 
+        //Read  ListPathDischange (Guia de ubicaciones)
+        private static async Task<List<string>> ListPathDischangeAlojables2(IEnumerable<System.IO.FileInfo> listInput)
+        {
+            List<string> DischangePathList = new List<string>();
+
+            Task task0 = new Task(() =>
+            {
+                foreach (System.IO.FileInfo item in listInput)
+                {
+                    DischangePathList.Add(@"\Alojables\" + item.FullName.Split(new[] { @"\Alojables\" }, StringSplitOptions.None)[1]);
+                }
+            });
+
+            task0.Start();
+            await task0;
+
+            return (DischangePathList.Any()) ? DischangePathList.Distinct().ToList() : DischangePathList;
+        }
+        //Read  ListPathDischange (Guia de ubicaciones)
+        private static async Task<List<string>> ListPathDischangeConfigurables2(IEnumerable<System.IO.FileInfo> listInput)
+        {
+            List<string> DischangePathList = new List<string>();
+
+            Task task0 = new Task(() =>
+            {
+                foreach (System.IO.FileInfo item in listInput)
+                {
+                    DischangePathList.Add(@"\Configurables\" + item.FullName.Split(new[] { @"\Configurables\" }, StringSplitOptions.None)[1]);
+                }
+            });
+
+            task0.Start();
+            await task0;
+
+            return (DischangePathList.Any()) ? DischangePathList.Distinct().ToList() : DischangePathList;
+        }
+
         //ListadoAlojables Sheet
         private static async Task<List<ActivityComponentListAlojables>> ListAlojables(List<string> listInput)
         {
@@ -521,6 +579,66 @@ namespace AutoDischange.ViewModel.Helpers
                 foreach (string item in listInput)
                 {
                     
+                    //List<DischangePath> dischangePathListTemp = (DatabaseHelper.Read<DischangePath>()).Where(n => n.Path.Contains(item)).ToList();
+                    ActivityComponentListAlojables = new ActivityComponentListAlojables();
+                    ActivityComponentListAlojables.Id = _contador;
+                    ActivityComponentListAlojables.Workbook = "ListadoAlojables";
+                    if (!item.Contains("Upgrade") && !item.Contains(".deploy"))
+                    {
+                        ActivityComponentListAlojables.DischangeComponentName.Add(item);
+                        _contador++;
+                    }
+                    //if (dischangePathListTemp.Any())
+                    //{
+                    //    //DischangePathList.Add(dischangePathListTemp.First().Path);
+                    //    foreach (DischangePath itemTemp in dischangePathListTemp)
+                    //    {
+                    //        if (!itemTemp.Path.Contains("Upgrade") && !itemTemp.Path.Contains(".deploy"))
+                    //        {
+                    //            ActivityComponentListAlojables.DischangeComponentName.Add(itemTemp.Path);
+                    //            _contador++;
+                    //        }
+
+
+                    //    }
+                    //}
+                    //else
+                    //{
+                    //    if (!item.Contains("Upgrade") && !item.Contains(".deploy"))
+                    //    {
+                    //        ActivityComponentListAlojables.DischangeComponentName.Add(item);
+                    //        _contador++;
+                    //    }
+
+                    //}
+
+                    ActivityComponentListAlojablesListTask.Add(ActivityComponentListAlojables);
+                   
+                }
+
+                return ActivityComponentListAlojablesListTask;
+            });
+            task0.Start();
+
+            return await task0;
+        }
+
+        //ListadoAlojables Sheet
+        /*
+         * @D
+         * */
+        private static async Task<List<ActivityComponentListAlojables>> ListAlojablesOld(List<string> listInput)
+        {
+
+
+            Task<List<ActivityComponentListAlojables>> task0 = new Task<List<ActivityComponentListAlojables>>(() =>
+            {
+                List<ActivityComponentListAlojables> ActivityComponentListAlojablesListTask = new List<ActivityComponentListAlojables>();
+                ActivityComponentListAlojables ActivityComponentListAlojables;
+                int _contador = 1;
+                foreach (string item in listInput)
+                {
+
                     List<DischangePath> dischangePathListTemp = (DatabaseHelper.Read<DischangePath>()).Where(n => n.Path.Contains(item)).ToList();
                     ActivityComponentListAlojables = new ActivityComponentListAlojables();
                     ActivityComponentListAlojables.Id = _contador;
@@ -546,11 +664,11 @@ namespace AutoDischange.ViewModel.Helpers
                             ActivityComponentListAlojables.DischangeComponentName.Add(item);
                             _contador++;
                         }
-                        
+
                     }
 
                     ActivityComponentListAlojablesListTask.Add(ActivityComponentListAlojables);
-                   
+
                 }
 
                 return ActivityComponentListAlojablesListTask;
@@ -559,7 +677,6 @@ namespace AutoDischange.ViewModel.Helpers
 
             return await task0;
         }
-
         //ListadoConfigurables Sheet
         private static async Task<List<ActivityComponentListConfigurables>> ListConfigurables(List<string> listInput,string envExcel)
         {
@@ -573,6 +690,43 @@ namespace AutoDischange.ViewModel.Helpers
                 foreach (string item in listInput)
                 {
                    
+                    //List<DischangePath> dischangePathListTemp = (DatabaseHelper.Read<DischangePath>()).Where(n => n.Path.Contains($"{item}")).ToList();
+                    ActivityComponentConfigurables = new ActivityComponentListConfigurables();
+                    ActivityComponentConfigurables.Id = _contador;
+                    ActivityComponentConfigurables.Workbook = "ListadoConfigurables";
+                    ActivityComponentConfigurables.ComponentEnv = envExcel.ToUpper();
+
+                    if (!item.Contains("Upgrade") && !item.Contains(".deploy"))
+                    {
+                        ActivityComponentConfigurables.DischangeComponentName.Add(item);
+                        
+                    }
+                    ActivityComponentListConfigurablesList.Add(ActivityComponentConfigurables);
+                    _contador++;
+                }
+                return ActivityComponentListConfigurablesList;
+            });
+            task0.Start();
+            
+
+            return await task0;
+        }
+        /***
+         * 
+         * 
+         * */
+        private static async Task<List<ActivityComponentListConfigurables>> ListConfigurablesOld(List<string> listInput, string envExcel)
+        {
+
+
+            Task<List<ActivityComponentListConfigurables>> task0 = new Task<List<ActivityComponentListConfigurables>>(() =>
+            {
+                List<ActivityComponentListConfigurables> ActivityComponentListConfigurablesList = new List<ActivityComponentListConfigurables>();
+                ActivityComponentListConfigurables ActivityComponentConfigurables;
+                int _contador = 1;
+                foreach (string item in listInput)
+                {
+
                     List<DischangePath> dischangePathListTemp = (DatabaseHelper.Read<DischangePath>()).Where(n => n.Path.Contains($"{item}")).ToList();
                     ActivityComponentConfigurables = new ActivityComponentListConfigurables();
                     ActivityComponentConfigurables.Id = _contador;
@@ -608,7 +762,7 @@ namespace AutoDischange.ViewModel.Helpers
                 return ActivityComponentListConfigurablesList;
             });
             task0.Start();
-            
+
 
             return await task0;
         }
@@ -1219,7 +1373,12 @@ namespace AutoDischange.ViewModel.Helpers
 
                     ActivityComponentPreProList.Add(ActivityComponentPrePro);
 
-                   
+                    ActivityComponentPrePro.PendindActivity = $" {int.Parse(_pendingActivity) + 1 }";
+                    ActivityComponentPrePro.rst.AppendText($"Prender pools  ", ActivityComponentPrePro.font);
+                    ActivityComponentPrePro.rst.AppendText($"de todos los servidores.");
+                    //ActivityComponentPrePro.Activity = $@"<b>Bajar pools</b> de todos los servidores.";
+                    ActivityComponentPreProList.Add(ActivityComponentPrePro);
+
                 }
                 else
                 {   //PRO
@@ -1287,7 +1446,12 @@ namespace AutoDischange.ViewModel.Helpers
                     //ActivityComponentPrePro.Activity += $@"Esperar validación para continuar con la siguiente actividad.{ System.Environment.NewLine}";
                     ActivityComponentPreProList.Add(ActivityComponentPrePro);
 
-                    
+                    ActivityComponentPrePro.PendindActivity = $" {int.Parse(_pendingActivity) + 1 }";
+                    ActivityComponentPrePro.rst.AppendText($"Prender pools  ", ActivityComponentPrePro.font);
+                    ActivityComponentPrePro.rst.AppendText($"de todos los servidores.");
+                    //ActivityComponentPrePro.Activity = $@"<b>Bajar pools</b> de todos los servidores.";
+                    ActivityComponentPreProList.Add(ActivityComponentPrePro);
+
                 }
 
                 return ActivityComponentPreProList;

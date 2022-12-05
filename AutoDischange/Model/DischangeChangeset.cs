@@ -13,6 +13,16 @@ namespace AutoDischange.Model
         public int Id { get; set; }
         public string Changeset { get; set; }
         public string Branch { get; set; }
+
+    }
+
+    public class DischangeChangeset2 : TfsModelDetail
+    {
+        [PrimaryKey, AutoIncrement]
+        public int Id { get; set; }
+        public string Changeset { get; set; }
+        public string Branch { get; set; }
+
     }
 
     public class BranchJenkinsExcel

@@ -106,14 +106,14 @@ namespace AutoDischange.ViewModel
             EnvEntrega = "PRE";
             ActivityPathComponent = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile);
 
-            List<DischangeChangeset> DischangeChangeset = (DatabaseHelper.Read<DischangeChangeset>()).ToList();
-            if (DischangeChangeset.Any())
-            {
-                foreach (DischangeChangeset item in DischangeChangeset)
-                {
-                    DischangeChangesets.Add(item);
-                }
-            }
+            //List<DischangeChangeset> DischangeChangeset = (DatabaseHelper.Read<DischangeChangeset>()).ToList();
+            //if (DischangeChangeset.Any())
+            //{
+            //    foreach (DischangeChangeset item in DischangeChangeset)
+            //    {
+            //        DischangeChangesets.Add(item);
+            //    }
+            //}
         }
 
         public async void ExcuteActivityExport()

@@ -60,7 +60,7 @@
 
                 </Button>
 
-                <TextBlock Text="Detalle de lista de DIS-CHANGES"/>
+                <!--<TextBlock Text="Detalle de lista de DIS-CHANGES"/>
                 <ListView
                   Width="251"
                   SelectionMode="Single"
@@ -87,7 +87,7 @@
                             </Border>
                         </DataTemplate>
                     </ListView.ItemTemplate>
-                </ListView>
+                </ListView>-->
 
 
 

@@ -238,6 +238,7 @@
     <Compile Include="ViewModel\DischangeVM.cs" />
     <Compile Include="ViewModel\Helpers\ActivityHelper.cs" />
     <Compile Include="ViewModel\Helpers\CsvHelper.cs" />
+    <None Include="ViewModel\Helpers\DiffComponentHelper.cs.old" />
     <Compile Include="ViewModel\Helpers\DiffComponentHelper.cs" />
     <Compile Include="ViewModel\Helpers\DISChangeRequest.cs" />
     <Compile Include="ViewModel\Helpers\ExcelHelper.cs" />

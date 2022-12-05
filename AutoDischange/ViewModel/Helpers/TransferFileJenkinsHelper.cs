@@ -18,6 +18,10 @@ namespace AutoDischange.ViewModel.Helpers
         public static List<FilesPacksToUpdates> FilesPacksTos = new List<FilesPacksToUpdates>();
         public static List<FilesPacksToUpdates> JenkinsTransferFile(string rutaUbicFile, string rutaUsr, string branch, string changeset)
         {
+            if (rutaUbicFile == @"\Alojables\DIS\eClient\Content\Custom\BSM\JScripts.js")
+            {
+                string aaa = "aqui";
+            }
             string ext = Path.GetExtension(rutaUbicFile);
             string rutaServer = string.Empty, rutaDisChanges = string.Empty, fileExamp = string.Empty;
             string rutaPack = string.Empty, rutaI = string.Empty, rutaPack2 = string.Empty, rutaF = string.Empty;
@@ -66,14 +70,15 @@ namespace AutoDischange.ViewModel.Helpers
                 rutaF = rutaUbicFile.Contains($@"\\ci-jenkins\branches\BSM\{branch}\Pack\Latest\") ? rutaUsr + "\\Alojables\\DIS" +  rutaNoFile(rutaUbicFile.Replace($@"\\ci-jenkins\branches\BSM\{branch}\Pack\Latest", "")) : $@"{rutaUsr}{rutaPack2}";
             }
 
-
+            filesPacksToUpdates = new FilesPacksToUpdates();
+            bool flag = true;
+            string pathFileStart = $"{rutaI}{fileExamp}";
+            string pathFileEnd = rutaF + fileExamp;
             //verifico que el directorio de busqueda exista
             if (Directory.Exists(rutaI))
             {
                 if (File.Exists($"{rutaI}{fileExamp}"))
                 {
-                    string pathFileStart = $"{rutaI}{fileExamp}";
-                    string pathFileEnd = rutaF + fileExamp;
                     //Verifico que el directorio de destino exista
                     if (!Directory.Exists(rutaF))
                     {
@@ -92,34 +97,47 @@ namespace AutoDischange.ViewModel.Helpers
                     {
                         //Copiar archivo
                         File.Copy(pathFileStart, pathFileEnd, true);
-
-                        //TENGO UNA 
-                        //CREAMOS UNA LISTA PARA GUARDAR TODAS LAS RUTAS CON SU PESO Y FECHA DE CREACION
-                        filesPacksToUpdates = new FilesPacksToUpdates();
-                        filesPacksToUpdates.pathFile = pathFileEnd;
-                        filesPacksToUpdates.nameFile = fileExamp;
-                        FileInfo fileInfo = new FileInfo(pathFileStart);
-                        filesPacksToUpdates.dateTimeFile = fileInfo.LastWriteTime;
-                        filesPacksToUpdates.weightFile = (int)fileInfo.Length;
-                        filesPacksToUpdates.changeset = changeset;
-                        filesPacksToUpdates.branchUse = branch;
-                        filesPacksToUpdates.Confirm = true;
-                        FilesPacksTos.Add(filesPacksToUpdates);
                     }
                     else
                     {
+                        flag = false;
                         Log4net.log.Error($@"El archivo {fileExamp} no esta en la ruta {rutaI}");
                     }
+                    //CREAMOS UNA LISTA PARA GUARDAR TODAS LAS RUTAS CON SU PESO Y FECHA DE CREACION
                 }
                 else
                 {
+                    flag = false;
                     Log4net.log.Error($@"El archivo {fileExamp} no esta en la ruta {rutaI}");
                 }
             }
             else
             {
+                flag = false;
                 Log4net.log.Error($@"El directorio {rutaI} donde quiere acceder no existe");
             }
+
+            filesPacksToUpdates.pathFile = pathFileEnd;
+            filesPacksToUpdates.nameFile = fileExamp;
+            if (flag)
+            {
+                FileInfo fileInfo = new FileInfo(pathFileStart);
+                filesPacksToUpdates.dateTimeFile = fileInfo.LastWriteTime;
+                filesPacksToUpdates.weightFile = (int)fileInfo.Length;
+            }
+            else
+            {
+                //Verifico que el directorio de destino exista
+                if (!Directory.Exists(rutaUsr))
+                {
+                    //Crear el directorio
+                    Directory.CreateDirectory(rutaUsr);
+                }
+            }
+            filesPacksToUpdates.changeset = changeset;
+            filesPacksToUpdates.branchUse = branch;
+            filesPacksToUpdates.Confirm = flag;
+            FilesPacksTos.Add(filesPacksToUpdates);
             return FilesPacksTos;
         }
         public static string nameFile(string url)
@@ -191,5 +209,10 @@ namespace AutoDischange.ViewModel.Helpers
         public DateTime dateTimeFile { get; set; }
         public int weightFile { get; set; }
         public bool Confirm { get; set; } = false;
+
+        public static implicit operator List<object>(FilesPacksToUpdates v)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

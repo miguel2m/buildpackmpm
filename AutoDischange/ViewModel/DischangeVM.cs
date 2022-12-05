@@ -235,6 +235,10 @@ namespace AutoDischange.ViewModel
                             {
                                 if (itemLocal.path.Contains(SelectedChangeset.Branch))
                                 {
+                                    if (itemLocal.changetype.Contains("delete, merge"))
+                                    {
+                                        itemLocal.path += " [Fusionar mediante combinación, eliminar]";
+                                    }
                                     TfsList.Add(itemLocal);
                                 }
                             }
@@ -273,6 +277,11 @@ namespace AutoDischange.ViewModel
                     JenkinsListPath.Clear();
                     string valueString = String.Empty, nameFile2 = String.Empty;
                     ext = Path.GetExtension(TfsSelected.path);
+                    if (ext.Contains(" [Fusionar mediante combinación, eliminar]"))
+                    {
+                        ext = ext.Replace(" [Fusionar mediante combinación, eliminar]", "");
+                        TfsSelected.path = TfsSelected.path.Replace(" [Fusionar mediante combinación, eliminar]", "");
+                    }
                     if (ext == ".cs")
                     {
                         List<string> listValue = UtilHelper.fileList(TfsSelected.path, '/');
@@ -357,7 +366,7 @@ namespace AutoDischange.ViewModel
                                     }
                                 }
                             }
-                            else if (itemLocal.Path.Contains("customer-operation-services.xml")) 
+                            else if (itemLocal.Path.Contains("customer-operation-services.xml"))
                             {
                                 if (itemLocal.Path.Contains("Alojables"))
                                 {

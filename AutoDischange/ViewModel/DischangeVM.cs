@@ -308,7 +308,11 @@ namespace AutoDischange.ViewModel
                         else
                         {
                             valueString = UtilHelper.nameFile(TfsSelected.path, '/');
-                        }                        
+                        }
+                    }
+                    else if (ext == ".config" && TfsSelected.path.Contains("mpm.eClient.ecPortal.Web"))
+                    {
+                        valueString = $@"\eClient\{UtilHelper.nameFile(TfsSelected.path, '/')}";
                     }
                     else
                     {
@@ -459,6 +463,21 @@ namespace AutoDischange.ViewModel
                     {
                         dischangePath.Path = $@"\Alojables\DIS\eClient\bin\{valueString}";
                         ComponentList.Add(dischangePath);
+                    }
+                    if (tfsSelected.path.Contains(@"/Configuracion/Procesos/"))
+                    {
+                        dischangePath.Path = $@"\Alojables\DIS\InstallBSM\Resources{valueString}";
+                        ComponentList.Add(dischangePath);
+                        //guardar en la BD Guia de Ubicaciones
+                        _ = DatabaseHelper.InsertDischange(dischangePath);
+                    }
+                    if (tfsSelected.path.Contains("/mpm.eClient.ecPortal.Web/Web.config"))
+                    {
+                        dischangePath.Path = $@"\Alojables\DIS{valueString}";
+                        ComponentList.Add(dischangePath);
+                        //guardar en la BD Guia de Ubicaciones
+                        _ = DatabaseHelper.InsertDischange(dischangePath);
+
                     }
                 }
             }

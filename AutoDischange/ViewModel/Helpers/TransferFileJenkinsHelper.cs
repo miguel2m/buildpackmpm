@@ -18,10 +18,6 @@ namespace AutoDischange.ViewModel.Helpers
         public static List<FilesPacksToUpdates> FilesPacksTos = new List<FilesPacksToUpdates>();
         public static List<FilesPacksToUpdates> JenkinsTransferFile(string rutaUbicFile, string rutaUsr, string branch, string changeset)
         {
-            if (rutaUbicFile == @"\Alojables\DIS\eClient\Content\Custom\BSM\JScripts.js")
-            {
-                string aaa = "aqui";
-            }
             string ext = Path.GetExtension(rutaUbicFile);
             string rutaServer = string.Empty, rutaDisChanges = string.Empty, fileExamp = string.Empty;
             string rutaPack = string.Empty, rutaI = string.Empty, rutaPack2 = string.Empty, rutaF = string.Empty;

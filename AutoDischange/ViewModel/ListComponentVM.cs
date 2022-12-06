@@ -213,7 +213,8 @@ namespace AutoDischange.ViewModel
                         {
                             ListComponentStatus = $"Cargando datos de TFS.";
                             List<string> list = new List<string>();
-                            TodosItemTfs.Sort(delegate (TfsItem x, TfsItem y) {
+                            TodosItemTfs.Sort(delegate (TfsItem x, TfsItem y)
+                            {
                                 return x.version.CompareTo(y.version);
                             });
                             foreach (TfsItem item in TodosItemTfs)
@@ -293,6 +294,7 @@ namespace AutoDischange.ViewModel
 
                                 //METODO PARA GENERAR EL EXCEL
                                 string rutaH = rutaCont2.FirstOrDefault(n => n.Contains(bbranch.NameBranch));
+
                                 DetallarResultadoPack(rutaH);
                                 FilesPacksTos.Clear();
                             }
@@ -385,24 +387,27 @@ namespace AutoDischange.ViewModel
             IEnumerable<IGrouping<string, FilesPacksToUpdates>> GroupedByFiles = FilesPacksTos.GroupBy(user => user.nameFile);
             foreach (IGrouping<string, FilesPacksToUpdates> nameFileKey in GroupedByFiles)
             {
-                int cantFiles = FilesPacksTos.Where(x => x.nameFile == nameFileKey.Key).Count();
-                if (cantFiles > 1)
+                if (!nameFileKey.Key.Contains(".config"))
                 {
-                    FilesPacksToUpdates mostCurrentFile = FilesPacksTos.Where(x => x.nameFile == nameFileKey.Key).OrderByDescending(y => y.dateTimeFile).FirstOrDefault();
-
-                    //ruta inicial
-                    string mostCurrentPathFile = mostCurrentFile.pathFile;
-                    DateTime mostCurrentDateTimeFile = mostCurrentFile.dateTimeFile;
-                    foreach (FilesPacksToUpdates item in nameFileKey)
+                    int cantFiles = FilesPacksTos.Where(x => x.nameFile == nameFileKey.Key).Count();
+                    if (cantFiles > 1)
                     {
-                        if (mostCurrentPathFile != item.pathFile && mostCurrentDateTimeFile != item.dateTimeFile)
+                        FilesPacksToUpdates mostCurrentFile = FilesPacksTos.Where(x => x.nameFile == nameFileKey.Key).OrderByDescending(y => y.dateTimeFile).FirstOrDefault();
+
+                        //ruta inicial
+                        string mostCurrentPathFile = mostCurrentFile.pathFile;
+                        DateTime mostCurrentDateTimeFile = mostCurrentFile.dateTimeFile;
+                        foreach (FilesPacksToUpdates item in nameFileKey)
                         {
-                            if (File.Exists(item.pathFile))
+                            if (mostCurrentPathFile != item.pathFile && mostCurrentDateTimeFile != item.dateTimeFile)
                             {
-                                File.SetAttributes(item.pathFile, FileAttributes.Normal);
-                                File.Delete(item.pathFile);
+                                if (File.Exists(item.pathFile))
+                                {
+                                    File.SetAttributes(item.pathFile, FileAttributes.Normal);
+                                    File.Delete(item.pathFile);
+                                }
+                                File.Copy(mostCurrentPathFile, item.pathFile);
                             }
-                            File.Copy(mostCurrentPathFile, item.pathFile);
                         }
                     }
                 }
@@ -412,116 +417,62 @@ namespace AutoDischange.ViewModel
         private void CargarPathGU(string ext, string findTfsBranch, ListComponent listComponent, string valueString, TfsItem item, List<DischangePath> dischangePathList, string cad)
         {
             bool flag = false;
+            string rutaConf = string.Empty;
             DischangePath dischangePath = new DischangePath();
-            if (ext == ".sql")
+
+            //1ro Busco en la Guia de Ubicaciones
+            dischangePathList = DatabaseHelper.Read<DischangePath>().Where(n => n.Path.Contains(valueString) && !n.Path.Contains("\\DIS\\Upgrade\\")).ToList();
+            if (dischangePathList.Count > 0)
             {
-                if (item.path.Contains(findTfsBranch))
-                {
-                    ExtraerBranchTFS2(valueString, item, findTfsBranch);
-                }
-                AddPathGu(findTfsBranch);
-            }
-            else
-            {
-                dischangePathList = DatabaseHelper.Read<DischangePath>().Where(n => n.Path.Contains(valueString) && !n.Path.Contains("\\DIS\\Upgrade\\")).ToList();
-                string rutaConf = string.Empty;
-
-                // TENGO UN ARCHIVO EN EL TFS PERO NO TENGO LA RUTA EN LA GUIA DE UBICACIONES
-                NoGuiaUbicaciones(dischangePathList, valueString, item, rutaConf, findTfsBranch, cad, ext);
-
-                //QUIERO EVALUAR SI LA CARPETA CONFIGURABLE ESTA COMPLETA EN LOS 4 AMBIENTES
-                if (dischangePathList.Where(n => n.Path.Contains("\\Configurables\\Cer")).Count() > 0 &&
-                    dischangePathList.Where(n => n.Path.Contains("\\Configurables\\Pre")).Count() > 0 &&
-                    dischangePathList.Where(n => n.Path.Contains("\\Configurables\\Pro")).Count() > 0 &&
-                    (dischangePathList.Where(n => n.Path.Contains("\\Configurables\\Des")).Count() == 0 || dischangePathList.Where(n => n.Path.Contains("\\Configurables\\Desa")).Count() == 0))
-                {
-                    foreach (DischangePath item2 in dischangePathList)
-                    {
-                        if (!item2.Path.Contains("custom-context.xml") && !item2.Path.Contains("customer-operation-services.xml"))
-                        {
-                            if (!item2.Path.Contains("Alojables"))
-                            {
-                                if (item2.Path.Contains("Cer"))
-                                {
-                                    rutaConf = item2.Path;
-                                    rutaConf = rutaConf.Replace("Cer", "Desa");
-                                }
-                            }
-                        }
-                    }
-                    if (rutaConf != "")
-                    {
-                        if (item.path.Contains(findTfsBranch))
-                        {
-                            cad = UtilHelper.extraerBranchTfs(rutaConf, '/', ext, findTfsBranch);
-                            cad += rutaConf;
-                            ExtraerBranchTFS2(valueString, item, findTfsBranch);
-
-                        }
-                        AddPathGu(findTfsBranch);
-                    }
-                }
+                //CREO LA RUTA PARA LOS COMPONENTES QUE VAN A [DESA] EN LOS CONFIGURABLES EN CASO DE QUE NO EXISTA
+                ConfigNoDesa(dischangePathList, rutaConf, item, findTfsBranch, cad, ext);
 
                 for (int i = 0; i < dischangePathList.Count; i++)
                 {
+                    //ESTE ARCHIVO SOLO PUEDE SER ALOJABLE
                     if (dischangePathList[i].Path.Contains("custom-context.xml"))
                     {
                         if (!dischangePathList[i].Path.Contains("Configurables") && !dischangePathList[i].Path.Contains("BSM"))
                         {
-                            if (item.path.Contains("mpm.seg.Customers.eClient.Web") && dischangePathList[i].Path.Contains(@"eClient\CustomerSettings"))
-                            {
-                                ExtraerBranchTFS2(dischangePathList[i].Path, item, findTfsBranch);
-                            }
-                            else if (item.path.Contains("mpm.seg.Customers.DataRecovers") && dischangePathList[i].Path.Contains(@"ecDataProvider\CustomerSettings"))
-                            {
-                                ExtraerBranchTFS2(dischangePathList[i].Path, item, findTfsBranch);
-                            }
+                            ExtraerBranchTFS2(dischangePathList[i].Path, item, findTfsBranch);
                             AddPathGu(findTfsBranch);
                         }
                     }
-                    else if (dischangePathList[i].Path.Contains("customer-operation-services.xml") && dischangePathList[i].Path.Contains("Alojables"))
+                    //ESTE ARCHIVO SOLO PUEDE SER ALOJABLE
+                    else if (dischangePathList[i].Path.Contains("customer-operation-services.xml"))
                     {
-                        ExtraerBranchTFS2(dischangePathList[i].Path, item, findTfsBranch);
-                        AddPathGu(findTfsBranch);
+                        if (dischangePathList[i].Path.Contains("Alojables"))
+                        {
+                            ExtraerBranchTFS2(dischangePathList[i].Path, item, findTfsBranch);
+                            AddPathGu(findTfsBranch);
+                        }
                     }
+                    //SOLO CONFIGURABLES Y CMD
                     else if (ext == ".config" || ext == ".cmd")
                     {
-                        foreach (BranchUse item2 in _branchUses)
+                        //SI EL PATH CONTIENE ESTA CONDICION 
+                        if (item.path.Contains("mpm.eClient.ecPortal.Web"))
                         {
-                            if (item.path.Contains(item2.NameBranch))
+                            if (item.path.Contains(findTfsBranch))
                             {
-                                cad = UtilHelper.extraerBranchTfs(dischangePathList[i].Path, '/', ext, item2.NameBranch);
+                                valueString = $@"\Alojables\DIS\eClient\{UtilHelper.nameFile(item.path, '/')}";
+                                ExtraerBranchTFS2(valueString, item, findTfsBranch);
+                            }
+                        }
+                        else
+                        {
+                            if (item.path.Contains(findTfsBranch))
+                            {
+                                cad = UtilHelper.extraerBranchTfs(dischangePathList[i].Path, '/', ext, findTfsBranch);
                                 cad += dischangePathList[i].Path;
                                 //CORRECCION DE NOMBRE DE ARCHIVOS DE LA GUIA DE UBICACION PARA LUEGO BUSCAR EN EL JENKINS
-                                if (cad.Contains(@"\Des\"))
-                                {
-                                    cad = cad.Replace(@"\Des\", @"\DESA\");
-                                }
-                                else if (cad.Contains(@"\Desa\"))
-                                {
-                                    cad = cad.Replace(@"\Desa\", @"\DESA\");
-                                }
-                                else if (cad.Contains(@"\Cer\"))
-                                {
-                                    cad = cad.Replace(@"\Cer\", @"\CERT\");
-                                }
-                                else if (cad.Contains(@"\Cert\"))
-                                {
-                                    cad = cad.Replace(@"\Cert\", @"\CERT\");
-                                }
-                                else if (cad.Contains(@"\Pre\"))
-                                {
-                                    cad = cad.Replace(@"\Pre\", @"\PRE\");
-                                }
-                                else if (cad.Contains(@"\Pro\"))
-                                {
-                                    cad = cad.Replace(@"\Pro\", @"\PRO\");
-                                }
+                                CorregirNombrePathConfig(cad);
                                 ExtraerBranchTFS2(cad, item, findTfsBranch);
                             }
                         }
                         AddPathGu(findTfsBranch);
                     }
+                    //SI HAY UN JS REPETIDO MAS DE UNA VEZ
                     else if (ext == ".js" && dischangePathList.Count > 1)
                     {
                         flag = ObtenerSoloModificado(dischangePathList[i].Path, item, flag, findTfsBranch);
@@ -530,10 +481,102 @@ namespace AutoDischange.ViewModel
                             AddPathGu(findTfsBranch);
                         }
                     }
+                    //PARA ESTOS DOS ARCHIVOS EN LA GUIA DE UBICACION NO ESTA LA RUTA DE CALCULOS SERVICES 
+                    else if (valueString == "mpm.seg.Customers.DataRecovers.dll" || valueString == "mpm.seg.Customers.DataRecovers.Ahorro.dll")
+                    {
+                        if (dischangePathList.Where(n => n.Path.Contains("\\CalculusServices\\")).Count() == 0)
+                        {
+                            rutaConf = $@"\CalculusServices\bin\{valueString}";
+                            if (item.path.Contains(findTfsBranch))
+                            {
+                                cad = UtilHelper.extraerBranchTfs(rutaConf, '/', ext, findTfsBranch);
+                                cad += rutaConf;
+                                ExtraerBranchTFS2(cad, item, findTfsBranch);
+                            }
+                            AddPathGu(findTfsBranch);
+                        }
+                    }
                     else
                     {
                         ExtraerBranchTFS2(dischangePathList[i].Path, item, findTfsBranch);
                         AddPathGu(findTfsBranch);
+                    }
+                }
+            }
+            else
+            {
+                if (ext == ".sql")
+                {
+                    if (item.path.Contains(findTfsBranch))
+                    {
+                        ExtraerBranchTFS2(valueString, item, findTfsBranch);
+                    }
+                    AddPathGu(findTfsBranch);
+                }
+                else
+                {
+                    //TENGO UN ARCHIVO EN EL TFS PERO NO ESTA LA RUTA EN LA GUIA DE UBICACIONES
+                    NoGuiaUbicaciones(dischangePathList, valueString, item, rutaConf, findTfsBranch, cad, ext);
+                }
+            }
+        }
+
+        private void CorregirNombrePathConfig(string cad)
+        {
+            if (cad.Contains(@"\Des\"))
+            {
+                cad = cad.Replace(@"\Des\", @"\DESA\");
+            }
+            else if (cad.Contains(@"\Desa\"))
+            {
+                cad = cad.Replace(@"\Desa\", @"\DESA\");
+            }
+            else if (cad.Contains(@"\Cer\"))
+            {
+                cad = cad.Replace(@"\Cer\", @"\CERT\");
+            }
+            else if (cad.Contains(@"\Cert\"))
+            {
+                cad = cad.Replace(@"\Cert\", @"\CERT\");
+            }
+            else if (cad.Contains(@"\Pre\"))
+            {
+                cad = cad.Replace(@"\Pre\", @"\PRE\");
+            }
+            else if (cad.Contains(@"\Pro\"))
+            {
+                cad = cad.Replace(@"\Pro\", @"\PRO\");
+            }
+        }
+
+        private void ConfigNoDesa(List<DischangePath> dischangePathList, string rutaConf, TfsItem item, string findTfsBranch, string cad, string ext)
+        {
+            //QUIERO EVALUAR SI LA CARPETA CONFIGURABLE ESTA COMPLETA EN LOS 4 AMBIENTES
+            if ((dischangePathList.Where(n => n.Path.Contains("\\Configurables\\Cer")).Count() > 0 || dischangePathList.Where(n => n.Path.Contains("\\Configurables\\Cert")).Count() > 0) &&
+                dischangePathList.Where(n => n.Path.Contains("\\Configurables\\Pre")).Count() > 0 &&
+                dischangePathList.Where(n => n.Path.Contains("\\Configurables\\Pro")).Count() > 0 &&
+                (dischangePathList.Where(n => n.Path.Contains("\\Configurables\\Des")).Count() == 0 ||
+                dischangePathList.Where(n => n.Path.Contains("\\Configurables\\Desa")).Count() == 0))
+            {
+                if (dischangePathList.Where(a => a.Path.Contains("custom-context.xml")).Count() == 0 &&
+                    dischangePathList.Where(a => a.Path.Contains("customer-operation-services.xml")).Count() == 0)
+                {
+                    foreach (DischangePath item2 in dischangePathList)
+                    {
+                        if (item2.Path.Contains("Cer"))
+                        {
+                            rutaConf = item2.Path;
+                            rutaConf = rutaConf.Replace("Cer", "DESA");
+
+                            if (item.path.Contains(findTfsBranch))
+                            {
+                                cad = UtilHelper.extraerBranchTfs(rutaConf, '/', ext, findTfsBranch);
+                                cad += rutaConf;
+                                ExtraerBranchTFS2(cad, item, findTfsBranch);
+
+                            }
+                            AddPathGu(findTfsBranch);
+                        }
                     }
                 }
             }
@@ -569,46 +612,34 @@ namespace AutoDischange.ViewModel
 
         private void NoGuiaUbicaciones(List<DischangePath> dischangePathList, string valueString, TfsItem item, string rutaConf, string findTfsBranch, string cad, string ext)
         {
-            if (dischangePathList.Count() == 0 && !item.path.Contains("BSM Robot"))
+            List<string> lstRutaConf = new List<string>();
+            if (!item.path.Contains("BSM Robot"))
             {
                 if (valueString.Count() > 0)
                 {
-                    if (item.path.Contains("/Mappings/General/"))
+                    if (item.path.Contains(".hbm.xml"))
                     {
-                        rutaConf = $@"\Batch\Mappings\Partials\General\{valueString}";
-                    }
-                    if (rutaConf != null)
-                    {
+                        //OBTENGO UNA PARTE DE LA RUTA DEL TFS
+                        int positionMap = item.path.IndexOf("Mappings");
+                        string rutaTfs = item.path.Substring(positionMap, item.path.Length - positionMap).Replace(@"/", @"\");
+                        lstRutaConf.Add($@"\Batch\{rutaTfs}");
+                        lstRutaConf.Add($@"\SegServices\bin\{rutaTfs}");
                         if (item.path.Contains(findTfsBranch))
                         {
-                            cad = UtilHelper.extraerBranchTfs(rutaConf, '/', ext, findTfsBranch);
-                            cad += rutaConf;
-                            ExtraerBranchTFS2(cad, item, findTfsBranch);
+                            foreach (string lstRuta in lstRutaConf)
+                            {
+                                cad = UtilHelper.extraerBranchTfs(lstRuta, '/', ext, findTfsBranch);
+                                cad += lstRuta;
+                                ExtraerBranchTFS2(cad, item, findTfsBranch);
+                                AddPathGu(findTfsBranch);
+                            }
                         }
-                        AddPathGu(findTfsBranch);
                     }
                 }
             }
             else
             {
-                if (item.path.Contains("BSM Robot"))
-                {
-                    Log4net.log.Error($@"No es parte de los componentes --> {item.path}");
-                }
-                if (valueString == "mpm.seg.Customers.DataRecovers.dll" || valueString == "mpm.seg.Customers.DataRecovers.Ahorro.dll")
-                {
-                    if (dischangePathList.Where(n => n.Path.Contains("\\CalculusServices\\")).Count() == 0)
-                    {
-                        rutaConf = $@"\CalculusServices\bin\{valueString}";
-                        if (item.path.Contains(findTfsBranch))
-                        {
-                            cad = UtilHelper.extraerBranchTfs(rutaConf, '/', ext, findTfsBranch);
-                            cad += rutaConf;
-                            ExtraerBranchTFS2(cad, item, findTfsBranch);
-                        }
-                        AddPathGu(findTfsBranch);
-                    }
-                }
+                Log4net.log.Error($@"No es parte de los componentes --> {item.path}");
             }
         }
 
@@ -709,13 +740,10 @@ namespace AutoDischange.ViewModel
 
             bool branchUse = _branchUses.FirstOrDefault(c => c.NameBranch == findTfsBranch).UseBranch;
 
-            if (branchUse)
+            if (branchUse && item.path.Contains(findTfsBranch))
             {
-                if (item.path.Contains(findTfsBranch))
-                {
-                    ListComponent.Branch = findTfsBranch;
-                    ListComponent.Confirm = branchUse;
-                }
+                ListComponent.Branch = findTfsBranch;
+                ListComponent.Confirm = branchUse;
             }
         }
 

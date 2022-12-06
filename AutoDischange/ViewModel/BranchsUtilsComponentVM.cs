@@ -50,12 +50,14 @@ namespace AutoDischange.ViewModel
         {
             try
             {
+                Log4net.log.Info("Inicio de carga de branches");
                 StatusExcel = "Cargando Archivo...";
                 BranchUtilsComponentStatus = false;
                 BranchUtilsComponentStatus = await CsvHelper.ReadCSVBranch_Utiles(filePath);
                 BranchUtilsComponentStatus = true;
                 StatusExcel = "Carga Finalizada.";
                 MessageBox.Show("Listo ", "Listo", MessageBoxButton.OK, MessageBoxImage.Information);
+                Log4net.log.Info("Fin de carga de branches");
 
             }
             catch (Exception ex)
@@ -64,6 +66,7 @@ namespace AutoDischange.ViewModel
                 BranchUtilsComponentStatus = true;
                 StatusExcel = $"Error en Excel: { ex.Message}.";
                 MessageBox.Show("Error en Excel: " + ex.Message, "Error en Excel", MessageBoxButton.OK, MessageBoxImage.Error);
+                Log4net.log.Info("Fin de carga de branches");
             }
         }
 

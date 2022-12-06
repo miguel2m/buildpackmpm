@@ -120,6 +120,7 @@ namespace AutoDischange.ViewModel
         {
             try
             {
+                Log4net.log.Info("Inicio de reporte de actividades");
                 //Console.WriteLine(EnvEntrega);
                 ActivityStatus = $"Leyendo paquetes";
                 ActivityVisible = false;
@@ -144,6 +145,7 @@ namespace AutoDischange.ViewModel
                 ActivityVisible = true;
                 ActivityStatus = $"Tarea comparación de paquetes finalizada";
                 MessageBox.Show("Listo ", "Listo", MessageBoxButton.OK, MessageBoxImage.Information);
+                Log4net.log.Info("Fin de reporte de actividades");
             }
             catch (Exception ex)
             {
@@ -151,6 +153,7 @@ namespace AutoDischange.ViewModel
                 ActivityVisible = true;
                 ActivityStatus = $"Error al ejecutar Excel de entrega: { ex.Message}.";
                 MessageBox.Show("Error al ejecutar Excel de entrega: " + ex.Message, "Error al ejecutar Excel de entrega", MessageBoxButton.OK, MessageBoxImage.Error);
+                Log4net.log.Info("Fin de reporte de actividades");
             }
         }
 

@@ -118,12 +118,14 @@ namespace AutoDischange.ViewModel
 
             try
             {
+                Log4net.log.Info("Inicio de comparación de paquetes");
                 DiffStatus = $"Leyendo paquetes";
                 DiffVisible = false;
                 await DiffComponentHelper.DiffFiles(DiffComponent, PathDownload);
                 DiffVisible = true;
                 DiffStatus = $"Tarea comparación de paquetes finalizada";
                 MessageBox.Show("Listo ", "Listo", MessageBoxButton.OK, MessageBoxImage.Information);
+                Log4net.log.Info("Fin de comparación de paquetes");
             }
             catch (Exception ex)
             {
@@ -132,6 +134,7 @@ namespace AutoDischange.ViewModel
                 DiffVisible = true;
                 DiffStatus = $"Error al ejecutar comparación de paquetes: { ex.Message}.";
                 MessageBox.Show("Error al ejecutar comparación de paquetes : " + ex.Message, "Error al ejecutar comparación de paquetes", MessageBoxButton.OK, MessageBoxImage.Error);
+                Log4net.log.Info("Fin de comparación de paquetes");
             }
             
 

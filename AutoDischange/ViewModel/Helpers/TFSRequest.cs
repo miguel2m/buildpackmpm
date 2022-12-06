@@ -30,6 +30,7 @@ namespace AutoDischange.ViewModel.Helpers
         public static async Task<List<TfsItem>> GetChangeset(string changeset)
         {
             //ConfigurationManager.AppSettings["rutaJenkins"];
+            Log4net.log.Info("Inicio de consulta de TFS cahngeset: "+ changeset);
 
             List<TfsItem> tfsReponse = new List<TfsItem>();
 
@@ -49,6 +50,7 @@ namespace AutoDischange.ViewModel.Helpers
                 var response = await client.GetAsync(url);
                 if (!response.IsSuccessStatusCode)
                 {
+                    Log4net.log.Error("Error de consulta de TFS cahngeset: " + changeset+" estatus request: "+ response.IsSuccessStatusCode);
                     throw new HttpRequestException(response.StatusCode.ToString());
                 }
                 string json = await response.Content.ReadAsStringAsync();
@@ -66,12 +68,14 @@ namespace AutoDischange.ViewModel.Helpers
                     }
                 }
             }
+            Log4net.log.Info("Fin de consulta de TFS cahngeset: " + changeset);
             return tfsReponse;
         }
 
         //GET Changeset
         public static async Task<TfsModelDetail> GetChangesetAuthor(string changeset)
         {
+            Log4net.log.Info("Inicio de consulta de TFS cahngeset Autor: " + changeset);
             //ConfigurationManager.AppSettings["rutaJenkins"];
             TfsModelDetail tfsReponse = new TfsModelDetail();
 
@@ -89,6 +93,7 @@ namespace AutoDischange.ViewModel.Helpers
                 var responseDetail = await client.GetAsync(urlDetail);
                 if (!responseDetail.IsSuccessStatusCode)
                 {
+                    Log4net.log.Error("Error de consulta de TFS cahngeset Autor: " + changeset + " estatus request: " + responseDetail.IsSuccessStatusCode);
                     throw new HttpRequestException(responseDetail.StatusCode.ToString());
                 }
 
@@ -98,6 +103,7 @@ namespace AutoDischange.ViewModel.Helpers
                 //Console.WriteLine(tfsReponseVarDetail);
                 tfsReponse = tfsReponseVarDetail;
             }
+            Log4net.log.Info("Fin de consulta de TFS cahngeset Autor: " + changeset);
             return tfsReponse;
         }
     }

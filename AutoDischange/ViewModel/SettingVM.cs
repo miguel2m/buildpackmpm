@@ -49,7 +49,7 @@ namespace AutoDischange.ViewModel
         {
             try
             {
-               
+                Log4net.log.Info("Inicio de sincronización de base de datos");
                 StatusExcel = "Cargando Excel....";
                 SyncStatus = false ;
                 //SyncStatus = await ExcelHelper.ReadExcelDIS_Changes(filePath);
@@ -58,6 +58,7 @@ namespace AutoDischange.ViewModel
                 //string dbFile = Path.Combine(Environment.CurrentDirectory, "dischangesPath.db3");
                 StatusExcel = "Carga Excel finalizada.";
                 MessageBox.Show("Listo ", "Listo", MessageBoxButton.OK, MessageBoxImage.Information);
+                Log4net.log.Info("Fin de sincronización de base de datos");
                 //Console.WriteLine(File.Exists(dbFile));
                 //if (File.Exists(dbFile) == false)
                 //{
@@ -76,6 +77,7 @@ namespace AutoDischange.ViewModel
                 SyncStatus = true;
                 StatusExcel = $"Error en Excel: { ex.Message}.";
                 MessageBox.Show("Error en Excel: " + ex.Message, "Error en Excel", MessageBoxButton.OK, MessageBoxImage.Error);
+                Log4net.log.Info("Fin de sincronización de base de datos");
             }
         }
 

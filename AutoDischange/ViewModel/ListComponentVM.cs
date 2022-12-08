@@ -219,6 +219,10 @@ namespace AutoDischange.ViewModel
                             });
                             foreach (TfsItem item in TodosItemTfs)
                             {
+                                if (item.hashValue == "xq4u8sRBez42CbBs1Yg15g==")
+                                {
+                                    int a = 0;
+                                }
                                 string findTfsBranch = BranchSeleccionadoTfs(_branchUses, item);
                                 if (findTfsBranch.Contains("Error"))
                                 {
@@ -273,10 +277,6 @@ namespace AutoDischange.ViewModel
                             ListComponentStatus = $"Transfiriendo archivos de Jenkins, para la rama {bbranch.NameBranch}.";
                             foreach (ListComponent pathFound in PathGU2)
                             {
-                                if (pathFound.Path.Contains("mpm.eClient.Shared.dll"))
-                                {
-                                    int a = 0;
-                                }
                                 if (!rutaF.Contains(pathFound.Branch))
                                 {
                                     //voy agregar el directorio donde se va a agregar el paquete del Jenkins
@@ -301,13 +301,13 @@ namespace AutoDischange.ViewModel
 
                             if (FilesPacksTos.Count > 0)
                             {
+                                //METODO PARA GENERAR EL EXCEL
+                                string rutaH = rutaCont2.FirstOrDefault(n => n.Contains(bbranch.NameBranch));
+                                DetallarResultadoPack(rutaH);
+
                                 //METODO PARA LA HOMOLOGACION DE LOS ARCHIVOS
                                 HomologarArchivos();
 
-                                //METODO PARA GENERAR EL EXCEL
-                                string rutaH = rutaCont2.FirstOrDefault(n => n.Contains(bbranch.NameBranch));
-
-                                DetallarResultadoPack(rutaH);
                                 FilesPacksTos.Clear();
                             }
                             else
@@ -463,7 +463,7 @@ namespace AutoDischange.ViewModel
                             }
                             if (flag)
                             {
-                                AddPathGu(findTfsBranch);
+                                AddPathGu(findTfsBranch, item.version);
                                 flag = false;
                             }
                         }
@@ -474,7 +474,7 @@ namespace AutoDischange.ViewModel
                         if (dischangePathList[i].Path.Contains("Alojables"))
                         {
                             ExtraerBranchTFS2(dischangePathList[i].Path, item, findTfsBranch);
-                            AddPathGu(findTfsBranch);
+                            AddPathGu(findTfsBranch, item.version);
                         }
                     }
                     //SOLO CONFIGURABLES Y CMD
@@ -500,7 +500,7 @@ namespace AutoDischange.ViewModel
                                 ExtraerBranchTFS2(cad, item, findTfsBranch);
                             }
                         }
-                        AddPathGu(findTfsBranch);
+                        AddPathGu(findTfsBranch, item.version);
                     }
                     //SI HAY UN JS REPETIDO MAS DE UNA VEZ
                     else if (ext == ".js" && dischangePathList.Count > 1)
@@ -508,7 +508,7 @@ namespace AutoDischange.ViewModel
                         flag = ObtenerSoloModificado(dischangePathList[i].Path, item, flag, findTfsBranch);
                         if (flag)
                         {
-                            AddPathGu(findTfsBranch);
+                            AddPathGu(findTfsBranch, item.version);
                         }
                     }
                     //PARA ESTOS DOS ARCHIVOS EN LA GUIA DE UBICACION NO ESTA LA RUTA DE CALCULOS SERVICES 
@@ -517,19 +517,24 @@ namespace AutoDischange.ViewModel
                         if (dischangePathList.Where(n => n.Path.Contains("\\CalculusServices\\")).Count() == 0)
                         {
                             rutaConf = $@"\CalculusServices\bin\{valueString}";
-                            if (item.path.Contains(findTfsBranch))
-                            {
-                                cad = UtilHelper.extraerBranchTfs(rutaConf, '/', ext, findTfsBranch);
-                                cad += rutaConf;
-                                ExtraerBranchTFS2(cad, item, findTfsBranch);
-                            }
-                            AddPathGu(findTfsBranch);
+                            cad = UtilHelper.extraerBranchTfs(rutaConf, '/', ext, findTfsBranch);
+                            cad += rutaConf;
                         }
+                        else
+                        {
+                            cad = dischangePathList[i].Path;
+                        }
+
+                        if (item.path.Contains(findTfsBranch))
+                        {
+                            ExtraerBranchTFS2(cad, item, findTfsBranch);
+                        }
+                        AddPathGu(findTfsBranch, item.version);
                     }
                     else
                     {
                         ExtraerBranchTFS2(dischangePathList[i].Path, item, findTfsBranch);
-                        AddPathGu(findTfsBranch);
+                        AddPathGu(findTfsBranch, item.version);
                     }
                 }
             }
@@ -541,7 +546,7 @@ namespace AutoDischange.ViewModel
                     {
                         ExtraerBranchTFS2(valueString, item, findTfsBranch);
                     }
-                    AddPathGu(findTfsBranch);
+                    AddPathGu(findTfsBranch, item.version);
                 }
                 else
                 {
@@ -595,7 +600,7 @@ namespace AutoDischange.ViewModel
                         ExtraerBranchTFS2(cad, item, findTfsBranch);
 
                     }
-                    AddPathGu(findTfsBranch);
+                    AddPathGu(findTfsBranch, item.version);
                 }
             }
             else
@@ -624,7 +629,7 @@ namespace AutoDischange.ViewModel
                                     ExtraerBranchTFS2(cad, item, findTfsBranch);
 
                                 }
-                                AddPathGu(findTfsBranch);
+                                AddPathGu(findTfsBranch, item.version);
                             }
                         }
                     }
@@ -632,7 +637,7 @@ namespace AutoDischange.ViewModel
             }
         }
 
-        private void AddPathGu(string findTfsBranch)
+        private void AddPathGu(string findTfsBranch, int version)
         {
             if (PathGU.Count == 0)
             {
@@ -640,7 +645,7 @@ namespace AutoDischange.ViewModel
             }
             else
             {
-                int canexist = PathGU.Where(n => n.Path == ListComponent.Path && n.Branch == findTfsBranch).Count();
+                int canexist = PathGU.Where(n => n.Path == ListComponent.Path && n.Branch == findTfsBranch && n.changeset == version.ToString()).Count();
                 if (canexist == 0)
                 {
                     PathGU.Add(ListComponent);
@@ -681,7 +686,7 @@ namespace AutoDischange.ViewModel
                                 cad = UtilHelper.extraerBranchTfs(lstRuta, '/', ext, findTfsBranch);
                                 cad += lstRuta;
                                 ExtraerBranchTFS2(cad, item, findTfsBranch);
-                                AddPathGu(findTfsBranch);
+                                AddPathGu(findTfsBranch, item.version);
                             }
                         }
                     }

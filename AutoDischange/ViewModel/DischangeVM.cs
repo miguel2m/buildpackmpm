@@ -469,14 +469,16 @@ namespace AutoDischange.ViewModel
                         dischangePath.Path = $@"\Alojables\DIS\InstallBSM\Resources{valueString}";
                         ComponentList.Add(dischangePath);
                         //guardar en la BD Guia de Ubicaciones
-                        _ = DatabaseHelper.InsertDischange(dischangePath);
+                        //_ = DatabaseHelper.InsertDischange(dischangePath);
+                        _ = DatabaseHelper.InsertReplaceDischange(dischangePath);
                     }
                     if (tfsSelected.path.Contains("/mpm.eClient.ecPortal.Web/Web.config"))
                     {
                         dischangePath.Path = $@"\Alojables\DIS{valueString}";
                         ComponentList.Add(dischangePath);
                         //guardar en la BD Guia de Ubicaciones
-                        _ = DatabaseHelper.InsertDischange(dischangePath);
+                        _ = DatabaseHelper.InsertReplaceDischange(dischangePath);
+                        //_ = DatabaseHelper.InsertDischange(dischangePath);
 
                     }
                 }
@@ -489,6 +491,7 @@ namespace AutoDischange.ViewModel
                     {
                         dischangePath.Path = $@"\Alojables\DIS\CalculusServices\bin\{valueString}";
                         ComponentList.Add(dischangePath);
+                        _ = DatabaseHelper.InsertReplaceDischange(dischangePath);
                     }
                 }
             }

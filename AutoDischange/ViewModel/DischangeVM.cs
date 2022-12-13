@@ -116,6 +116,7 @@ namespace AutoDischange.ViewModel
             JenkinsListPath = new ObservableCollection<JenkinsItem>();
             DischangeStatus = "Nada que hacer.";
             PackageCommand = new PackageCommand(this);
+            SelectedChangeset = new DischangeChangeset();
             //SortPackDischange.SortPack(@"C:\Users\miguelangel.medina\Documents\pack\20211118_P4.1_20221007180020\");
 
             List<DischangeChangeset> DischangeChangeset = (DatabaseHelper.Read<DischangeChangeset>()).ToList();
@@ -259,9 +260,10 @@ namespace AutoDischange.ViewModel
             DisplayName = "";
             CommentAuth = "";
             ChangeCreated = "";
-            DischangeChangeset primerChangeset = new DischangeChangeset(); 
+            DischangeChangeset primerChangeset = new DischangeChangeset();
             primerChangeset.Changeset = DischangeChangesets.FirstOrDefault().Changeset;
             primerChangeset.Branch = DischangeChangesets.FirstOrDefault().Branch;
+            SelectedChangeset = primerChangeset;
             List<TfsItem> OneItem = await TFSRequest.GetChangeset(primerChangeset.Changeset);
             TfsModelDetail Oneauthor = await TFSRequest.GetChangesetAuthor(primerChangeset.Changeset);
             DisplayName = Oneauthor.author.displayName;

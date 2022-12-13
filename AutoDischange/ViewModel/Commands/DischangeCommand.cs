@@ -43,6 +43,7 @@ namespace AutoDischange.ViewModel.Commands
             {
                 //ViewModel.GetExcel(dialog.FileName);
                 ViewModel.GetCsv(dialog.FileName);
+
                 //selectedImage.Source = new BitmapImage(new Uri(fileName));
 
                 //MakePredictionAsync(fileName);

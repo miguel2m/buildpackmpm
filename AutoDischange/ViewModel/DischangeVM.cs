@@ -18,11 +18,13 @@ namespace AutoDischange.ViewModel
     public class DischangeVM : INotifyPropertyChanged
     {
         public ObservableCollection<DischangeChangeset> DischangeChangesets { get; set; }
+
         public DischangeCommand DischangeCommand { get; set; }
 
         public PackageCommand PackageCommand { get; set; }
 
         private DischangeChangeset selectedChangeset;
+
         public DischangeChangeset SelectedChangeset
         {
             get { return selectedChangeset; }
@@ -57,6 +59,7 @@ namespace AutoDischange.ViewModel
                 OnPropertyChanged("DisplayName");
             }
         }
+
         private string commentAuth;
 
         public string CommentAuth
@@ -68,6 +71,7 @@ namespace AutoDischange.ViewModel
                 OnPropertyChanged("CommentAuth");
             }
         }
+
         private string changeCreated;
 
         public string ChangeCreated
@@ -80,11 +84,10 @@ namespace AutoDischange.ViewModel
             }
         }
 
-        public ObservableCollection<TfsItem> TfsList{ get; set; }
-
-      
+        public ObservableCollection<TfsItem> TfsList{ get; set; }      
 
         private TfsItem tfsSelected;
+
         public TfsItem TfsSelected
         {
             get { return tfsSelected; }
@@ -101,6 +104,8 @@ namespace AutoDischange.ViewModel
         public ObservableCollection<JenkinsItem> JenkinsListPath { get; set; }
 
         public List<DischangePath> DischangePathList = new List<DischangePath>();
+
+        public List<BranchUse> _branchUsesFront = new List<BranchUse>();
 
         public DischangeVM()
         {
@@ -123,80 +128,172 @@ namespace AutoDischange.ViewModel
             }
 
         }
-        public async void GetExcel(string fileName)
+        //METODO PARA VERIFICAR COMPARAR BRANCHES DEL CSV CON LOS BRANCHES UTILES
+        public void LoadBranchFront()
         {
             try
             {
-                string noData = string.Empty;
                 DischangeChangesets.Clear();
-
-                foreach (var changeset in await ExcelHelper.ReadExcel(fileName))
+                _branchUsesFront.Clear();
+                List<BranchJenkinsExcel> BranchesList = DatabaseHelper.Read<BranchJenkinsExcel>()
+                    .OrderBy(x => x.Name).ToList();
+                if (BranchesList.Count > 0)
                 {
-                    if (changeset.Branch != "" && changeset.Changeset != "")
+                    foreach (BranchJenkinsExcel item in BranchesList)
                     {
-                        DischangeChangesets.Add(changeset);
+                        _branchUsesFront.Add(new BranchUse()
+                        {
+                            NameBranch = item.Name,
+                            UseBranch = true
+                        });
                     }
-                    else
-                    {
-                        noData += changeset.Changeset + " | ";
-                    }
-                }
-                if (noData != "")
-                {
-                    DischangeStatus = $"Indicar Branch en los siguientes changeset: {noData}";
-                    DischangeStatus += "| Lista de changesets cargada.";
+                    Log4net.log.Info($"[AP-10]-Lectura de Branchs utiles para comparar con CSV cargados.");
                 }
                 else
                 {
-                    DischangeStatus = "Lista de changesets cargada.";
+                    DischangeStatus = $"[AP-10e]-No han sido cargados los datos de Branches Utiles. El proceso no continuara.";
+                    Log4net.log.Error(DischangeStatus);
+                    return;
                 }
             }
             catch (Exception ex)
             {
-                Log4net.log.Error(ex.Message);
-                DischangeStatus = $"Error en Excel: { ex.Message}.";
-                MessageBox.Show("Error en Excel: " + ex.Message, "Error en Excel", MessageBoxButton.OK, MessageBoxImage.Error);
+
+                Log4net.log.Error($"[AP-10e]-{ex.Message}");
+                DischangeStatus = $"Se ha detenido la ejecucion: {ex.Message}";
+                return;
             }
-            
         }
 
         public async void GetCsv(string fileName)
         {
             try
             {
+                //FUNCION PARA OBTENER LA LISTA DE BRANCHES DE USO
+                LoadBranchFront();
                 string noData = string.Empty;
+                bool flag = false;
                 DischangeChangesets.Clear();
-                foreach (DischangeChangeset changeset in await CsvHelper.ReadCSVChangeset(fileName))
+                //Agrego en una Lista los Changeset
+                List<DischangeChangeset> AssesChangesets = await CsvHelper.ReadCSVChangeset(fileName);
+                if (AssesChangesets.Count > 0)
                 {
-                    if (changeset.Branch != "" && changeset.Changeset != "")
+                    foreach (DischangeChangeset changeset in await CsvHelper.ReadCSVChangeset(fileName))
                     {
-                        DischangeChangesets.Add(changeset);
+                        //Evaluamos si los datos son null o si viene con espacio en blanco
+                        if ((String.IsNullOrWhiteSpace(changeset.Branch) && String.IsNullOrWhiteSpace(changeset.Changeset)) || (String.IsNullOrEmpty(changeset.Branch) && String.IsNullOrEmpty(changeset.Changeset)))
+                        {
+                            noData += "No agrego datos de changeset y branch";
+                        }
+                        else
+                        {
+                            //EVALUO SI NO TIENE BRANCH
+                            if (String.IsNullOrWhiteSpace(changeset.Branch) || String.IsNullOrEmpty(changeset.Branch))
+                            {
+                                noData += $"{changeset.Changeset}|No indico el Branch";
+                            }
+                            else
+                            {
+                                //EVALUEMOS SI EL BRANCH ESTA DENTRO DE LOS BRANCH UTILES
+                                foreach (var itemBranch in _branchUsesFront)
+                                {
+                                    if (itemBranch.NameBranch.Contains(changeset.Branch))
+                                    {
+                                        flag = true;
+                                    }
+                                }
+                                if (flag)
+                                {
+                                    //EVALUAMOS SI EL CHANGESET ESTA VACIO
+                                    if (String.IsNullOrWhiteSpace(changeset.Changeset))
+                                    {
+                                        noData += $"No indico el Changeset|{changeset.Branch}";
+                                    }
+                                    else
+                                    {
+                                        DischangeChangesets.Add(changeset);
+                                    }
+                                }
+                                else
+                                {
+                                    noData += $"{changeset.Changeset}|El Branch no esta dentro de la lista de Branchs de Uso";
+                                }
+
+                            }
+
+                        }
+                    }
+                    if (noData != "")
+                    {
+                        DischangeStatus = noData;
+                        Log4net.log.Error($"[AP-1e]-{DischangeStatus}");
                     }
                     else
                     {
-                        noData += changeset.Changeset + " | ";
+                        //FUNCION PARA OBTENER EL PRIMER CHANGESET Y SU INFORMACION
+                        GetChangesetIndividual();
+                        DischangeStatus = "Lista de changesets cargada.";
+                        Log4net.log.Info($"[AP-1]-{DischangeStatus}");
                     }
-                }
-                if (noData != "")
-                {
-                    DischangeStatus = $"Indicar Branch en los siguientes changeset: {noData}";
-                    DischangeStatus += "| Lista de changesets cargada.";
                 }
                 else
                 {
-                    DischangeStatus = "Lista de changesets cargada.";
+                    DischangeStatus = $"[AP-1e]-No agrego datos de changeset y branch";
+                    Log4net.log.Error(DischangeStatus);
                 }
             }
             catch (Exception ex)
             {
-                Log4net.log.Error(ex.Message);
-                DischangeStatus = $"Error en CSV: { ex.Message}.";
+                Log4net.log.Error($"[AP-1e]-{ex.Message}");
+                DischangeStatus = $"[AP-1e]-Error en CSV: { ex.Message}.";
             }
 
         }
+        //FUNCION PARA OBTENER LA INFORMACION DEL PRIMER CHANGESET
+        public async void GetChangesetIndividual()
+        {
+            TfsList.Clear();
+            ComponentList.Clear();
+            JenkinsListPath.Clear();
+            DischangeStatus = "Obteniendo Path del TFS.";
+            DisplayName = "";
+            CommentAuth = "";
+            ChangeCreated = "";
+            DischangeChangeset primerChangeset = new DischangeChangeset(); 
+            primerChangeset.Changeset = DischangeChangesets.FirstOrDefault().Changeset;
+            primerChangeset.Branch = DischangeChangesets.FirstOrDefault().Branch;
+            List<TfsItem> OneItem = await TFSRequest.GetChangeset(primerChangeset.Changeset);
+            TfsModelDetail Oneauthor = await TFSRequest.GetChangesetAuthor(primerChangeset.Changeset);
+            DisplayName = Oneauthor.author.displayName;
+            CommentAuth = Oneauthor.comment;
+            ChangeCreated = Oneauthor.createdDate.ToString();
+            if (!string.IsNullOrEmpty(primerChangeset.Branch))
+            {
+                OneItem = OneItem.FindAll((item) => item.path.Contains(primerChangeset.Branch));
+            }
+            if (OneItem.FirstOrDefault() != null)
+            {
+                if (OneItem.First().path.Contains(primerChangeset.Branch))
+                {
+                    if (OneItem.First().changetype.Contains("delete, merge"))
+                    {
+                        OneItem.First().path += " [Fusionar mediante combinación, eliminar]";
+                    }
+                    TfsList.Add(OneItem.First());
+                }
+                DischangeStatus = $"Path Changesets del TFS Obtenido cantidad: {TfsList.Count}.";
+                Log4net.log.Info($"[AP-1]-{DischangeStatus}");
+            }
+            else
+            {
+                DischangeStatus = $"El changeset {SelectedChangeset.Changeset} en el branch {SelectedChangeset.Branch} no posee componentes.";
+                Log4net.log.Error($"[AP-1e]-{DischangeStatus}");
+                MessageBox.Show($"El changeset {SelectedChangeset.Changeset} en el branch {SelectedChangeset.Branch} no posee componentes.", $"El changeset {SelectedChangeset.Changeset} en el branch {SelectedChangeset.Branch} no posee componentes.", MessageBoxButton.OK, MessageBoxImage.Warning);
+            }
+        }
 
         public async void GetChangeset()
-        {
+        {            
             if (SelectedChangeset == null)
             {
                 TfsList.Clear();
@@ -225,7 +322,7 @@ namespace AutoDischange.ViewModel
                     ChangeCreated = author.createdDate.ToString();
                     if (!string.IsNullOrEmpty(SelectedChangeset.Branch))
                     {
-                        allItem = allItem.FindAll((item)=> item.path.Contains(SelectedChangeset.Branch));
+                        allItem = allItem.FindAll((item) => item.path.Contains(SelectedChangeset.Branch));
                     }
                     if (allItem.FirstOrDefault() != null)
                     {
@@ -261,9 +358,7 @@ namespace AutoDischange.ViewModel
                     DischangeStatus = $"Error al intentar conectar con el TFS: { ex.Message}.";
                     MessageBox.Show("Error al intentar conectar con el TFS: " + ex.Message, "Error al intentar conectar con el TFS", MessageBoxButton.OK, MessageBoxImage.Error);
                 }
-
             }
-
         }
 
         public void GetTfsComponent()
@@ -503,8 +598,5 @@ namespace AutoDischange.ViewModel
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
-
-        
-
     }
 }
